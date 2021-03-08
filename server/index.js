@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-import userRoutes from './routes/user-routes';
+const userRoutes = require('./routes/user-routes');
 
 const PORT = 8000;
 
