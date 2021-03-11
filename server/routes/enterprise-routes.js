@@ -1,13 +1,13 @@
 const express = require('express');
 const router = express.Router();
 
-const { getEnterprises, getEnterprise, createEnterprise, updateEnterprise,  deleteEnterprise} = require('../controllers/enterprise-controller');
+const enterpriseController = require('../controllers/enterprise-controller');
 
-router.get('/:lat/:long/:dist', getEnterprises);
-router.get('/:id', getEnterprise);
-router.post('/', createEnterprise);
-router.put('/:id', updateEnterprise);
-router.delete('/:id', deleteEnterprise);
+router.get('/:lat/:long/:dist', enterpriseController.getEnterprises); // might want to put a post request, post filter metadata plu rest
+router.get('/:id', enterpriseController.getEnterprise);
+router.post('/', enterpriseController.createEnterprise);
+router.put('/:id', enterpriseController.updateEnterprise);
+router.delete('/:id', enterpriseController.deleteEnterprise);
 
 
 module.exports = router;
