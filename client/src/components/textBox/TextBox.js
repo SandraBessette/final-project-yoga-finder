@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../GlobalStyles';
 
-const InputText = ({width})=>{
+const TextBox = ({width})=>{
 
     return (
         <Input type="text" width={width}/>  
@@ -25,4 +25,4 @@ const Input = styled.input`
         outline-width: 0px;
     }
 `;
-export default InputText;
+export default TextBox;

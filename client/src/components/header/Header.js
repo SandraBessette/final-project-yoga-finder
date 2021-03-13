@@ -11,7 +11,7 @@ const Header = ()=>{
                 <Image src='yoga3.jpg' alt='logo'/>              
                 <Title>Yoga Finder</Title>
             </Logo>
-            <Button background={'white'} color={COLORS.primary} height={'35px'} width={'90px'} >Sign In</Button>    
+            <Button background={'white'} color={COLORS.primary} width={'90px'} >Sign In</Button>    
         </Wrapper>
     )
 

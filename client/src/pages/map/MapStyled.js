@@ -1,178 +1,102 @@
 const MapStyled = [
     {
-        "featureType": "water",
-        "elementType": "geometry",
+        "featureType": "road",
         "stylers": [
             {
-                "color": "#e9e9e9"
+                "hue": "#5e00ff"
             },
             {
-                "lightness": 17
-            }
-        ]
-    },
-    {
-        "featureType": "landscape",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#f5f5f5"
-            },
-            {
-                "lightness": 20
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.fill",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 17
-            }
-        ]
-    },
-    {
-        "featureType": "road.highway",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 29
-            },
-            {
-                "weight": 0.2
-            }
-        ]
-    },
-    {
-        "featureType": "road.arterial",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 18
-            }
-        ]
-    },
-    {
-        "featureType": "road.local",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 16
+                "saturation": -79
             }
         ]
     },
     {
         "featureType": "poi",
-        "elementType": "geometry",
         "stylers": [
             {
-                "color": "#f5f5f5"
+                "saturation": -78
             },
             {
-                "lightness": 21
-            }
-        ]
-    },
-    {
-        "featureType": "poi.park",
-        "elementType": "geometry",
-        "stylers": [
-            {
-                "color": "#dedede"
+                "hue": "#6600ff"
             },
             {
-                "lightness": 21
-            }
-        ]
-    },
-    {
-        "elementType": "labels.text.stroke",
-        "stylers": [
-            {
-                "visibility": "on"
+                "lightness": -47
             },
-            {
-                "color": "#ffffff"
-            },
-            {
-                "lightness": 16
-            }
-        ]
-    },
-    {
-        "elementType": "labels.text.fill",
-        "stylers": [
-            {
-                "saturation": 36
-            },
-            {
-                "color": "#333333"
-            },
-            {
-                "lightness": 40
-            }
-        ]
-    },
-    {
-        "elementType": "labels.icon",
-        "stylers": [
             {
                 "visibility": "off"
             }
         ]
     },
     {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "lightness": 22
+            }
+        ]
+    },
+    {
+        "featureType": "landscape",
+        "stylers": [
+            {
+                "hue": "#6600ff"
+            },
+            {
+                "saturation": -11
+            }
+        ]
+    },
+    {},
+    {},
+    {
+        "featureType": "water",
+        "stylers": [
+            {
+                "saturation": -65
+            },
+            {
+                "hue": "#1900ff"
+            },
+            {
+                "lightness": 8
+            }
+        ]
+    },
+    {
+        "featureType": "road.local",
+        "stylers": [
+            {
+                "weight": 1.3
+            },
+            {
+                "lightness": 30
+            }
+        ]
+    },
+    {
         "featureType": "transit",
-        "elementType": "geometry",
         "stylers": [
             {
-                "color": "#f2f2f2"
+                "visibility": "simplified"
             },
             {
-                "lightness": 19
+                "hue": "#5e00ff"
+            },
+            {
+                "saturation": -16
             }
         ]
     },
     {
-        "featureType": "administrative",
-        "elementType": "geometry.fill",
+        "featureType": "transit.line",
         "stylers": [
             {
-                "color": "#fefefe"
-            },
-            {
-                "lightness": 20
+                "saturation": -72
             }
         ]
     },
-    {
-        "featureType": "administrative",
-        "elementType": "geometry.stroke",
-        "stylers": [
-            {
-                "color": "#fefefe"
-            },
-            {
-                "lightness": 17
-            },
-            {
-                "weight": 1.2
-            }
-        ]
-    }
+    {}
 ]
+
 
 export default MapStyled;

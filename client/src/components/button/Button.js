@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
+import { COLORS } from '../../GlobalStyles';
 
-const Button = ({background, color, height, width, onClick, children})=>{
+const Button = ({background, color, width, radius, onclick, children})=>{
 
     return (
         <Wrapper 
             backgroundColor={background}
-            colorText={color}
-            height={height}
+            colorText={color}           
             width={width}
-            onClick={onClick}
+            radius={radius}
+            onClick={onclick}            
         >
             {children}
         </Wrapper>
@@ -18,16 +19,24 @@ const Button = ({background, color, height, width, onClick, children})=>{
 };
 
 const Wrapper = styled.button`
-    background: ${(p)=>p.backgroundColor};
-    border-radius: 4px;
+    background: ${(p)=>p.backgroundColor || COLORS.primary};
+    border-radius: ${(p)=>p.radius || '4px'};
     border-color: transparent;
-    color: ${(p)=>p.colorText};
+    color: ${(p)=>p.colorText || "white"};
  
     cursor: pointer;
     display: block;
     font-size: 16px;
-    height: ${(p)=>p.height};
-    width: ${(p)=>p.width};
+    height: 35px;
+    width: ${(p)=>p.width || '100%'};
+    font-weight: 400;
+    transition: all 0.30s ease-in-out;  
+
+    &:hover {       
+        background: ${(p)=>p.colorText || "white"};
+        color: ${(p)=>p.backgroundColor || COLORS.primary};
+        border: 1px solid ${(p)=>p.backgroundColor || COLORS.primary};
+    }
 
     &:disabled {
         cursor: not-allowed;

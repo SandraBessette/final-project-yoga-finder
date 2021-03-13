@@ -15,19 +15,64 @@ const getEnterprises = async (req, res) => {
   
     try {        
         const result = await EnterpriseModel.find({ location:
-                                                     { $nearSphere:
-                                                         { $geometry:
-                                                            { type: "Point", coordinates: [latFormat, longFormat] },
+                                                    { $nearSphere:
+                                                        { $geometry:
+                                                            { type: "Point", coordinates: [longFormat, latFormat] },
                                                              $maxDistance: distFormat * METERS_PER_KM 
                                                             } 
                                                         }
-                                                     });
+                                                    });
  
         res.status(200).json({ status: 200, message: "success", data: result });         
 
     } catch (error){
         res.status(404).json({ status: 404, error: error?.message });      
     }  
+};
+
+const getFilteredEnterprises = async (req, res) => {
+    const {
+        bounds, 
+        center,
+        dist,
+        filters,
+        sort,
+        type,
+        limit       
+        } = req.body;
+
+    const pipeline = [];
+    pipeline.push( {
+        $geoNear: {
+            near: { type: "Point", coordinates: center },
+            distanceField: "dist.calculated",           
+            spherical: true
+        }
+    }); 
+    pipeline.push( { $limit: 100 });
+    pipeline.push( {
+        $match: {
+            location: {
+                $geoWithin: {
+                    $geometry: {
+                        type : "Polygon" ,
+                        coordinates: [ [ bounds.nw, bounds.ne, bounds.se, bounds.sw, bounds.nw ] ]
+                    }
+                }
+            }
+        }
+    });
+       
+    try{  
+        const query = EnterpriseModel.aggregate([pipeline]); 
+        const result = await query.exec();
+        console.log("second query", result);
+        res.status(200).json({ status: 201, message: "success", data: result});  
+    } catch (error){
+        console.log("error", error.message);
+        res.status(500).json({ status: 500, error: error?.message });      
+    }  
+
 };
 
 const getEnterprise = async (req, res) => {
@@ -152,5 +197,6 @@ module.exports = {
     getEnterprise, 
     createEnterprise,
     updateEnterprise, 
-    deleteEnterprise 
+    deleteEnterprise,
+    getFilteredEnterprises
 };
