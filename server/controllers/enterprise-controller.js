@@ -45,6 +45,23 @@ const getFilteredEnterprises = async (req, res) => {
     pipeline.push( {
         $geoNear: {
             near: { type: "Point", coordinates: center },
+            distanceField: "dist.calculated",
+            distanceMultiplier: 0.001,
+            query: { location: {
+                $geoIntersects: {
+                    $geometry: {
+                        type : "Polygon" ,
+                        coordinates: [ [ bounds.nw, bounds.ne, bounds.se, bounds.sw, bounds.nw ] ]
+                    }
+                }
+            }},           
+            spherical: true,            
+        }
+    }); 
+    pipeline.push( { $limit: 100 });
+    /*pipeline.push( {
+        $geoNear: {
+            near: { type: "Point", coordinates: center },
             distanceField: "dist.calculated",           
             spherical: true
         }
@@ -61,7 +78,7 @@ const getFilteredEnterprises = async (req, res) => {
                 }
             }
         }
-    });
+    });*/
        
     try{  
         const query = EnterpriseModel.aggregate([pipeline]); 

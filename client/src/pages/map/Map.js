@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import {
     GoogleMap,
@@ -7,10 +7,9 @@ import {
 
 } from "@react-google-maps/api";
 import MapStyled  from './MapStyled';
-import { COLORS } from '../../GlobalStyles';
-import { MdMyLocation } from  "react-icons/md";
-import TextBox from '../../components/textBox/TextBox';
 import Button from '../../components/button/Button';
+import SearchBox from './components/SearchBox';
+import LocationButton from './components/LocationButton';
 
 const mapContainerStyle = {
     width: '100%',
@@ -28,8 +27,7 @@ const options ={
  zoomControl: true
 }
 const Map = ()=>{
-    const [ libraries ] = useState(['places', 'geometry' ]);
-    console.log(libraries);
+    const [ libraries ] = useState(['places', 'geometry' ]); 
     const {isLoaded, loadError} = useLoadScript ({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries,
@@ -42,12 +40,12 @@ const Map = ()=>{
    //const [map, setMap] = React.useState(null)  
 
     const mapRef = React.useRef();
-    const onMapLoad = React.useCallback((map) => {     
+    const onMapLoad = useCallback((map) => {     
         //setMap(map);
         mapRef.current = map; 
     }, []);
 
-    const updateCoordinates = React.useCallback(() => {
+    const updateCoordinates = useCallback(() => {
         console.log("map in hangle change", mapRef.current);
         const NECorner = mapRef.current.getBounds().getNorthEast();
         const SWCorner = mapRef.current.getBounds().getSouthWest();
@@ -60,29 +58,34 @@ const Map = ()=>{
                     });
     }, []);
 
-    const handleAreaButtonClick = React.useCallback((e)=>{
+    const handleAreaButtonClick = useCallback((e)=>{
         e.preventDefault();
         updateCoordinates();
     }, [updateCoordinates]);
 
-    const panTo = React.useCallback(({ lat, lng }) => {
+    const panTo = useCallback(({ lat, lng, bounds = null }) => {
         mapRef.current.panTo({ lat, lng });
-        mapRef.current.setZoom(13);
+       // console.log(' bounds',  bounds);
+      //  if (bounds)
+       //     mapRef.current.fitBounds(bounds); 
+    //    else
+            mapRef.current.setZoom(14);
         updateCoordinates();
     }, [updateCoordinates]);
+    
+    const fitMapToData = useCallback((data) => {
+        const bounds = new window.google.maps.LatLngBounds();
+        data.forEach((marker)=>{
+            bounds.extend(new window.google.maps.LatLng(marker.location.coordinates[1], marker.location.coordinates[0]));
+        });
 
-    const handleCurentPositionClick = React.useCallback((e)=>{
-        e.preventDefault();
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                panTo({
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                });
-            },
-            () => null
-        );
-    }, [panTo]);
+        if (data.length > 0) {
+            bounds.extend(mapRef.current.getCenter());
+            mapRef.current.fitBounds(bounds);
+            
+        }    // faut que ca retourne une promise.... pour que ca marche avec le bouton sera this area
+
+    }, []);
 
     useEffect(()=>{
         if(!coordinates)
@@ -101,6 +104,7 @@ const Map = ()=>{
         .then((json)=>{
             const {status, data} = json;
                 if (status === 201) {
+                   // fitMapToData([...data]);
                     setBusiness([...data]);
                     setStatus("idle");
                     setAreaButtonVisible(false);
@@ -112,7 +116,7 @@ const Map = ()=>{
         .catch((error)=>{
             setStatus("error");
         })
-    }, [coordinates]);
+    }, [coordinates, fitMapToData]);
 
 
     if(loadError) return "error loading map";
@@ -130,7 +134,7 @@ const Map = ()=>{
                     if (!coordinates) {                      
                         updateCoordinates();
                     }
-                    else {
+                    else {                       
                         setAreaButtonVisible(true);
                     }
                         
@@ -152,12 +156,8 @@ const Map = ()=>{
                 />
                 ))}
             </GoogleMap>
-            <SearchWrapper>
-                <TextBox width={'300px'} />                
-            </SearchWrapper>
-            <IconButton title="Show your location" onClick={handleCurentPositionClick}>
-                <MdMyLocation size={25} color= {COLORS.primary} />
-            </IconButton >
+            <SearchBox panTo={panTo}/>               
+            <LocationButton panTo={panTo}/>
             {areaButtonVisible && <AreaWrapper >
                 <Button width={'175px'} radius={'15px'} onclick={handleAreaButtonClick }>
                     Search this area...
@@ -168,20 +168,11 @@ const Map = ()=>{
     )
 
 };
-// <Wrapper>
 
 const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: calc(100vh - 74px);
-`;
-
-const SearchWrapper = styled.div`
-    position: absolute;
-    top: 20px;
-    left: 10px;
-    display: flex;
-    align-items: center;
 `;
 
 const AreaWrapper = styled.div`
@@ -191,24 +182,6 @@ const AreaWrapper = styled.div`
     display: flex;
     align-items: center;
     transform: translate(-50%);
-`;
-
-const IconButton = styled.button`
-    position: absolute;
-    bottom: 120px;
-    right: 15px;
-    border: none;
-    cursor: pointer; 
-    border-radius: 10px;   
-    background: white;
-    display: flex;
-    align-items: center;
-    padding: 5px;
-    box-shadow: 0 0 5px grey;  
-    
-    &:focus {
-        outline: none;
-    }
 `;
 
 export default Map

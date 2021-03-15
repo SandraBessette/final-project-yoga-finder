@@ -2,14 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../GlobalStyles';
 
-const TextBox = ({width})=>{
+const TextBox = ({handleOnChanged, handleKeyDown, value, width, placeholder="", disabled=false})=>{
 
     return (
-        <Input type="text" width={width}/>  
+        <Input 
+            type="text" 
+            width={width}
+            value= {value}         
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={(ev)=>(handleOnChanged(ev))} 
+            onKeyDown={(ev) =>(handleKeyDown ? handleKeyDown(ev): null)} 
+       />  
     );
 };
 
 const Input = styled.input`  
+    box-sizing: border-box;
     border: 1px solid ${COLORS.primary};
     border-radius: 5px;
     height: 30px;
