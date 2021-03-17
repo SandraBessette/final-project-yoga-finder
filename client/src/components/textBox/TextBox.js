@@ -25,7 +25,7 @@ const Input = styled.input`
     width: ${(p)=>p.width};  
     padding: 0 5px;
     transition: all 0.30s ease-in-out;  
-    margin: 15px;
+   // margin: 15px;
     box-shadow: 0 0 5px lightgrey;    
  
     &:focus  {

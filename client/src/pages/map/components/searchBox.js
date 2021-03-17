@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import usePlacesAutocomplete, {
     getGeocode,
     getLatLng
-  } from "use-places-autocomplete";
+} from "use-places-autocomplete";
+import useOnclickOutside from "react-cool-onclickoutside";
 import { AiFillCloseCircle } from  "react-icons/ai"; 
 import TextBox from '../../../components/textBox/TextBox';
 import { COLORS } from '../../../GlobalStyles';
@@ -22,6 +23,10 @@ const SearchBox = ({panTo})=>{
             radius: 300 * 1000,
         }
        
+      });
+
+      const ref = useOnclickOutside(() => {       
+        clearSuggestions();
       });
 
     const handleOnChanged = (ev) => {
@@ -104,43 +109,44 @@ const SearchBox = ({panTo})=>{
         });
 
     return (
-        <SearchWrapper>            
-            <TextBox 
-                handleOnChanged={handleOnChanged}
-                value={value}
-                width='320px'
-                disabled={!ready}
-                handleKeyDown={handleKeyDown}
-                placeholder="Search a location" />
+        <SearchWrapper ref={ref}> 
+            <TextBoxWrapper>          
+                <TextBox 
+                    handleOnChanged={handleOnChanged}
+                    value={value}
+                    width='360px'
+                    disabled={!ready}
+                    handleKeyDown={handleKeyDown}
+                    placeholder="Search a location" 
+                />
                 <IconButton title="Clear search" onClick={handleClickClose} >
                     <AiFillCloseCircle size={23}  />
-                </IconButton >       
+                </IconButton > 
+            </TextBoxWrapper>       
             {status === "OK" && <List>{renderSuggestions()}</List>}                            
         </SearchWrapper>
-    )
-
-}
+    );
+};
 
 const SearchWrapper = styled.div`
     position: absolute;
     box-sizing: border-box;
-    top: 20px;
-    left: 15px;
+    top: 30px;
+    left: 20px;
     display: flex;
-    flex-direction: column;
-    width: 320px;
+    flex-direction: column;    
 `;
 
 const List = styled.ul`    
     box-sizing: border-box; 
     background-color: white;
     border-radius: 5px;
-    width: 100%;    
+    width: 360px;    
     box-shadow: 1px 3px 7px 3px #D3D3D3;
     margin-bottom: 20px;   
     line-height: normal;
-    padding: 0;
-    margin: 0 15px;
+    padding: 0;   
+    z-index: 2;
   
    li {
     list-style-type: none;
@@ -151,17 +157,20 @@ const List = styled.ul`
    }  
 `;
 
-const IconButton = styled.button` 
-    position: absolute;
-    top: 15px;
-    left: 335px;
-    border: none;
-    cursor: pointer;    
-    background: transparent;
+const TextBoxWrapper = styled.div`
+    display: flex; 
+    align-items: center;   
+`;
+
+const IconButton = styled.button`  
     display: flex;
-    align-items: center;
-    padding: 4px;   
-    color: ${COLORS.primary};
+    align-items: center; 
+    border: none;
+    border-radius: 50%;
+    margin: 0 5px;  
+    padding: 0px;  
+    cursor: pointer;   
+    color: ${COLORS.primary};   
 
      &:hover {  
         color: #6a41ac;

@@ -32,31 +32,38 @@ const enterpriseSchema = new Schema(
         hours: {
             monday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             tuesday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             wednesday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             thursday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             friday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             saturday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             sunday: {
               start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(4, 30, 0, 0) },
+              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },           
         },
         favoriteTotal: { type: Number, default: 0 },

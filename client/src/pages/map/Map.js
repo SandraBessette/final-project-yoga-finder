@@ -9,6 +9,7 @@ import {
 import MapStyled  from './MapStyled';
 import Button from '../../components/button/Button';
 import SearchBox from './components/SearchBox';
+import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 
 const mapContainerStyle = {
@@ -45,8 +46,17 @@ const Map = ()=>{
         mapRef.current = map; 
     }, []);
 
+    const markerUrl = useCallback((type)=>{
+        let url = '/yogaMarker2.svg';
+        if( type === "Meditation")
+            url = '/MarkerMeditation.svg';
+        if (type === 'Accessory')
+            url = '/MarkerAccessory.svg';
+        return url;
+    }, []);
+
     const updateCoordinates = useCallback(() => {
-        console.log("map in hangle change", mapRef.current);
+        //console.log("map in hangle change", mapRef.current);
         const NECorner = mapRef.current.getBounds().getNorthEast();
         const SWCorner = mapRef.current.getBounds().getSouthWest();
    
@@ -73,7 +83,7 @@ const Map = ()=>{
         updateCoordinates();
     }, [updateCoordinates]);
     
-    const fitMapToData = useCallback((data) => {
+   /* const fitMapToData = useCallback((data) => {
         const bounds = new window.google.maps.LatLngBounds();
         data.forEach((marker)=>{
             bounds.extend(new window.google.maps.LatLng(marker.location.coordinates[1], marker.location.coordinates[0]));
@@ -85,7 +95,7 @@ const Map = ()=>{
             
         }    // faut que ca retourne une promise.... pour que ca marche avec le bouton sera this area
 
-    }, []);
+    }, []);*/
 
     useEffect(()=>{
         if(!coordinates)
@@ -116,7 +126,7 @@ const Map = ()=>{
         .catch((error)=>{
             setStatus("error");
         })
-    }, [coordinates, fitMapToData]);
+    }, [coordinates]);
 
 
     if(loadError) return "error loading map";
@@ -152,17 +162,34 @@ const Map = ()=>{
                 {business && business.map((marker) => (
                 <Marker
                     key={marker._id}
-                    position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }}                   
+                    position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }} 
+                    icon={{
+                        url: markerUrl(marker.type),                   
+                        origin: new window.google.maps.Point(0, 0),
+                        anchor: new window.google.maps.Point(0, 40),
+                        scaledSize: new window.google.maps.Size(40, 40),
+                      }}                  
                 />
                 ))}
+                {coordinates &&
+                <Marker                    
+                    position={{ lat: coordinates.center[1], lng: coordinates.center[0] }} 
+                    icon={{
+                        url: '/pinCenter.svg',                     
+                        origin: new window.google.maps.Point(0, 0),
+                        anchor: new window.google.maps.Point(0, 35),
+                        scaledSize: new window.google.maps.Size(35, 35),
+                      }}                  
+                />}
             </GoogleMap>
             <SearchBox panTo={panTo}/>               
-            <LocationButton panTo={panTo}/>
+            <LocationButton panTo={panTo}/>          
             {areaButtonVisible && <AreaWrapper >
                 <Button width={'175px'} radius={'15px'} onclick={handleAreaButtonClick }>
                     Search this area...
                 </Button>
             </AreaWrapper>}
+            <SideBar data={business}/>
             
         </Wrapper>
     )
