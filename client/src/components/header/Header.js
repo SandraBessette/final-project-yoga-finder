@@ -2,7 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import {CgProfile} from "react-icons/cg"; 
 import Button from '../button/Button';
+import Navbar from '../navbar/Navbar';
 
 
 const Header = ()=>{
@@ -14,7 +16,10 @@ const Header = ()=>{
                     <Title>Yoga Finder</Title>
                 </Logo>
             </StyledLink>
-            <Button background={'white'} color={COLORS.primary} width={'90px'} >Sign In</Button>    
+            <RightWrapper>
+                <Button background={'white'} color={COLORS.primary} width={'90px'} >Sign In</Button>  
+                <Navbar />                     
+            </RightWrapper>
         </Wrapper>
     );
 };
@@ -50,6 +55,15 @@ const Image = styled.img`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+`;
+
+const RightWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    height: ${HEADER_HEIGHT};
+    position: relative;
+   
+
 `;
 
 export default Header;

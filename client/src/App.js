@@ -10,6 +10,8 @@ import {
  import styled from 'styled-components';
  import Map from './pages/map/Map';
  import SingleBusiness from './pages/singleBusiness/SingleBusiness';
+ import Business from './pages/business/Business';
+ import CreateBusiness from './pages/createBusiness/CreateBusiness';
  import Header from './components/header/Header';
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
@@ -38,6 +40,9 @@ const App= () => {
           </Route> 
           <Route exact path="/Business/:id">           
             <SingleBusiness />
+          </Route> 
+          <Route exact path="/user/business">           
+            <CreateBusiness />
           </Route>          
         </Switch>
         }

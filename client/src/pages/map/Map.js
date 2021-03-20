@@ -61,9 +61,17 @@ const Map = ()=>{
 
     const mapRef = React.useRef();
     const onMapLoad = useCallback((map) => {     
-        //setMap(map);
+       
         mapRef.current = map; 
-    }, []);   
+    }, []);  
+    
+    const windowRef = React.useRef();
+    const onWindowLoad = useCallback((window) => {     
+        //setMap(map);
+        windowRef.current = window;
+       
+        console.log(window);
+    }, []); 
 
     const onUnmount = useCallback((map) =>{       
         mapRef.current = null;
@@ -162,7 +170,7 @@ const Map = ()=>{
                 center={center}
                 options={options}
                 onLoad={onMapLoad} 
-                onUnmount={onUnmount}               
+                onUnmount={onUnmount}                          
                 onBoundsChanged={ () => {                
                     if (!coordinates) {                      
                         updateCoordinates();
@@ -183,14 +191,14 @@ const Map = ()=>{
             }
             >
                 {business && business.map((marker) => (
+              
                 <Marker
                     key={marker._id}
                     position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }} 
-                    animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}
-                    onClick={(e) => {   
-                        //e.preventDefault();
-                        console.log('marker', marker)                    
-                        setSelected(marker);
+                    animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}   
+                    onLoad={onWindowLoad}                               
+                    onClick={(e) => {                                                          
+                        setSelected(marker);                      
                       }}
                     icon={{
                         url: icons[marker.type].icon,                 
@@ -200,7 +208,7 @@ const Map = ()=>{
                       }}                  
                 />
                 ))}
-                {coordinates &&
+               {coordinates &&
                 <Marker                    
                     position={{ lat: coordinates.center[1], lng: coordinates.center[0] }} 
                     icon={{
@@ -212,11 +220,13 @@ const Map = ()=>{
                 />}
                 {selected ? (
                 <InfoWindow
-                    position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}
-                    anchor="top"
+                    position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}  
+                    options={{pixelOffset: new window.google.maps.Size(0, -42)}}                                
                     onCloseClick={() => {
-                    setSelected(null);
-                    }}
+                        //windowRef.current.content.focus();
+                        setSelected(null);
+                    }}                    
+                   
                 >
                    <SmallWindow data={selected}/>
                 </InfoWindow>
@@ -239,7 +249,7 @@ const Map = ()=>{
     );
 
 };
-
+//position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}   
 const Wrapper = styled.div`
     position: relative;
     width: 100%;
