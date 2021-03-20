@@ -1,20 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLORS } from '../../GlobalStyles';
+import { Link } from "react-router-dom";
+import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import Button from '../button/Button';
 
 
 const Header = ()=>{
     return(
         <Wrapper>
-            <Logo>                
-                <Image src='yoga3.jpg' alt='logo'/>              
-                <Title>Yoga Finder</Title>
-            </Logo>
+             <StyledLink to={`/`}  >
+                <Logo>                
+                    <Image src='/yoga3.jpg' alt='logo'/>              
+                    <Title>Yoga Finder</Title>
+                </Logo>
+            </StyledLink>
             <Button background={'white'} color={COLORS.primary} width={'90px'} >Sign In</Button>    
         </Wrapper>
-    )
-
+    );
 };
 
 
@@ -25,6 +27,7 @@ const Wrapper = styled.div`
     background-color: ${COLORS.primary};
     color: white;
     padding: 10px 20px;
+    height: ${HEADER_HEIGHT};
 `;
 
 const Logo = styled.div`
@@ -43,4 +46,10 @@ const Image = styled.img`
     border-radius: 50%;
 
 `;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+`;
+
 export default Header;

@@ -5,7 +5,8 @@ import SideBarItem from './SideBarItem';
 import { VscSearchStop} from "react-icons/vsc";
 
 
-const SideBar = ({data})=>{  
+
+const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave })=>{  
 
     return(
         <Wrapper>
@@ -17,7 +18,13 @@ const SideBar = ({data})=>{
             </NoResultWrapper>}
             {data && data.map((item)=>{
                 return(
-                    <SideBarItem key={item._id} data={item} />
+                    <SideBarItem 
+                        key={item._id}
+                        data={item}
+                        handleOnMouseEnter={handleOnMouseEnter} 
+                        handleOnMouseLeave={handleOnMouseLeave} 
+                        
+                    />                       
                 );
             })}
         </Wrapper>      
@@ -89,4 +96,7 @@ const NoResultWrapper = styled.div`
     padding: 15px;
     color: grey;
 `;
+
+
+
 export default SideBar;

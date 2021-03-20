@@ -4,13 +4,17 @@ import {
     GoogleMap,
     useLoadScript,
     Marker,
+    InfoWindow
 
 } from "@react-google-maps/api";
-import MapStyled  from './MapStyled';
+import { HEADER_HEIGHT } from '../../GlobalStyles'
+import MapStyled  from '../../MapStyled';
 import Button from '../../components/button/Button';
 import SearchBox from './components/SearchBox';
 import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
+import SmallWindow from './components/SmallWindow';
+import Spinner from '../../components/spinner/Spinner';
 
 const mapContainerStyle = {
     width: '100%',
@@ -27,33 +31,43 @@ const options ={
  disableDefaultUI: true,
  zoomControl: true
 }
+
+const icons = {
+    Yoga: {
+        icon: '/yogaMarker2.svg'
+    },
+    Accessory: {
+        icon: '/MarkerMeditation.svg'
+    },
+    Meditation: {
+        icon: '/MarkerAccessory.svg'
+    }
+};
+
 const Map = ()=>{
-    const [ libraries ] = useState(['places', 'geometry' ]); 
+   /* const [ libraries ] = useState(['places', 'geometry' ]); 
     const {isLoaded, loadError} = useLoadScript ({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries,
-    });
+    });*/
    
     const [business, setBusiness] = useState(null);
+    const [animatedId, setAnimatedId] = useState(null);
     const [status, setStatus] = useState("idle");
     const [coordinates, setCoordinates] = useState(null);
     const [areaButtonVisible, setAreaButtonVisible] = useState(false);
+    const [selected, setSelected] = useState(null);
    //const [map, setMap] = React.useState(null)  
 
     const mapRef = React.useRef();
     const onMapLoad = useCallback((map) => {     
         //setMap(map);
         mapRef.current = map; 
-    }, []);
+    }, []);   
 
-    const markerUrl = useCallback((type)=>{
-        let url = '/yogaMarker2.svg';
-        if( type === "Meditation")
-            url = '/MarkerMeditation.svg';
-        if (type === 'Accessory')
-            url = '/MarkerAccessory.svg';
-        return url;
-    }, []);
+    const onUnmount = useCallback((map) =>{       
+        mapRef.current = null;
+    }, [])
 
     const updateCoordinates = useCallback(() => {
         //console.log("map in hangle change", mapRef.current);
@@ -72,6 +86,14 @@ const Map = ()=>{
         e.preventDefault();
         updateCoordinates();
     }, [updateCoordinates]);
+
+    const handleOnMouseEnter = useCallback((e, id) =>{
+        setAnimatedId(id);
+    }, []);
+
+    const handleOnMouseLeave = useCallback(() =>{
+        setAnimatedId(null);
+    }, []);
 
     const panTo = useCallback(({ lat, lng, bounds = null }) => {
         mapRef.current.panTo({ lat, lng });
@@ -99,9 +121,8 @@ const Map = ()=>{
 
     useEffect(()=>{
         if(!coordinates)
-            return;
-        console.log('coordinates', coordinates)
-        setStatus("loading")
+            return;       
+        setStatus("loading");
         fetch('/enterprises/filters', {
             method: "POST",
             headers: {
@@ -129,17 +150,19 @@ const Map = ()=>{
     }, [coordinates]);
 
 
-    if(loadError) return "error loading map";
-    if(!isLoaded) return "loading map";
+   // if(loadError) return "error loading map"; 
     
     return(
         <Wrapper>
+            {/*!isLoaded && <Spinner />*/}
+            {/*isLoaded &&*/ <>
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
                 zoom={15}
                 center={center}
                 options={options}
-                onLoad={onMapLoad}                
+                onLoad={onMapLoad} 
+                onUnmount={onUnmount}               
                 onBoundsChanged={ () => {                
                     if (!coordinates) {                      
                         updateCoordinates();
@@ -163,10 +186,16 @@ const Map = ()=>{
                 <Marker
                     key={marker._id}
                     position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }} 
+                    animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}
+                    onClick={(e) => {   
+                        //e.preventDefault();
+                        console.log('marker', marker)                    
+                        setSelected(marker);
+                      }}
                     icon={{
-                        url: markerUrl(marker.type),                   
+                        url: icons[marker.type].icon,                 
                         origin: new window.google.maps.Point(0, 0),
-                        anchor: new window.google.maps.Point(0, 40),
+                        anchor: new window.google.maps.Point(20, 40),
                         scaledSize: new window.google.maps.Size(40, 40),
                       }}                  
                 />
@@ -181,6 +210,17 @@ const Map = ()=>{
                         scaledSize: new window.google.maps.Size(35, 35),
                       }}                  
                 />}
+                {selected ? (
+                <InfoWindow
+                    position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}
+                    anchor="top"
+                    onCloseClick={() => {
+                    setSelected(null);
+                    }}
+                >
+                   <SmallWindow data={selected}/>
+                </InfoWindow>
+                ) : null}
             </GoogleMap>
             <SearchBox panTo={panTo}/>               
             <LocationButton panTo={panTo}/>          
@@ -189,17 +229,21 @@ const Map = ()=>{
                     Search this area...
                 </Button>
             </AreaWrapper>}
-            <SideBar data={business}/>
-            
+            <SideBar 
+                data={business}
+                handleOnMouseEnter={handleOnMouseEnter}
+                handleOnMouseLeave={handleOnMouseLeave}
+            />
+            </>}            
         </Wrapper>
-    )
+    );
 
 };
 
 const Wrapper = styled.div`
     position: relative;
     width: 100%;
-    height: calc(100vh - 74px);
+    height: calc(100vh - ${HEADER_HEIGHT});
 `;
 
 const AreaWrapper = styled.div`

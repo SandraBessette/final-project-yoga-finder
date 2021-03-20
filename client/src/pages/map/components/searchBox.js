@@ -7,7 +7,7 @@ import usePlacesAutocomplete, {
 import useOnclickOutside from "react-cool-onclickoutside";
 import { AiFillCloseCircle } from  "react-icons/ai"; 
 import TextBox from '../../../components/textBox/TextBox';
-import { COLORS } from '../../../GlobalStyles';
+import IconButton from '../../../components/button/IconButton';
 
 const SearchBox = ({panTo})=>{  
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0); 
@@ -119,7 +119,7 @@ const SearchBox = ({panTo})=>{
                     handleKeyDown={handleKeyDown}
                     placeholder="Search a location" 
                 />
-                <IconButton title="Clear search" onClick={handleClickClose} >
+                <IconButton title="Clear search" margin='0 5px' onclick={handleClickClose} >
                     <AiFillCloseCircle size={23}  />
                 </IconButton > 
             </TextBoxWrapper>       
@@ -160,25 +160,6 @@ const List = styled.ul`
 const TextBoxWrapper = styled.div`
     display: flex; 
     align-items: center;   
-`;
-
-const IconButton = styled.button`  
-    display: flex;
-    align-items: center; 
-    border: none;
-    border-radius: 50%;
-    margin: 0 5px;  
-    padding: 0px;  
-    cursor: pointer;   
-    color: ${COLORS.primary};   
-
-     &:hover {  
-        color: #6a41ac;
-    }  
-    
-    &:focus {
-        outline: none;
-    }
 `;
 
 export default SearchBox;
