@@ -25,8 +25,7 @@ const SmallWindow = ({data})=>{
 
     };
     return (
-        <StyledLink tabIndex={0} ref={windowRef}
-        onFocus={handleOnBlur}
+        <StyledLink ref={windowRef}       
             to={`/business/${data._id}`}
         >
         <Wrapper >

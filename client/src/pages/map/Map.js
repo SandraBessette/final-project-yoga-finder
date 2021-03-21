@@ -103,6 +103,10 @@ const Map = ()=>{
         setAnimatedId(null);
     }, []);
 
+    const handleClickMarker = useCallback((marker) =>{       
+        setSelected({...marker});         
+    }, []);
+
     const panTo = useCallback(({ lat, lng, bounds = null }) => {
         mapRef.current.panTo({ lat, lng });
        // console.log(' bounds',  bounds);
@@ -190,17 +194,14 @@ const Map = ()=>{
                 }
             }
             >
-                {business && business.map((marker) => (
-              
+                {business && business.map((marker) => (              
                 <Marker
                     key={marker._id}
                     position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }} 
                     animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}   
                     onLoad={onWindowLoad}                               
-                    onClick={(e) => {                                                          
-                        setSelected(marker);                      
-                      }}
-                    icon={{
+                    onClick={() => { handleClickMarker(marker)}}  
+                      icon={{
                         url: icons[marker.type].icon,                 
                         origin: new window.google.maps.Point(0, 0),
                         anchor: new window.google.maps.Point(20, 40),
@@ -218,8 +219,8 @@ const Map = ()=>{
                         scaledSize: new window.google.maps.Size(35, 35),
                       }}                  
                 />}
-                {selected ? (
-                <InfoWindow
+                {selected ? (                   
+                <InfoWindow                  
                     position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}  
                     options={{pixelOffset: new window.google.maps.Size(0, -42)}}                                
                     onCloseClick={() => {

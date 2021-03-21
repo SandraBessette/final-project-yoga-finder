@@ -19,6 +19,8 @@ const SingleBusiness = ()=>{
     const [hoursHidden, setHoursHidden] = useState(true);
     const { id } = useParams();
     const history = useHistory();
+    const mapRef = React.useRef();
+    const markerRef = React.useRef();
 
     const handleClick = (e) => { 
         e.preventDefault(); 
@@ -120,7 +122,7 @@ const SingleBusiness = ()=>{
                     <p>{business.description}</p>
                     <a href={`http://${business.website}`} >{business.website}</a>
                     < MapWrapper>
-                        <Map lat={business.location.coordinates[1]} lng={business.location.coordinates[0]} type={business.type}/>
+                        <Map lat={business.location.coordinates[1]} lng={business.location.coordinates[0]} type={business.type} mapRef={mapRef} markerRef={markerRef}/>
                     </ MapWrapper>
                 </ContentWrapper>
             </MainWrapper>

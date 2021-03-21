@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import styled from 'styled-components';
 import usePlacesAutocomplete, {
     getGeocode,
-    getLatLng
+    getLatLng,
+    getZipCode
 } from "use-places-autocomplete";
 import useOnclickOutside from "react-cool-onclickoutside";
 import { AiFillCloseCircle } from  "react-icons/ai"; 
 import TextBox from '../../../components/textBox/TextBox';
 import IconButton from '../../../components/button/IconButton';
 
-const SearchBox = ({panTo})=>{  
+const SearchBox = ({panTo, top='30px', left='20px'})=>{  
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0); 
     const {
         ready,
@@ -78,9 +79,11 @@ const SearchBox = ({panTo})=>{
         try {
             const results = await getGeocode({ address: description });
             const { lat, lng } = await getLatLng(results[0]);  
-            console.log(results);
+            const zipCode = await getZipCode(results[0], false);
+            console.log('formatted_address', results[0].formatted_address);
+            const formatAddress = results[0].formatted_address;
             const bounds = results[0]?.geometry?.bounds;
-            panTo({ lat, lng, bounds });
+            panTo({ lat, lng, bounds, formatAddress, zipCode });
         } catch (error) {
             console.log("😱 Error: ", error);
         }
@@ -109,7 +112,7 @@ const SearchBox = ({panTo})=>{
         });
 
     return (
-        <SearchWrapper ref={ref}> 
+        <SearchWrapper ref={ref} top={top} left={left}> 
             <TextBoxWrapper>          
                 <TextBox 
                     handleOnChanged={handleOnChanged}
@@ -131,8 +134,8 @@ const SearchBox = ({panTo})=>{
 const SearchWrapper = styled.div`
     position: absolute;
     box-sizing: border-box;
-    top: 30px;
-    left: 20px;
+    top: ${(p)=>p.top};
+    left: ${(p)=>p.left};
     display: flex;
     flex-direction: column;    
 `;
