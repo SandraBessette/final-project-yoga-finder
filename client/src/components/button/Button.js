@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../GlobalStyles';
 
-const Button = ({background, color, width, radius, onclick, children})=>{
+const Button = ({background, color, width, radius, onclick, disabled=false, children})=>{
 
     return (
         <Wrapper 
@@ -10,7 +10,8 @@ const Button = ({background, color, width, radius, onclick, children})=>{
             colorText={color}           
             width={width}
             radius={radius}
-            onClick={onclick}            
+            onClick={onclick}
+            disabled={disabled}            
         >
             {children}
         </Wrapper>
@@ -32,8 +33,8 @@ const Wrapper = styled.button`
     font-weight: 400;
     transition: all 0.30s ease-in-out;  
 
-    &:hover {       
-        background: ${(p)=>p.colorText || "white"};
+    &:hover:not(:disabled) {       
+        background-color: ${(p)=>p.colorText || "white"};
         color: ${(p)=>p.backgroundColor || COLORS.primary};
         border: 1px solid ${(p)=>p.backgroundColor || COLORS.primary};
     }

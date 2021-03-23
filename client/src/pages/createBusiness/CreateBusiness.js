@@ -1,16 +1,37 @@
-import React, {useState, useCallback} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory  } from "react-router-dom";
 import styled from 'styled-components';
+import FileBase from 'react-file-base64';
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import TextBox from '../../components/textBox/TextBox.js';
 import SearchBox from '../map/components/SearchBox';
-import DropDown from './DropDown';
+import DropDown from './components/DropDown';
+import Checkbox from './components/Checkbox';
+import TextArea from './components/TextArea';
 import Map from '../../components/map/Map';
+import Button from '../../components/button/Button';
 
 const typeArray = ["Yoga", "Meditation", "Accessory"];
+const daysArray = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
+const typeHourArray = ["Open", "Close"];
+
+const tagObject = {
+     0: { name: "Online", isChoosen: false },
+     1: { name: "Corporate", isChoosen: false },
+     2: { name: "Hot yoga", isChoosen: false },
+     3: { name: "Therapeutic yoga", isChoosen: false },
+     4: { name: "Hatha Yoga", isChoosen: false },
+     5: { name: "Ashtanga Yoga", isChoosen: false },
+     6: { name: "Vinyasa/Flow Yoga", isChoosen: false },
+     7: { name: "Yin Yoga", isChoosen: false },
+     8: { name: "Kundalini Yoga", isChoosen: false },
+     9: { name: "Prenatal Yoga", isChoosen: false },
+     9: { name: "Kripalu Yoga", isChoosen: false },  
+};
+
 const formDataInit = {
-    nameBusiness: "",
+    name: "",
     type: "Yoga",
     phone: "",
     address: {
@@ -27,37 +48,37 @@ const formDataInit = {
     website:"",
     hours: {
         monday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         tuesday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         wednesday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         thursday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         friday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         saturday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         },
         sunday:{
-            start: "8:00",
+            start: "08:00",
             end: "17:00",
             type: "Open"
         }
@@ -70,35 +91,144 @@ const center = {
 };
 const CreateBusiness = ()=>{
     const [formData, setFormData] = useState(formDataInit);
-    const mapRef = React.useRef();
-    const markerRef = React.useRef();
+    const [disabled, setDisabled] = useState(false); 
+    const [validPhoneError, setValidPhoneError] = useState(""); 
+    const [validZipError, setValidZipError] = useState("");   
     const history = useHistory(); 
       
     const  handleChange = (ev, item)=>{
         setFormData({...formData, [item]: ev.target.value});
-    } 
-    
+    };
+
+    const  handleHoursChange = (ev, day, item)=>{
+        setFormData({...formData, hours: {...formData.hours, [day]: {...formData.hours[day], [item]: ev.target.value } } });
+    };
+
+    const handleImages = (base64)=>{ 
+        setFormData({ ...formData, image: [ base64 ] });
+    };
+
+    const handleOnClick =(ev) =>{
+        ev.preventDefault();
+       /* setStatus("loading");
+        fetch('/enterprises/filters', {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...coordinates }),
+        })
+        .then((res)=>res.json())
+        .then((json)=>{
+            const {status, data} = json;
+                if (status === 201) {
+                    setStatus("idle");
+                }
+                else{
+                    setStatus("error");
+                }
+        })
+        .catch((error)=>{
+            setStatus("error");
+        })
+        /*if(!formValidation() ){            
+            return;
+        }*/
+        
+    };
+
+    const handleTags = (ev, value)=>{
+        
+      let tagsArray = [ ...formData.tags];
+        if (ev.target.checked)
+            tagsArray.push(value);
+        else {
+            tagsArray = tagsArray.filter((tag)=>(tag !== value))
+        }
+        setFormData({ ...formData, tags: tagsArray});
+    };
+
+
+    const hoursArray = useCallback(()=>{
+        const halfHours = ["00", "30"];
+        const times = [];
+        for(let i = 0; i < 24; i++){
+            for(let j = 0; j < 2; j++){       
+                times.push( ('0' + i).slice(-2) + ":" + halfHours[j] );
+            }
+        }
+        return times;
+    }, []);
+
     const panTo = useCallback(({ lat, lng, bounds, formatAddress, zipCode }) => {      
-        setFormData({...formData, address: {formatted: formatAddress, zip: zipCode}, location: {type: "Point", coordinates: [lng, lat]}});
-        if (mapRef?.current && markerRef?.current){
-            mapRef.current.panTo({ lat, lng });
-            const latlng = new window.google.maps.LatLng(lat, lng);
-            markerRef.current.setPosition(latlng);
-        }      
+        setFormData({...formData, address: {formatted: formatAddress, zip: zipCode}, location: {type: "Point", coordinates: [lng, lat]}});      
        
     }, [formData]);
 
+    const formZipValidation = useCallback(() => {       
+        let isValid = true;
+       
+        if (!(/^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/.test(formData.address.zip))){
+            setValidZipError("The zip code is not a valid zip code in Canada. Try to choose a more precise location in Canada");
+            isValid = false;           
+        }  
+        else
+            setValidZipError("");
+        
+        return isValid;
+      }, [formData.address.zip]);
+
+    const formPhoneValidation = useCallback(() => {       
+        let isValid = true;
+     
+        if (!(/\d{3}-\d{3}-\d{4}/.test(formData.phone)) || formData.phone.length > 12){
+            setValidPhoneError( "The phone number should have 514-999-9999 format");          
+            isValid = false;
+        }
+        else 
+            setValidPhoneError("");      
+      
+        return isValid;
+      }, [formData.phone]);
+
+   useEffect(() => { 
+        let isDisabled = false;
+        if (formData.phone === "" || !formPhoneValidation()) {
+            isDisabled = true;
+        }
+
+        if (formData.address.zip === "" || !formZipValidation()) {
+            isDisabled = true;
+        }
+
+        if (formData.name === "" || 
+            formData.location.coordinates === [0,0] ||
+            formData.address.formatted === "" ||
+            formData.address.zip === null)
+                isDisabled = true;
+    
+         setDisabled(isDisabled);
+      }, [ formData.name, formData.phone, formData.location.coordinates, formData.address,  formZipValidation, formPhoneValidation, setDisabled]);
+
     return (
         <Wrapper>           
-            <UserHeader title='Create Business'/>
+            <UserHeader title='Create Business'/> 
             <MainWrapper>  
                 <Form>
+                    <Image src={formData.image[0] || '/noYogaImage.jpg'} alt="yogaPicture"></Image>
+                    <TextBoxWrapper>
+                    <Label htmlFor='name' >Image </Label>                     
+                    <div >
+                        <FileBase type="file" multiple={false} onDone={({ base64 }) => handleImages(base64)} />
+                    </div>   
+                    </TextBoxWrapper>
                     <TextBoxWrapper>
                     <Label htmlFor='name' >Name </Label>                     
                         <TextBox 
-                            handleOnChanged={(e)=>handleChange(e, 'nameBusiness')}                            
-                            value={formData.nameBusiness}
-                            width='500px'
+                            handleOnChanged={(e)=>handleChange(e, 'name')}                            
+                            value={formData.name}
+                            width='100%'
                             placeholder='name'
                             id='name'
                             /> 
@@ -106,7 +236,9 @@ const CreateBusiness = ()=>{
                     <DropDown 
                         id='type'
                         label='Type'
-                        handleSortSelect={(e)=>handleChange(e, 'type')}
+                        width='150px'                     
+                        defaultValue={formData.type}
+                        handleSelect={(e)=>handleChange(e, 'type')}
                         valueArray={typeArray}
                     /> 
                     <TextBoxWrapper>
@@ -119,12 +251,14 @@ const CreateBusiness = ()=>{
                             id='phone'
                             /> 
                     </TextBoxWrapper>
+                    <Error color='orange'>{validPhoneError}</Error>
                     <Divider/>
                     < SearchBoxWrapper>                                   
                         <SearchBox 
                             panTo={panTo}
                             top='0'
-                            left='16%'
+                            left='0%'
+                            width='95%'
                             /> 
                     </ SearchBoxWrapper> 
                     <TextBoxWrapper>
@@ -132,7 +266,7 @@ const CreateBusiness = ()=>{
                         <TextBox 
                             handleOnChanged={null}                            
                             value={formData.address.formatted}
-                            width='500px'                            
+                            width='100%'                            
                             id='address'
                             disabled={true}
                             /> 
@@ -148,9 +282,94 @@ const CreateBusiness = ()=>{
                             /> 
                     </TextBoxWrapper>
                     < MapWrapper>
-                        <Map lat={center.lat} lng={center.lng} type={formData.type} mapRef={mapRef} markerRef={markerRef}/>
+                        <Map 
+                            lat={formData.location.coordinates[1] === 0 ? center.lat : formData.location.coordinates[1]}
+                            lng={formData.location.coordinates[0] === 0 ? center.lng : formData.location.coordinates[0]}
+                            type={formData.type}                              
+                            />
                     </ MapWrapper> 
-                    <Divider />                                         
+                    <Error color='GoldenRod'>{validZipError}</Error>
+                    <Divider />
+                    <TextAreaWrapper>
+                    <Label htmlFor='description'>Description</Label>                     
+                        <TextArea
+                            handleOnChanged={(e)=>handleChange(e, 'description')}  
+                            value={formData.description}
+                            width='100%'
+                            height='200px'
+                            placeholder='Description of my business.'
+                            id='description'
+                            /> 
+                    </TextAreaWrapper>     
+                    <TextBoxWrapper>
+                    <Label htmlFor='website'>Website</Label>                     
+                        <TextBox 
+                            handleOnChanged={(e)=>handleChange(e, 'website')}                            
+                            value={formData.website}
+                            width='100%'
+                            placeholder='http://www.mywebsite.com'
+                            id='website'
+                            /> 
+                    </TextBoxWrapper>   
+                    <Divider />
+                    <TextAreaWrapper>
+                    <Label htmlFor='hours'>Hours</Label> 
+                    {daysArray.map((day)=>{
+                        return (< >
+                            <Label key={day}><strong>{day}</strong></Label> 
+                            <HoursWrapper>                   
+                                <DropDown 
+                                    id={`${day}From`}
+                                    label='from'
+                                    width='80px'
+                                    labelWidth='20px'
+                                    defaultValue={formData.hours[day].start}
+                                    handleSelect={(e)=>handleHoursChange(e, day, 'start')}
+                                    valueArray={hoursArray()}
+                                    disabled={formData.hours[day].type === 'Close'}
+                                /> 
+                                <DropDown 
+                                    id={`${day}To`}
+                                    label='to'
+                                    width='80px'
+                                    labelWidth='20px'
+                                    defaultValue={formData.hours[day].end}
+                                    handleSelect={(e)=>handleHoursChange(e, day, 'end')}
+                                    valueArray={hoursArray()}
+                                    disabled={formData.hours[day].type === 'Close'}
+                                /> 
+                                <DropDown 
+                                    id={`${day}Type`}
+                                    label='type'
+                                    width='80px'
+                                    labelWidth='20px'
+                                    defaultValue={formData.hours[day].type}
+                                    handleSelect={(e)=>handleHoursChange(e, day, 'type')}
+                                    valueArray={typeHourArray}
+                                /> 
+                            </HoursWrapper>  </> 
+                        )
+                    })}                   
+                    </TextAreaWrapper> 
+                    <Divider />   
+                    <TextAreaWrapper>
+                    <Label>Tags</Label>  
+                    {Object.values(tagObject).map((tag)=>{
+                        return(
+                            <Checkbox
+                            key={tag.name}
+                            value= {tag.name}
+                            handleChange={handleTags}
+                            isChecked={formData.tags.includes(tag.name)}
+                            >
+                                {tag.name}
+                            </Checkbox>
+                        )
+                    })}                   
+                       
+                    </TextAreaWrapper> 
+                    <Divider />   
+                    <Button width={'100%'} onclick={handleOnClick} disabled={disabled}>Submit</Button>                                     
                 </Form>              
                
             </MainWrapper>  
@@ -171,19 +390,19 @@ const Divider = styled.div`
 
 const MainWrapper = styled.div`
     margin: 0 auto;
-    max-width: 820px;
+    max-width: 700px;
     padding: 20px;
     display: flex;
     justify-content: center;
 `;
 
-const Label = styled.label`
-    padding-right: 10px;
+const Label = styled.label`  
+    padding: 5px 10px 5px 0;
     color: ${COLORS.primary};
     display: block;
-    width: 80px;
+    min-width: 80px;
     float: left;
-    margin-right: 15px;
+    margin-right: 15px; // remove with cell vue,,, same with the dropbox
     text-align: start;
 
 `;
@@ -199,16 +418,47 @@ const TextBoxWrapper = styled.div`
     display: flex;
     align-items: center;
 `;
+
+const TextAreaWrapper = styled.div`    
+    margin: 10px 0;   
+    display: flex;
+    flex-direction: column;
+`;
     
 const Form = styled.form`
   border: 1px solid ${COLORS.primary};
   border-radius: 5px;
   margin: 20px 0;
   padding: 25px;
+  display: block;
+  width: 100%;
 `;
 
 const MapWrapper = styled.div`
     height: 300px;
     margin: 15px 0;
 `;
+
+const Image = styled.img`
+    width: 300px;
+    height: 300px;
+    display: block;
+    margin: auto;
+    object-fit: cover;
+    border-radius: 10px;
+`;
+
+const HoursWrapper = styled.div`
+    display: flex;  
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    align-items: center;
+`;
+
+const Error= styled.div`
+    font-size: 13px;
+    color: ${(p)=>p.color};
+`;
+
 export default CreateBusiness;

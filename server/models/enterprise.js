@@ -8,11 +8,8 @@ const enterpriseSchema = new Schema(
         type: {type: String, enum: ['Yoga', 'Meditation', 'Accessory'], required: true},
         phone: { type: String , required: true },
         address: {
-            street: { type: String, required: true },
-            city: { type: String, required: true },
-            zip: { type: String, required: true },
-            province: { type: String, required: true },
-            country: { type: String, required: true },
+            formatted:{ type: String, required: true },           
+            zip: { type: String, required: true }           
         },
         location: {
             type: {
@@ -31,18 +28,18 @@ const enterpriseSchema = new Schema(
         website: String,
         hours: {
             monday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             tuesday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             wednesday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             thursday: {
@@ -51,18 +48,18 @@ const enterpriseSchema = new Schema(
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             friday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             saturday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             sunday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },           
         },

@@ -112,8 +112,7 @@ const getEnterprise = async (req, res) => {
 };
 
 const createEnterprise = async (req, res) => {
-   const {
-    userId, //wont be there at the end with auth,,,,
+   const {  
     name,
     type,
     phone,
@@ -125,18 +124,13 @@ const createEnterprise = async (req, res) => {
     website,
     hours
     } = req.body;
-
-    if (!(/\d{3}-\d{3}-\d{4}/.test(phone)))
-        return res.status(400).json({ status: 400, message: "The phone number is invalide.", data: req.body }); 
-    if (!(/^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/.test(address?.zip)))
-        return res.status(400).json({ status: 400, message: "The zip code is invalide.", data: req.body });  
-
+    const userId = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
     try {
         const oldEnterprise = await EnterpriseModel.findOne({ userId, name });    
         if (oldEnterprise) 
             return res.status(400).json({ status: 400, message: "The enterprise already exists.", data: req.body });  
 
-        const result = await EnterpriseModel.create({ ...req.body });  
+        const result = await EnterpriseModel.create({ ...req.body,   userId});  
         res.status(201).json({ status: 201, message: "success", data: result });
 
       } catch (error) {

@@ -40,41 +40,8 @@ const icons = {
     }
 };
 
-const Map = ({lat, lng, type, mapRef, markerRef})=>{
-    
-    
-    const onMapLoad = useCallback((map) => {  
-       // const [markerPosition, et]  
-       
-        mapRef.current = map; 
-    }, [mapRef]); 
-    
-    const onMarkerLoad = useCallback((marker) => {  
-        // const [markerPosition, et]  
-        console.log('marker', marker);
-        markerRef.current = marker; 
-     }, [markerRef]); 
-    
-   
-
-    const onUnmount = useCallback((map) =>{       
-        mapRef.current = null;
-    }, [mapRef]);
-
-    const onMarkerUnmount = useCallback(() =>{       
-        markerRef.current = null;
-    }, [markerRef]);
-
-  /*  const getMarkerPosition = useCallback(() => {    
-        if (!markerRef?.current)
-            return {lat:lat, lng:lng}
-        //console.log({ lat: mapRef.current.center.lat(), lng: mapRef.current.center.lng() });
-        console.log(mapRef);
-        lat= mapRef.current.center.lat();
-        return { lat: mapRef.current.center.lat(), lng: mapRef.current.center.lng() }
-       
-    }, [mapRef, lat, lng]);  */
-    
+const Map = ({lat, lng, type })=>{   
+ 
     return(
         <Wrapper>
             {/*!isLoaded && <Spinner />*/}
@@ -85,25 +52,18 @@ const Map = ({lat, lng, type, mapRef, markerRef})=>{
                     center={{
                         lat: lat,
                         lng: lng
-                    }}
-                    onLoad={onMapLoad} 
-                    onUnmount={onUnmount}   
+                    }}                 
                     options={options}                     
                 >
                     <Marker                    
-                    position={{lat:lat, lng:lng}} 
-                    onLoad={onMarkerLoad}
-                    onUnmoun={onMarkerUnmount}
+                    position={{lat:lat, lng:lng}}                
                     icon={{
                         url: icons[type].icon,                     
                         origin: new window.google.maps.Point(0, 0),
                         anchor: new window.google.maps.Point(0, 35),
                         scaledSize: new window.google.maps.Size(35, 35),
-                      }}                  
+                    }}                  
                 />
-                  
-                
-                       
                 </GoogleMap>   
             }                  
         </Wrapper>
