@@ -1,9 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
-import { colors, isOpen} from '../../../api/helper';
+import { colors, isOpen} from '../../api/helper';
 
-const SideBarItem = ({data, handleOnMouseEnter = null, handleOnMouseLeave =null })=>{   
+const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMouseLeave =null })=>{   
+
+    const formatAdress = (address)=>{
+        if (!address)
+            return "";
+        const addressArray = address.split(",");
+        return (`${addressArray[0]}, ${addressArray[1]}`);
+    }
 
     return(
         <StyledLink
@@ -11,15 +18,15 @@ const SideBarItem = ({data, handleOnMouseEnter = null, handleOnMouseLeave =null 
             onMouseEnter={handleOnMouseEnter !== null ? (e)=>handleOnMouseEnter(e, data._id) : null } 
             onMouseLeave={handleOnMouseLeave} 
         >
-            <Wrapper colorBorder={colors[data.type].color}>
+            <Wrapper height={height} colorBorder={colors[data.type].color}>
                 <ImageWrapper colorBorder={colors[data.type].color}>
-                    <Image src={data.image[0]} alt="yogaImage" />
+                    <Image src={data.image[0] || '/noYogaImage.jpg'} alt="yogaImage" />
                 </ImageWrapper >
                 <ContentWapper>
                     <Title>{data.name}</Title>
                     <Content>{data.ratingCount === 0 ? 'No rating': '⭐⭐⭐⭐⭐'}</Content>
                     <MiddleContent>               
-                    <Content>{`${data.address.street} ${data.address.city}`}</Content>
+                    <Content>{formatAdress(data.address.formatted)}</Content>
                     <Content>{data.phone} - <Hour isOpen={isOpen(data.hours)}>{isOpen(data.hours) ? 'Open': 'Close'}</Hour></Content>
                     </MiddleContent>
                     <Dist>{data.dist?.calculated && data.dist.calculated.toFixed(2) + ' km'}</Dist>
@@ -35,8 +42,9 @@ const Wrapper = styled.div`
     border-radius: 5px;
     border: ${(p)=> ('1px solid' + p.colorBorder) };
     padding: 0; 
-    min-height: 125px;
+    min-height: ${(p)=>p.height? p.height : '125px'}; 
     margin: 5px 0;  
+   
 
     &:hover img {      
         transform: scale(1.092);     
@@ -98,6 +106,7 @@ const Dist = styled.p`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+  width: 100%;
 `;
 
-export default SideBarItem;
+export default BusinessItem;

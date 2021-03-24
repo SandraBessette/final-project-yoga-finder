@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../../GlobalStyles';
-import SideBarItem from './SideBarItem';
+import BusinessItem from '../../../components/businessItem/BusinessItem';
 import { VscSearchStop} from "react-icons/vsc";
 
 
@@ -18,7 +18,7 @@ const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave })=>{
             </NoResultWrapper>}
             {data && data.map((item)=>{
                 return(
-                    <SideBarItem 
+                    <BusinessItem
                         key={item._id}
                         data={item}
                         handleOnMouseEnter={handleOnMouseEnter} 

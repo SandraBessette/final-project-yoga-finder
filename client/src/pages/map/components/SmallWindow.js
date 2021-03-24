@@ -29,7 +29,7 @@ const SmallWindow = ({data})=>{
             to={`/business/${data._id}`}
         >
         <Wrapper >
-            <Image src={data.image} alt="yogaImage"/>
+            <Image src={data.image[0] || '/noYogaImage.jpg'} alt="yogaImage"/>
             <div>
             <Title>{data.name}</Title>
             <Content>{data.ratingCount === 0 ? 'No rating': '⭐⭐⭐⭐⭐'}</Content>

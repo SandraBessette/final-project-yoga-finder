@@ -65,7 +65,7 @@ const SingleBusiness = ()=>{
                 </TopContentWrapper>
             </TopWrapper>
             <MainWrapper>
-                <Image src={business.image[0]}></Image>
+                <Image fit={business.image[0] ? "cover" : "contain"} src={business.image[0] || '/noYogaImage.jpg'} alt="YogaImage"></Image>
                 <TopIconWrapper color={colors[business.type].colorLight}>
                     <IconButton type={business.type} padding={'10px'} margin={'4px 0 5px 0'}>
                         <MdFavoriteBorder size={50}/>
@@ -92,7 +92,7 @@ const SingleBusiness = ()=>{
                                 <HoursWrapper className={hoursHidden && 'expanded'} >
                                     {Object.keys(business.hours).map((day)=>(
                                         <Par key={day}><span>{day.substring(0,3)}</span>
-                                            {`${moment(business.hours[day].start).format('HH:mm')} - ${moment(business.hours[day].end).format('HH:mm')}`}
+                                            {business.hours[day].type === "Open" ? `${business.hours[day].start} - ${business.hours[day].end}` : "Close"}
                                         </Par>
                                     ))}                            
                                 </HoursWrapper>
@@ -104,7 +104,7 @@ const SingleBusiness = ()=>{
                         </Block>
                         <Block>
                             <FaMapMarkerAlt size={60} color={COLORS.primary}/>
-                            <Par>{`${business.address.street} ${business.address.city} ${business.address.zip} ${business.address.province} ${business.address.country}`}</Par>
+                            <Par>{`${business.address.app}, ${business.address.formatted}`}</Par>
                         </Block>
                     </IconWrapper>
                     <ProfilWrapper>
@@ -167,7 +167,7 @@ const MainWrapper = styled.div`
 `;
 
 const Image = styled.img`
-    object-fit: cover;
+    object-fit: ${(p)=>p.fit};
     width: 100%;
     height: 400px;  
     display: block;

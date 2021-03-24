@@ -37,6 +37,7 @@ const formDataInit = {
     address: {
         formatted: "",
         zip: "",
+        app: "",
     },
     location: {
         type: "Point",
@@ -94,6 +95,7 @@ const CreateBusiness = ()=>{
     const [disabled, setDisabled] = useState(false); 
     const [validPhoneError, setValidPhoneError] = useState(""); 
     const [validZipError, setValidZipError] = useState("");   
+    const [serverError, setServerError] = useState("");   
     const history = useHistory(); 
       
     const  handleChange = (ev, item)=>{
@@ -110,31 +112,33 @@ const CreateBusiness = ()=>{
 
     const handleOnClick =(ev) =>{
         ev.preventDefault();
-       /* setStatus("loading");
-        fetch('/enterprises/filters', {
+        setServerError("");
+        setDisabled(true);
+     
+        fetch('/enterprises/', {
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...coordinates }),
+            body: JSON.stringify({ ...formData }),
         })
         .then((res)=>res.json())
         .then((json)=>{
             const {status, data} = json;
                 if (status === 201) {
-                    setStatus("idle");
+                    localStorage.setItem("business", data._id);
+                    history.push("/user/newBusiness");
                 }
                 else{
-                    setStatus("error");
+                    setServerError(json.message);
+                    setDisabled(false);
                 }
         })
         .catch((error)=>{
-            setStatus("error");
-        })
-        /*if(!formValidation() ){            
-            return;
-        }*/
+            setServerError("unknown error");
+            setDisabled(false);
+        });       
         
     };
 
@@ -168,6 +172,9 @@ const CreateBusiness = ()=>{
 
     const formZipValidation = useCallback(() => {       
         let isValid = true;
+
+        if (formData.address.zip === "" )
+            return false;
        
         if (!(/^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/.test(formData.address.zip))){
             setValidZipError("The zip code is not a valid zip code in Canada. Try to choose a more precise location in Canada");
@@ -181,9 +188,12 @@ const CreateBusiness = ()=>{
 
     const formPhoneValidation = useCallback(() => {       
         let isValid = true;
+
+        if (formData.phone === "")
+            return false;
      
         if (!(/\d{3}-\d{3}-\d{4}/.test(formData.phone)) || formData.phone.length > 12){
-            setValidPhoneError( "The phone number should have 514-999-9999 format");          
+            setValidPhoneError( "The phone number should have a 999-999-9999 format");          
             isValid = false;
         }
         else 
@@ -194,22 +204,16 @@ const CreateBusiness = ()=>{
 
    useEffect(() => { 
         let isDisabled = false;
-        if (formData.phone === "" || !formPhoneValidation()) {
-            isDisabled = true;
-        }
-
-        if (formData.address.zip === "" || !formZipValidation()) {
-            isDisabled = true;
-        }
-
-        if (formData.name === "" || 
+      
+        if (!formZipValidation() || 
+            formData.name === "" || 
             formData.location.coordinates === [0,0] ||
             formData.address.formatted === "" ||
-            formData.address.zip === null)
+            !formPhoneValidation())
                 isDisabled = true;
     
          setDisabled(isDisabled);
-      }, [ formData.name, formData.phone, formData.location.coordinates, formData.address,  formZipValidation, formPhoneValidation, setDisabled]);
+      }, [ formData.name, formData.location.coordinates, formData.address.formatted,  formZipValidation, formPhoneValidation, setDisabled]);
 
     return (
         <Wrapper>           
@@ -224,7 +228,7 @@ const CreateBusiness = ()=>{
                     </div>   
                     </TextBoxWrapper>
                     <TextBoxWrapper>
-                    <Label htmlFor='name' >Name </Label>                     
+                    <Label htmlFor='name' >Name * </Label>                     
                         <TextBox 
                             handleOnChanged={(e)=>handleChange(e, 'name')}                            
                             value={formData.name}
@@ -242,7 +246,7 @@ const CreateBusiness = ()=>{
                         valueArray={typeArray}
                     /> 
                     <TextBoxWrapper>
-                    <Label htmlFor='phone'>Phone</Label>                     
+                    <Label htmlFor='phone'>Phone *</Label>                     
                         <TextBox 
                             handleOnChanged={(e)=>handleChange(e, 'phone')}                            
                             value={formData.phone}
@@ -251,7 +255,7 @@ const CreateBusiness = ()=>{
                             id='phone'
                             /> 
                     </TextBoxWrapper>
-                    <Error color='orange'>{validPhoneError}</Error>
+                    <Error >{validPhoneError}</Error>
                     <Divider/>
                     < SearchBoxWrapper>                                   
                         <SearchBox 
@@ -262,7 +266,7 @@ const CreateBusiness = ()=>{
                             /> 
                     </ SearchBoxWrapper> 
                     <TextBoxWrapper>
-                    <Label htmlFor='address'>Address</Label>                     
+                    <Label htmlFor='address'>Address*</Label>                     
                         <TextBox 
                             handleOnChanged={null}                            
                             value={formData.address.formatted}
@@ -272,13 +276,23 @@ const CreateBusiness = ()=>{
                             /> 
                      </TextBoxWrapper>
                      <TextBoxWrapper>
-                    <Label htmlFor='zipCode'>Zip code</Label>                     
+                    <Label htmlFor='zipCode'>Zip code *</Label>                     
                         <TextBox 
                             handleOnChanged={null}                            
                             value={formData.address.zip}
                             width='100px'                            
                             id='zipCode'
                             disabled={true}
+                            /> 
+                    </TextBoxWrapper>
+                    <TextBoxWrapper>
+                    <Label htmlFor='app'>App</Label>                     
+                        <TextBox 
+                            handleOnChanged={(e)=>handleChange(e, 'app')}                            
+                            value={formData.app}
+                            width='200px'
+                            placeholder='appartement number'
+                            id='app'
                             /> 
                     </TextBoxWrapper>
                     < MapWrapper>
@@ -288,7 +302,7 @@ const CreateBusiness = ()=>{
                             type={formData.type}                              
                             />
                     </ MapWrapper> 
-                    <Error color='GoldenRod'>{validZipError}</Error>
+                    <Error >{validZipError}</Error>
                     <Divider />
                     <TextAreaWrapper>
                     <Label htmlFor='description'>Description</Label>                     
@@ -369,7 +383,8 @@ const CreateBusiness = ()=>{
                        
                     </TextAreaWrapper> 
                     <Divider />   
-                    <Button width={'100%'} onclick={handleOnClick} disabled={disabled}>Submit</Button>                                     
+                    <Button width={'100%'} onclick={handleOnClick} disabled={disabled}>Submit</Button>  
+                    <Error >{serverError}</Error>                                   
                 </Form>              
                
             </MainWrapper>  
@@ -379,6 +394,7 @@ const CreateBusiness = ()=>{
 
 const Wrapper = styled.div`
    height: calc(100vh - ${HEADER_HEIGHT}); 
+   font-size: 15px;
 
 `;
 const Divider = styled.div`
@@ -458,7 +474,7 @@ const HoursWrapper = styled.div`
 
 const Error= styled.div`
     font-size: 13px;
-    color: ${(p)=>p.color};
+    color: red;
 `;
 
 export default CreateBusiness;

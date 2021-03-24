@@ -9,7 +9,8 @@ const enterpriseSchema = new Schema(
         phone: { type: String , required: true },
         address: {
             formatted:{ type: String, required: true },           
-            zip: { type: String, required: true }           
+            zip: { type: String, required: true },
+            app: { type: String }           
         },
         location: {
             type: {
@@ -43,8 +44,8 @@ const enterpriseSchema = new Schema(
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              },  
             thursday: {
-              start: { type: Date, default: new Date().setHours(8, 0, 0, 0) },
-              end: { type: Date, default: new Date().setHours(17, 0, 0, 0) },
+              start: { type: String, default: "08:00" },
+              end: { type: String, default: "17:00" },
               type: {type: String, enum: ['Open', 'Close'], default: 'Open'},
              }, 
             friday: {

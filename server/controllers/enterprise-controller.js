@@ -83,7 +83,7 @@ const getFilteredEnterprises = async (req, res) => {
     try{  
         const query = EnterpriseModel.aggregate([pipeline]); 
         const result = await query.exec();
-        console.log("second query", result);
+   
         res.status(200).json({ status: 201, message: "success", data: result});  
     } catch (error){
         console.log("error", error.message);
@@ -95,17 +95,28 @@ const getFilteredEnterprises = async (req, res) => {
 const getEnterprise = async (req, res) => {
     const { id } = req.params;
 
+  //  console.log("herebefore", id);
+
     if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+       return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
 
     try {
+      //  console.log("hereagain", id);
         const result = await EnterpriseModel.findOne({ _id: id }).populate('userId').exec(); 
-        if (result)     
+      //  console.log('result', result);
+        if (result)     {
+         //   console.log("200", result);
             res.status(200).json({ status: 200, message: "success", data: result });  
-        else  
+        }
+           
+        else {
+           // console.log("404", result);
             res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+        } 
+            
     }
     catch (error) {
+        console.log("500", error.message);
         res.status(500).json({ status: 500, error: error?.message });   
     }
 
@@ -113,17 +124,9 @@ const getEnterprise = async (req, res) => {
 
 const createEnterprise = async (req, res) => {
    const {  
-    name,
-    type,
-    phone,
-    address,
-    location,
-    image,
-    tags,
-    description,
-    website,
-    hours
+    name,    
     } = req.body;
+
     const userId = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
     try {
         const oldEnterprise = await EnterpriseModel.findOne({ userId, name });    

@@ -30,14 +30,17 @@ export const isOpen = (hours)=>{
     const date = new Date();
     const day = moment(date).format('dddd').toLowerCase();
     const todayHourFormat =  moment(date).format('HH:mm');
-    const startHourFormat = moment(hours[day].start).format('HH:mm');  
+   /* const startHourFormat = moment(hours[day].start).format('HH:mm');  
     const endHourFormat = moment(hours[day].end).format('HH:mm');    
     const todayHour = moment(todayHourFormat,'HH:mm');
     const startHour = moment(startHourFormat, 'HH:mm');  
-    const endHour = moment(endHourFormat, 'HH:mm');      
+    const endHour = moment(endHourFormat, 'HH:mm');  */    
     //add later data.hours[day].type === "open" &&
+    const todayHour = moment(todayHourFormat,'HH:mm');
+    const startHour = moment(hours[day].start, 'HH:mm');  
+    const endHour = moment(hours[day].end, 'HH:mm');
   
-    if(todayHour.isBetween(startHour, endHour, 'minutes', '[]'))
+    if (hours[day].type === "Open" && todayHour.isBetween(startHour, endHour, 'minutes', '[]'))
         return true;
     return false;
 };  
@@ -45,7 +48,8 @@ export const isOpen = (hours)=>{
 export const currentOpenHours = (hours)=>{
     const date = new Date();
     const day = moment(date).format('dddd').toLowerCase();
-    const startHourFormat = moment(hours[day].start).format('HH:mm'); 
-    const endHourFormat = moment(hours[day].end).format('HH:mm');     
-    return `${startHourFormat} - ${endHourFormat}`
+   // const startHourFormat = moment(hours[day].start).format('HH:mm'); 
+   // const endHourFormat = moment(hours[day].end).format('HH:mm'); 
+
+    return (hours[day].type === "Open" ? `${hours[day].start} - ${hours[day].end}` : "");
 }

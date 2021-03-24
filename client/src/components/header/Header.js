@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import {CgProfile} from "react-icons/cg"; 
 import Button from '../button/Button';
@@ -8,6 +8,15 @@ import Navbar from '../navbar/Navbar';
 
 
 const Header = ()=>{
+    const history = useHistory(); 
+
+
+    const handleClick = (e)=>{
+        e.preventDefault();
+        history.push("/user/auth");
+    };
+
+
     return(
         <Wrapper>
              <StyledLink to={`/`}  >
@@ -17,7 +26,7 @@ const Header = ()=>{
                 </Logo>
             </StyledLink>
             <RightWrapper>
-                <Button background={'white'} color={COLORS.primary} width={'90px'} >Sign In</Button>  
+                <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button>  
                 <Navbar />                     
             </RightWrapper>
         </Wrapper>

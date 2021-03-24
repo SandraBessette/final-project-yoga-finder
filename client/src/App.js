@@ -11,7 +11,9 @@ import {
  import Map from './pages/map/Map';
  import SingleBusiness from './pages/singleBusiness/SingleBusiness';
  import Business from './pages/business/Business';
+ import Confirmation from './pages/confirmation/Confirmation';
  import CreateBusiness from './pages/createBusiness/CreateBusiness';
+ import SignIn from './pages/signIn/SignIn';
  import Header from './components/header/Header';
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
@@ -43,7 +45,13 @@ const App= () => {
           </Route> 
           <Route exact path="/user/business">           
             <CreateBusiness />
-          </Route>          
+          </Route> 
+          <Route exact path="/user/newBusiness">           
+            <Confirmation title='Your new Business' />
+          </Route>  
+          <Route exact path="/user/auth">           
+            <SignIn />
+          </Route>       
         </Switch>
         }
       </>
