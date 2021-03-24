@@ -2,11 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../GlobalStyles';
 
-const TextBox = ({handleOnChanged, handleKeyDown, value, width, placeholder="", disabled=false, id=""})=>{
+const TextBox = ({handleOnChanged, handleKeyDown, value, width, placeholder="", disabled=false, id="", type="text"})=>{
 
     return (
         <Input 
-            type="text" 
+            type={type} 
             id={id}
             width={width}
             value= {value}         
