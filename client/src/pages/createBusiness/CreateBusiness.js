@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory  } from "react-router-dom";
 import styled from 'styled-components';
+import { useSelector } from "react-redux";
 import FileBase from 'react-file-base64';
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
@@ -91,6 +92,8 @@ const center = {
     lng: -73.567253
 };
 const CreateBusiness = ()=>{
+    const { authData } = useSelector((state)=>state.auth);   
+
     const [formData, setFormData] = useState(formDataInit);
     const [disabled, setDisabled] = useState(false); 
     const [validPhoneError, setValidPhoneError] = useState(""); 
@@ -100,6 +103,10 @@ const CreateBusiness = ()=>{
       
     const  handleChange = (ev, item)=>{
         setFormData({...formData, [item]: ev.target.value});
+    };
+
+    const  handleChangeApp = (ev)=>{
+        setFormData({...formData, address: { ...formData.address, app: ev.target.value}});
     };
 
     const  handleHoursChange = (ev, day, item)=>{
@@ -114,12 +121,13 @@ const CreateBusiness = ()=>{
         ev.preventDefault();
         setServerError("");
         setDisabled(true);
-     
-        fetch('/enterprises/', {
+   
+        fetch('/business/', {
             method: "POST",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
+                "Authorization": `Bearer ${authData?.token}`
             },
             body: JSON.stringify({ ...formData }),
         })
@@ -288,7 +296,7 @@ const CreateBusiness = ()=>{
                     <TextBoxWrapper>
                     <Label htmlFor='app'>App</Label>                     
                         <TextBox 
-                            handleOnChanged={(e)=>handleChange(e, 'app')}                            
+                            handleOnChanged={(e)=>handleChangeApp(e)}                            
                             value={formData.app}
                             width='200px'
                             placeholder='appartement number'

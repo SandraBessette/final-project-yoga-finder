@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import { useDispatch } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, Link, useHistory } from "react-router-dom";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { logout } from '../../store/reducers/auth/action'
 
@@ -9,10 +9,13 @@ import { logout } from '../../store/reducers/auth/action'
 const menuItem = [ "Profil", "Favorite", "Business"];
 
 const Navbar = ()=>{
+    const {authData} = useSelector((state)=>state.auth); 
     const dispatch = useDispatch(); 
+    const history = useHistory(); 
    
     const handleClick = (e)=>{
         e.preventDefault();
+        history.push('/');
         dispatch(logout());
     }
   
@@ -20,20 +23,20 @@ const Navbar = ()=>{
     return(
         <>
         <ImageWrapper >
-            <ProfilImage src='/user.svg' atl="userProfile"/>          
+            <ProfilImage src={authData?.data?.image || '/user.svg'} atl="userProfile"/>          
             <List>               
                 {menuItem.map((item)=>{
                    return (
                     <li key={item}>
-                        <StyledLink  activeClassName='active' to={`/user/${item.toLowerCase()}`}>
+                        <StyledNavLink  activeClassName='active' to={`/user/${item.toLowerCase()}`}>
                             {item}
-                        </StyledLink>            
+                        </StyledNavLink>            
                     </li>
                    ) 
                 })}
                 <li key="Logout">
                         <StyledLink onClick={handleClick} to={`/`}>
-                            "Logout"
+                            Logout
                         </StyledLink>            
                 </li>
             </List>  
@@ -83,8 +86,7 @@ const List = styled.ul`
     border-radius: 5px;
     width: 100px;    
     box-shadow: 1px 3px 7px 3px #D3D3D3;
-    
-    //line-height: normal;
+        //line-height: normal;
     padding: 0;  
     margin: 0px; 
     z-index: 2;
@@ -100,7 +102,31 @@ const List = styled.ul`
    }  
 `;
 
-const StyledLink = styled(NavLink)`
+const StyledNavLink = styled(NavLink)`
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+  
+  
+  width: 100%;
+  height: 100%;
+  padding: 0 15px;
+  
+  
+
+  &.active {
+    background-color: ${COLORS.primary};
+    color: white;
+  }
+
+  &:hover {     
+    background-color: ${COLORS.primary};
+    color: white; 
+  }
+`;
+
+  const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
   display: flex;
@@ -108,13 +134,8 @@ const StyledLink = styled(NavLink)`
   
   width: 100%;
   height: 100%;
-  padding: 0 15px;
-  
+  padding: 0 15px; 
 
-  &.active {
-    background-color: ${COLORS.primary};
-    color: white;
-  }
 
   &:hover {     
     background-color: ${COLORS.primary};

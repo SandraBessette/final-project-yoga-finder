@@ -1,10 +1,10 @@
-
+ 
 const initialState = {
   authData: null,
   status: 'loading',
   error: null,
 
-}
+}//setUser(JSON.parse(localStorage.getItem('profile')));
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     
@@ -16,7 +16,7 @@ const authReducer = (state = initialState, action) => {
                 status: 'idle'};
       }
     case 'LOGOUT': {
-      localStorage.clear();
+      localStorage.clear(); 
 
       return { ...initialState };
 

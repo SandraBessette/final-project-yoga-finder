@@ -1,7 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import { Link, useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { Link, useHistory, useLocation } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import decode from 'jwt-decode';
+import { logout } from '../../store/reducers/auth/action'
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import {CgProfile} from "react-icons/cg"; 
 import Button from '../button/Button';
@@ -11,8 +13,25 @@ import Navbar from '../navbar/Navbar';
 const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
     const history = useHistory(); 
+    const dispatch = useDispatch();
+    let location = useLocation();   
 
-
+    useEffect(() => {
+        const token = authData?.token;
+    
+        if (token) {
+          
+          const decodedToken = decode(token);
+    
+          if (decodedToken.exp * 1000 < new Date().getTime()){
+            console.log("here");
+            history.push('/');
+            dispatch(logout());            
+          }
+            
+        }  
+        
+      }, [authData?.token, location, dispatch]);
 
     const handleClick = (e)=>{
         e.preventDefault();
@@ -29,8 +48,8 @@ const Header = ()=>{
                 </Logo>
             </StyledLink>
             <RightWrapper>
-            { !authData ? <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button> : 
-                <Navbar />}                     
+            { !authData ? <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button> :<> 
+                <p>{authData.data.userName}</p><Navbar /></>}                     
             </RightWrapper>
         </Wrapper>
     );

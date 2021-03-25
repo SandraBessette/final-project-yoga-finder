@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { useParams, useHistory  } from "react-router-dom";
 import styled from 'styled-components';
-import  moment from 'moment'; 
 import { BiArrowBack } from "react-icons/bi"; 
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md"; 
 import { BsChatDots } from "react-icons/bs"; 
@@ -14,6 +13,7 @@ import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
 
 const SingleBusiness = ()=>{
+  
     const [business, setBusiness] = useState(null);    
     const [status, setStatus] = useState("loading");
     const [hoursHidden, setHoursHidden] = useState(true);
@@ -32,7 +32,7 @@ const SingleBusiness = ()=>{
     }
     useEffect(() => {  
         setStatus("loading");
-        fetch(`/enterprises/${id}`)
+        fetch(`/business/${id}`)
           .then((res) => res.json())
           .then((json) => {
             const { status, data} = json;     
@@ -104,11 +104,12 @@ const SingleBusiness = ()=>{
                         </Block>
                         <Block>
                             <FaMapMarkerAlt size={60} color={COLORS.primary}/>
-                            <Par>{`${business.address.app}, ${business.address.formatted}`}</Par>
+                            <Par>{business.address.app ? `${business.address.app}, ${business.address.formatted}` :
+                            business.address.formatted}</Par>
                         </Block>
                     </IconWrapper>
                     <ProfilWrapper>
-                    <ProfilImage src='/user.svg' atl="userProfile"/> 
+                    <ProfilImage src={business.userId.image || '/user.svg'} atl="userProfile"/> 
                         <p>{business.userId.userName}</p>
                     </ProfilWrapper>
                     {business.tags.length !==0 && <>
@@ -284,6 +285,8 @@ const ProfilWrapper = styled.div`
 
 const ProfilImage = styled.img`
     width: 50px;
+    height: 50px;
+    border-radius: 50%;
     display: inline-block;
     margin: 0 15px 15px 0;
 `;

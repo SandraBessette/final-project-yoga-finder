@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
-const enterpriseSchema = new Schema(
+const businessSchema = new Schema(
     {
         userId: {type: Schema.Types.ObjectId, required: true, ref: 'User'},
         name: {type: String, required: true},
@@ -73,10 +73,10 @@ const enterpriseSchema = new Schema(
         timestamps: true,     
       }
     );
-enterpriseSchema.index({location: '2dsphere'});
+  businessSchema.index({location: '2dsphere'});
 
-const EnterpriseModel = mongoose.model("Enterprise", enterpriseSchema);
-module.exports = EnterpriseModel;
+const BusinessModel = mongoose.model("Business", businessSchema);
+module.exports = BusinessModel;
 
 //moment ddd for day from Mon to Sun
 //HH for 24hour

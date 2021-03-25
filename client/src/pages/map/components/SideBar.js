@@ -47,16 +47,26 @@ const Wrapper = styled.div`
     width: 360px;
     height: 600px;
     overflow-y: auto;
-    &::-webkit-scrollbar {
-        width: 5px;
+    &::-webkit-scrollbar {       
+        width: 6px;
+             
+    }
+
+    &:hover::-webkit-scrollbar {
+       // width: 7px;
+
+       
     }
  
     &::-webkit-scrollbar-track {
         background: #ddd;
+       
     }
  
     &::-webkit-scrollbar-thumb {
         background: #ae95d7;
+        border-radius: 10px;
+       
     }
 /*&::-webkit-scrollbar-track
 {

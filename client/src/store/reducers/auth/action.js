@@ -5,7 +5,7 @@ export const authenticate = (data) => ({
   });
 
   export const logout = () => ({
-    type: "LOGOUT" 
+    type: "LOGOUT"  
   });
 
 export const requestAuthInfo = () => ({

@@ -135,7 +135,7 @@ const Map = ()=>{
         if(!coordinates)
             return;       
         setStatus("loading");
-        fetch('/enterprises/filters', {
+        fetch('/business/filters', {
             method: "POST",
             headers: {
                 Accept: "application/json",

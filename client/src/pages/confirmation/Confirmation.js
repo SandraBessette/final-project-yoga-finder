@@ -6,7 +6,7 @@ import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
 
 
-const Confirmation = ({title})=>{
+const Confirmation = ({type})=>{
     const [status, setStatus] = useState("loading");
     const [business, setBusiness] = useState(null);
     
@@ -14,7 +14,7 @@ const Confirmation = ({title})=>{
         const businessID = window.localStorage.getItem('business');
         if (businessID) { 
             setStatus("loading");   
-            fetch(`/enterprises/${businessID}`)
+            fetch(`/business/${businessID}`)
             .then((res) => res.json())
             .then((json) => {
                 const { status, data, message } = json;            
@@ -24,12 +24,12 @@ const Confirmation = ({title})=>{
                 }
                 else {
                     setStatus("error"); 
-                    window.localStorage.clear();                   
+                    window.localStorage.removeItem("business");                   
                 }
             })
             .catch((error)=>{               
                 setStatus("error");
-                window.localStorage.clear();
+                window.localStorage.removeItem("business");
             });
         }
         else {           
@@ -43,10 +43,14 @@ const Confirmation = ({title})=>{
 
     return(
         <Wrapper>           
-            <UserHeader title={title}/> 
+            <UserHeader title="Confirmation"/> 
             {status === 'loading' && <Spinner />}
             {status === 'idle' && 
             <MainWrapper> 
+            {type === "Create" ?
+                <p>Your business has been created succesfully!</p> :
+                <p>Your business has been modified succesfully!</p>
+            }
                 <BusinessItem data={business} height='150px'/>
             </MainWrapper>
             }
@@ -57,7 +61,7 @@ const Confirmation = ({title})=>{
 };
 
 const Wrapper = styled.div`
-   height: calc(100vh - ${HEADER_HEIGHT}); 
+   //height: calc(100vh - ${HEADER_HEIGHT}); 
    font-size: 15px;
 
 `;
@@ -69,6 +73,8 @@ const MainWrapper = styled.div`
     padding: 20px;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    flex: 1;
     align-items: center;
 `;
 export default Confirmation;

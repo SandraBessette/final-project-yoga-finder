@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/user-routes');
-const enterpriseRoutes = require('./routes/enterprise-routes');
+const businessRoutes = require('./routes/business-routes');
 require("dotenv").config();
 
 const { MONGO_URI } = process.env;
@@ -30,7 +30,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: false }))
 app.use("/", express.static(__dirname + "/"))
 
 app.use("/user", userRoutes);
-app.use('/enterprises', enterpriseRoutes);
+app.use('/business', businessRoutes);
 app.use('*', (req, res) => {
   return res.status(404).json({
     status: 404,

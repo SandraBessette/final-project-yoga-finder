@@ -5,8 +5,20 @@ import { Provider } from "react-redux";
 import reducer from "./store";
 import App from "./App";
 
+const loadState = () => {  
+    const serializedState = localStorage.getItem('profile');
+    if (serializedState === null) 
+      return undefined;
+   
+    return {auth: {authData: JSON.parse(serializedState), status: 'loading',
+    error: null}};
+};
+
+const persistedItemState = loadState();
+
 const store = createStore(
-  reducer,  
+  reducer,
+  persistedItemState,  
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 

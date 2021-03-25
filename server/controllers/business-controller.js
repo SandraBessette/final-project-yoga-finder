@@ -1,8 +1,8 @@
 
 const mongoose = require('mongoose');
-const EnterpriseModel = require('../models/enterprise');
+const BusinessModel = require('../models/business');
 
-const getEnterprises = async (req, res) => {
+const getBusiness = async (req, res) => {
     const {lat, long, dist} = req.params;
     const METERS_PER_KM = 1000;
    
@@ -14,7 +14,7 @@ const getEnterprises = async (req, res) => {
     const distFormat = dist ? parseFloat(long) : 45; //45.5334, 74.0063
   
     try {        
-        const result = await EnterpriseModel.find({ location:
+        const result = await BusinessModel.find({ location:
                                                     { $nearSphere:
                                                         { $geometry:
                                                             { type: "Point", coordinates: [longFormat, latFormat] },
@@ -30,7 +30,7 @@ const getEnterprises = async (req, res) => {
     }  
 };
 
-const getFilteredEnterprises = async (req, res) => {
+const getFilteredBusiness = async (req, res) => {
     const {
         bounds, 
         center,
@@ -81,7 +81,7 @@ const getFilteredEnterprises = async (req, res) => {
     });*/
        
     try{  
-        const query = EnterpriseModel.aggregate([pipeline]); 
+        const query = BusinessModel.aggregate([pipeline]); 
         const result = await query.exec();
    
         res.status(200).json({ status: 201, message: "success", data: result});  
@@ -92,26 +92,20 @@ const getFilteredEnterprises = async (req, res) => {
 
 };
 
-const getEnterprise = async (req, res) => {
-    const { id } = req.params;
-
-  //  console.log("herebefore", id);
+const getSingleBusiness = async (req, res) => {
+    const { id } = req.params;  
 
     if (!mongoose.Types.ObjectId.isValid(id))
-       return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+       return res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
 
-    try {
-      //  console.log("hereagain", id);
-        const result = await EnterpriseModel.findOne({ _id: id }).populate('userId').exec(); 
-      //  console.log('result', result);
-        if (result)     {
-         //   console.log("200", result);
+    try {   
+        const result = await BusinessModel.findOne({ _id: id }).populate('userId').exec();    
+        if (result) {     
             res.status(200).json({ status: 200, message: "success", data: result });  
         }
            
-        else {
-           // console.log("404", result);
-            res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+        else {        
+            res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
         } 
             
     }
@@ -122,18 +116,23 @@ const getEnterprise = async (req, res) => {
 
 };
 
-const createEnterprise = async (req, res) => {
+const createBusiness = async (req, res) => {
    const {  
-    name,    
+    name,  
+    type  
     } = req.body;
 
-    const userId = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
-    try {
-        const oldEnterprise = await EnterpriseModel.findOne({ userId, name });    
-        if (oldEnterprise) 
-            return res.status(400).json({ status: 400, message: "The enterprise already exists.", data: req.body });  
+    const userId = req.userId; 
+    if (!userId) {
+        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+      }
 
-        const result = await EnterpriseModel.create({ ...req.body,   userId});  
+    try {
+        const oldBusiness = await BusinessModel.findOne({ name, type });    
+        if (oldBusiness) 
+            return res.status(400).json({ status: 400, message: "The business already exists.", data: req.body });  
+
+        const result = await BusinessModel.create({ ...req.body,   userId});  
         res.status(201).json({ status: 201, message: "success", data: result });
 
       } catch (error) {
@@ -143,11 +142,10 @@ const createEnterprise = async (req, res) => {
 
 };
 
-const updateEnterprise = async (req, res) => {
+const updateBusiness = async (req, res) => {
     const { id } = req.params;
 
-    const {
-        userId, //wont be there at the end with auth,,,,
+    const {  
         name,
         type,
         phone,
@@ -159,27 +157,27 @@ const updateEnterprise = async (req, res) => {
         website,
         hours
         } = req.body;
-    
-    if (!(/\d{3}-\d{3}-\d{4}/.test(phone)))
-        return res.status(400).json({ status: 400, message: "The phone number is invalide.", data: req.body }); 
-    if (!(/^[ABCEGHJ-NPRSTVXY][0-9][ABCEGHJ-NPRSTV-Z] [0-9][ABCEGHJ-NPRSTV-Z][0-9]$/.test(address?.zip)))
-        return res.status(400).json({ status: 400, message: "The zip code is invalide.", data: req.body });  
 
+    const userId = req.userId; 
+    if (!userId) {
+        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+    }
+    
     if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+        return res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
 
     try {        
-        const oldEnterprise = await EnterpriseModel.findOne({ userId, name });    
-        if (oldEnterprise) 
-            return res.status(400).json({ status: 400, message: "The enterprise already exists.", data: req.body });
+        const oldBusiness = await BusinessModel.findOne({ name, type });    
+        if (oldBusiness && oldBusiness._id.toString() !== id) 
+            return res.status(400).json({ status: 400, message: "An business with this name already exists.", data: req.body });
 
-        const updatedEnterprise = { _id: id, ...req.body };
+        const updatedBusiness = { _id: id, userId, ...req.body };
    
-        const result = await EnterpriseModel.findByIdAndUpdate(id, updatedEnterprise, { new: true });        
+        const result = await BusinessModel.findByIdAndUpdate(id, updatedBusiness, { new: true });        
         if (result)
-            res.status(201).json({ status: 201, message: "enterprise updated", data: result }); 
+            res.status(201).json({ status: 201, message: "business updated", data: result }); 
         else  
-            res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+            res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
 
     } catch (error) {
         res.status(500).json({ status: 500, error: error?.message }); 
@@ -188,18 +186,24 @@ const updateEnterprise = async (req, res) => {
 
 };
 
-const deleteEnterprise = async (req, res) => {
+const deleteBusiness = async (req, res) => {
     const { id } = req.params;
 
+    const userId = req.userId; 
+    if (!userId) {
+        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: id });
+    }
+    
+
     if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+        return res.status(404).json({ status: 404, message: `No business with id: ${id}`, data: id }); 
 
     try {
-        const result = await EnterpriseModel.findByIdAndRemove(id);        
+        const result = await BusinessModel.findByIdAndRemove(id);        
         if (result)
-            res.status(201).json({ status: 201, message: "Post deleted successfully." });  
+            res.status(201).json({ status: 201, message: "Business deleted successfully." });  
         else  
-            res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` }); 
+            res.status(404).json({ status: 404, message: `No business with id: ${id}`, data: id }); 
 
     } catch (error) {
         res.status(500).json({ status: 500, error: error?.message }); 
@@ -207,10 +211,10 @@ const deleteEnterprise = async (req, res) => {
 };
 
 module.exports = { 
-    getEnterprises,
-    getEnterprise, 
-    createEnterprise,
-    updateEnterprise, 
-    deleteEnterprise,
-    getFilteredEnterprises
+    getBusiness,
+    getSingleBusiness, 
+    createBusiness,
+    updateBusiness, 
+    deleteBusiness,
+    getFilteredBusiness
 };

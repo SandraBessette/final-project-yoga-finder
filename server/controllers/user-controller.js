@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
-const EnterpriseModel = require('../models/enterprise');
+const BusinessModel = require('../models/business');
 
 
 const getUsers = async (req, res) => { 
@@ -43,8 +43,7 @@ const signin = async (req, res) => {
 }
 
 const signup = async (req, res) => {
-  const { email, userName, type, password, image} = req.body;
-  console.log("here", req.body);
+  const { email, userName, type, password, image} = req.body;  
 
   try {
     let oldUser = await UserModel.findOne({ userName });
@@ -53,11 +52,9 @@ const signup = async (req, res) => {
 
     oldUser = await UserModel.findOne({ email });
     if (oldUser) return res.status(400).json({  status: 400, message:"User already exists with this email", data: email });
-    console.log("heretoo");
-    const hashedPassword = await bcrypt.hash(password, 12);
-    console.log("passwordhash");
+ 
+    const hashedPassword = await bcrypt.hash(password, 12);   
     const result = await UserModel.create({ userName, email, type, image, password: hashedPassword});
-    console.log('result', result)
 
     const token = jwt.sign( { email: result.email, id: result._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN } );
 
@@ -70,25 +67,30 @@ const signup = async (req, res) => {
 };
 
 const updateFavorite = async (req, res) => {
-  const enterpriseId = req.body._id; 
+  const businessId = req.body._id; 
  
-  const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
+ // const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
 
-  if (!mongoose.Types.ObjectId.isValid(enterpriseId))
-    return res.status(404).json({ status: 404, message: `No enterprise with id: ${id}` });   
+  const id = req.userId; 
+  if (!id) {
+      return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(businessId))
+    return res.status(404).json({ status: 404, message: `No business with id: ${id}` });   
 
   try {  
     const user = await UserModel.findOne({ _id: id }) ;
     if (!user)
-      return res.status(404).json({ status: 404, message: `User not found` }); 
+      return res.status(404).json({ status: 404, message: `User not found` , data: req.body}); 
 
-    const index = user.favorites.findIndex((id) => id.toString() === enterpriseId);   
+    const index = user.favorites.findIndex((id) => id.toString() === businessId);   
     if (index === -1) {
-      user.favorites.push(enterpriseId);
-      await EnterpriseModel.updateOne({ _id: enterpriseId }, { $inc: { favoriteTotal: 1 } }); 
+      user.favorites.push(businessId);
+      await BusinessModel.updateOne({ _id: businessId }, { $inc: { favoriteTotal: 1 } }); 
     } else {
-      user.favorites = user.favorites.filter((id) => id.toString() !== enterpriseId);
-      await EnterpriseModel.updateOne({ _id: enterpriseId }, { $inc: { favoriteTotal: -1 } });      
+      user.favorites = user.favorites.filter((id) => id.toString() !== businessId);
+      await BusinessModel.updateOne({ _id: businessId }, { $inc: { favoriteTotal: -1 } });      
     }
  
     const result = await user.save();    
@@ -103,7 +105,12 @@ const updateFavorite = async (req, res) => {
 };
 
 const getFavorites = async (req, res) => {
-  const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
+  //const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
+  const id = req.userId; 
+  if (!id) {
+      return res.status(400).json({ status: 400, message: "The user is not authenticated" });
+  }
+
   try {
     const result = await UserModel.findOne({ _id: id }).populate('favorites').exec(); 
     if(result)
@@ -116,14 +123,19 @@ const getFavorites = async (req, res) => {
   }
 };
 
-const getEnterprises = async (req, res) =>{
-  const id = "6046b5958f1dc73f986be1d0"; //temporary, will recuperate that from the token
+const getBusiness = async (req, res) =>{
+ // const id = "6046b5958f1dc73f986be1d0"; //temporary, will recuperate that from the token
+ const id = req.userId; 
+  if (!id) {
+      return res.status(400).json({ status: 400, message: "The user is not authenticated" });
+  }
+
   try {
-    const result = await EnterpriseModel.find({ userId: id });
+    const result = await BusinessModel.find({ userId: id });
     if(result)
       res.status(200).json({ status: 200, message: "success", data: result });
     else
-      res.status(404).json({ status: 404,  message: "Enterprises for this user not found"});
+      res.status(404).json({ status: 404,  message: "Business for this user not found"});
   } catch (error) {
     res.status(500).json({ status: 500, error: error?.message});    
    console.log(error);
@@ -136,5 +148,5 @@ module.exports = {
   signup,
   updateFavorite,
   getFavorites,
-  getEnterprises
+  getBusiness
 };

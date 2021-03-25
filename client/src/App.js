@@ -1,8 +1,8 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { 
   BrowserRouter as Router,
   Switch,
-  Route, 
+  Route
  } from 'react-router-dom';
  import {  
   useLoadScript,
@@ -17,14 +17,18 @@ import {
  import Header from './components/header/Header';
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
+
  import { HEADER_HEIGHT } from './GlobalStyles'
 
-const App= () => {
+const App= () => {  
   const [ libraries ] = useState(['places', 'geometry' ]); 
     const {isLoaded, loadError} = useLoadScript ({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries,
     });
+    
+
+   
 
 
   return (
@@ -47,7 +51,7 @@ const App= () => {
             <CreateBusiness />
           </Route> 
           <Route exact path="/user/newBusiness">           
-            <Confirmation title='Your new Business' />
+            <Confirmation type='Create' />
           </Route>  
           <Route exact path="/user/auth">           
             <SignIn />

@@ -9,7 +9,7 @@ const userSchema = new Schema(
         password: String,
         image: String,
         type: {type: String, enum: ['Admin', 'Owner', 'Client'], required: true},
-        favorites: [{ type: Schema.Types.ObjectId, default: [], ref: 'Enterprise' }]
+        favorites: [{ type: Schema.Types.ObjectId, default: [], ref: 'Business' }]
       },
       {
         timestamps: true,        

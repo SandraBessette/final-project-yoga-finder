@@ -34,7 +34,7 @@ const SignIn = ({title})=>{
     };
 
     const handleImages = (base64)=>{ 
-        setFormData({ ...formData, image: [ base64 ] });
+        setFormData({ ...formData, image: base64 });
     };
     
     const handleIconClick = (e)=>{ 
@@ -49,6 +49,8 @@ const SignIn = ({title})=>{
         setValidPassword(""); 
         setValidEmail("");    
         setIsHidden(true);
+        dispatch(requestAuthInfo());
+        setFormData(initialState);
     };
 
     const handleSubmit =(ev) =>{
