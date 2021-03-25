@@ -1,4 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');  
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const UserModel = require('../models/user');
 const EnterpriseModel = require('../models/enterprise');
 
@@ -20,31 +22,50 @@ const getUsers = async (req, res) => {
 };
 
 const signin = async (req, res) => {
-
-
-
-};
-
-const signup = async (req, res) => {
-  const { email, userName, type, favorites } = req.body;
-
+  const { email, password } = req.body;
 
   try {
     const oldUser = await UserModel.findOne({ email });
+    if (!oldUser) 
+      return res.status(404).json({ status: 404, message: "User doesn't exist", data: email });
 
-    if (oldUser) return res.status(400).json({ message: "User already exists" });
+    const isPasswordOk = await bcrypt.compare(password, oldUser.password);
+    if (!isPasswordOk)
+      return res.status(400).json({ status: 400, message: "Invalid credentials", data: req.body });
 
-    //const hashedPassword = await bcrypt.hash(password, 12);
+    const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-    const result = await UserModel.create({ userName, email, type, favorites });
-
-   // const token = jwt.sign( { email: result.email, id: result._id }, secret, { expiresIn: "1h" } );
-
-    res.status(201).json({ status: 201, message: "success", data: result });
+    res.status(201).json({ status: 201, message: "success", data: oldUser, token });
   } catch (error) {
-    res.status(500).json({ error: error?.message, message: "Something went wrong" });
+    res.status(500).json({ status: 500, error: error?.message, message: "Something went wrong" });
+    console.log(error?.message);
+  };
+}
+
+const signup = async (req, res) => {
+  const { email, userName, type, password, image} = req.body;
+  console.log("here", req.body);
+
+  try {
+    let oldUser = await UserModel.findOne({ userName });
+    if (oldUser) return res.status(400).json({ status: 400, message: "User already exists with this userName", data: userName});
     
-    console.log(error);
+
+    oldUser = await UserModel.findOne({ email });
+    if (oldUser) return res.status(400).json({  status: 400, message:"User already exists with this email", data: email });
+    console.log("heretoo");
+    const hashedPassword = await bcrypt.hash(password, 12);
+    console.log("passwordhash");
+    const result = await UserModel.create({ userName, email, type, image, password: hashedPassword});
+    console.log('result', result)
+
+    const token = jwt.sign( { email: result.email, id: result._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN } );
+
+    res.status(201).json({ status: 201, message: "success", data: result, token });
+  } catch (error) {
+    res.status(500).json({ status: 500, error: error?.message, message: "something went wrong"});
+    
+    console.log(error?.message);
   }
 };
 
@@ -74,8 +95,8 @@ const updateFavorite = async (req, res) => {
     res.status(200).json({ status: 200, message: "success", data: result.favorites });  
  
   } catch (error) {
-    res.status(500).json({ status: 500, error: error?.message});    
-   console.log(error);
+    res.status(500).json({ status: 500, error: error?.message, message: "something went wrong"});    
+    console.log(error?.message);
   }
 
 

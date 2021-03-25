@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import {CgProfile} from "react-icons/cg"; 
 import Button from '../button/Button';
@@ -8,7 +9,9 @@ import Navbar from '../navbar/Navbar';
 
 
 const Header = ()=>{
+    const {authData} = useSelector((state)=>state.auth);  
     const history = useHistory(); 
+
 
 
     const handleClick = (e)=>{
@@ -26,8 +29,8 @@ const Header = ()=>{
                 </Logo>
             </StyledLink>
             <RightWrapper>
-                <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button>  
-                <Navbar />                     
+            { !authData ? <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button> : 
+                <Navbar />}                     
             </RightWrapper>
         </Wrapper>
     );

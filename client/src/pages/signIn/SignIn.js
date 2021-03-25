@@ -1,26 +1,32 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
+import { useHistory  } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import FileBase from 'react-file-base64';
 import TextBox from '../../components/textBox/TextBox.js';
 import IconButton from '../../components/button/IconButton';
 import Button from '../../components/button/Button';
+import { authenticate, requestAuthInfo, receiveAuthInfoError } from '../../store/reducers/auth/action'
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 
 const initialState = { userName: '', email: '', password: '', confirmPassword: '', type: "Client", image: ""};
 
 const SignIn = ({title})=>{
-    const [status, setStatus] = useState("loading");   
+    const {status, error} = useSelector((state)=>state.auth);   
+   // const [status, setStatus] = useState("loading");   
     const [isSignup, setIsSignup] = useState(false);
     const [formData, setFormData] = useState(initialState);
     const [disabled, setDisabled] = useState(false); 
     const [isHidden, setIsHidden] = useState(true); 
-    const [isHiddenConfirm, setIsHiddenConfirm] = useState(true); 
     const [validPassword, setValidPassword] = useState(""); 
     const [validPasswordLenght, setValidPasswordLenght] = useState("");  
-    const [serverError, setServerError] = useState("");   
+    const [validEmail, setValidEmail] = useState("");  
+   // const [serverError, setServerError] = useState("");   
+    const dispatch = useDispatch(); 
+    const history = useHistory(); 
    
 
     const  handleChange = (ev, item)=>{
@@ -35,26 +41,25 @@ const SignIn = ({title})=>{
         e.preventDefault();
         setIsHidden(!isHidden);
     };
-    const handleIconConfirmClick = (e)=>{ 
-        e.preventDefault();
-        setIsHiddenConfirm(!isHiddenConfirm);
-    };
-
+  
     const handleTextButton = (e)=>{ 
         e.preventDefault();
         setIsSignup(!isSignup);
         setValidPasswordLenght("");  
         setValidPassword(""); 
+        setValidEmail("");    
+        setIsHidden(true);
     };
 
     const handleSubmit =(ev) =>{
         ev.preventDefault();
         if (!formValidation())
             return;
-       /* setServerError("");
+        
         setDisabled(true);
-     
-        fetch('/enterprises/', {
+        dispatch(requestAuthInfo());
+        const endpoint = isSignup ? '/user/signup' : '/user/signin';
+        fetch(endpoint, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -63,32 +68,29 @@ const SignIn = ({title})=>{
             body: JSON.stringify({ ...formData }),
         })
         .then((res)=>res.json())
-        .then((json)=>{
-            const {status, data} = json;
-                if (status === 201) {
-                    localStorage.setItem("business", data._id);
-                    history.push("/user/newBusiness");
-                }
-                else{
-                    setServerError(json.message);
-                    setDisabled(false);
-                }
+        .then((json)=>{          
+            if (json.status === 201) {
+                dispatch(authenticate({data: json.data, token: json.token}));
+                history.push("/");
+            }
+             else{
+                dispatch(receiveAuthInfoError(json.message));               
+                setDisabled(false);
+            }
         })
         .catch((error)=>{
-            setServerError("unknown error");
+            dispatch(receiveAuthInfoError("unknown error"));         
             setDisabled(false);
-        }); */      
+        });     
         
-    };
+    };    
 
     const formValidation = useCallback(() => {  
         if (!isSignup){
             return true;
-        } 
-           
+        }           
 
         let isValid = true;
-
         if (formData.password.length < 8) {
             setValidPasswordLenght( "The Password must have 8 caracters or more");  
             isValid = false;
@@ -102,42 +104,44 @@ const SignIn = ({title})=>{
             isValid = false; 
         }        
         else 
-            setValidPassword("");      
+            setValidPassword("");   
+        
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (!emailRegex.test(formData.email)) {
+            setValidEmail("Invalid email address");
+            isValid = false;
+        }      
+        else {
+            setValidEmail("");
+        }       
       
         return isValid;
-      }, [formData.password, formData.confirmPassword, isSignup]);
+      }, [formData.password, formData.confirmPassword, formData.email, isSignup]);
 
    useEffect(() => { 
         let isDisabled = false;      
-        if (formData.userName === "" || 
+        if (formData.email === "" || 
             formData.password === "" ||
+            (formData.userName === "" &&  isSignup) ||
             (formData.confirmPassword === "" &&  isSignup))
             isDisabled = true;
     
-         setDisabled(isDisabled);
-      }, [formData, isSignup, setDisabled]);
-    
-
-    useEffect(() => {
-       
-      }, []);
-
-      if(status === 'error'){
-          return <p>"Error in loading your user account</p>
-      }
-
+        setDisabled(isDisabled);
+    }, [formData, isSignup, setDisabled]);  
+      
     return(
         <Wrapper>           
             <UserHeader title={isSignup ? "Sign up" : "Sign In"}/>            
             <MainWrapper> 
             <Form>
                 <Image src={formData.image || '/user.svg'} alt="userPicture"></Image>
-                { isSignup && <TextBoxWrapper>
+                { isSignup && <>
+                <TextBoxWrapper>
                     <Label htmlFor='name' >Image </Label>                     
                     <div >
                         <FileBase type="file" multiple={false} onDone={({ base64 }) => handleImages(base64)} />
                     </div>   
-                </TextBoxWrapper>}
+                </TextBoxWrapper>
                 <TextBoxWrapper>
                     <Label htmlFor='username' >Username * </Label>                     
                     <TextBox 
@@ -147,7 +151,18 @@ const SignIn = ({title})=>{
                         placeholder='username'
                         id='username'
                         /> 
+                </TextBoxWrapper> </>}
+               <TextBoxWrapper>
+                    <Label htmlFor='email' >Email * </Label>                     
+                    <TextBox 
+                        handleOnChanged={(e)=>handleChange(e, 'email')}                            
+                        value={formData.email}
+                        width='100%'
+                        placeholder='email'
+                        id='email'
+                        /> 
                 </TextBoxWrapper>
+                <Error>{validEmail}</Error>
                 <TextBoxWrapper>
                     <Label htmlFor='password' >Password * </Label>
                     <InputWrapper>
@@ -167,27 +182,27 @@ const SignIn = ({title})=>{
                 <Error >{validPasswordLenght}</Error> 
                 { isSignup && <>
                 <TextBoxWrapper>
-                    <Label htmlFor='confirmPassword' >Confirm * </Label>
-                    <InputWrapper>
-                        <TextBox
-                            handleOnChanged={(e)=>handleChange(e, 'confirmPassword')}  
-                            type={isHiddenConfirm ? "password" : "text"} 
+                    <Label htmlFor='confirmPassword' >Confirm * </Label> 
+                    <InputWrapper>                
+                    <TextBox
+                            handleOnChanged={(e)=>handleChange(e, 'confirmPassword')} 
+                            type='password'                          
                             width='100%'
                             id="confirmPassword"   
                             value={formData.confirmPassword}        
                             placeholder="confirm password"  
-                            />
-                            <IconButton width='30px' margin='0 5px' onclick={handleIconConfirmClick}>
-                                {isHiddenConfirm ? < AiOutlineEye size={25}/> : <AiOutlineEyeInvisible size={25}/>}
-                            </IconButton>                            
-                    </InputWrapper>  
+                            /> 
+                            <Space>
+                            </Space>   
+                    </InputWrapper>                                              
+                     
                 </TextBoxWrapper>
                 <Error >{validPassword}</Error> </> }
                 <Button width={'100%'} onclick={handleSubmit} disabled={disabled}>Submit</Button> 
                 <TextButton onClick={handleTextButton}>
                 { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }
                 </TextButton> 
-                <Error >{serverError}</Error>                 
+                <Error >{status === "error" ? error: ""}</Error>                 
             </Form>
             </MainWrapper>           
         </Wrapper>
@@ -238,8 +253,8 @@ const TextBoxWrapper = styled.div`
 `;
 
 const Image = styled.img`
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
     display: block;
     margin: 20px auto 35px auto;
     object-fit: cover;
@@ -271,6 +286,10 @@ const TextButton = styled.button`
         outline: none;
     }
 
+`;
+
+const Space = styled.div`
+    width: 39px;
 `;
 
 

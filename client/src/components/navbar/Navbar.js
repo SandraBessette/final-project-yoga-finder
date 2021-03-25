@@ -1,14 +1,20 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { logout } from '../../store/reducers/auth/action'
 
 
 const menuItem = [ "Profil", "Favorite", "Business"];
 
 const Navbar = ()=>{
+    const dispatch = useDispatch(); 
    
-
+    const handleClick = (e)=>{
+        e.preventDefault();
+        dispatch(logout());
+    }
   
 
     return(
@@ -25,6 +31,11 @@ const Navbar = ()=>{
                     </li>
                    ) 
                 })}
+                <li key="Logout">
+                        <StyledLink onClick={handleClick} to={`/`}>
+                            "Logout"
+                        </StyledLink>            
+                </li>
             </List>  
         </ImageWrapper> 
         
