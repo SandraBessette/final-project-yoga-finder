@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import { useHistory  } from "react-router-dom";
+import { useParams, useHistory  } from "react-router-dom";
 import styled from 'styled-components';
 import { useSelector } from "react-redux";
 import FileBase from 'react-file-base64';
@@ -12,6 +12,7 @@ import Checkbox from './components/Checkbox';
 import TextArea from './components/TextArea';
 import Map from '../../components/map/Map';
 import Button from '../../components/button/Button';
+import Spinner from '../../components/spinner/Spinner';
 
 const typeArray = ["Yoga", "Meditation", "Accessory"];
 const daysArray = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
@@ -28,7 +29,7 @@ const tagObject = {
      7: { name: "Yin Yoga", isChoosen: false },
      8: { name: "Kundalini Yoga", isChoosen: false },
      9: { name: "Prenatal Yoga", isChoosen: false },
-     9: { name: "Kripalu Yoga", isChoosen: false },  
+     10: { name: "Kripalu Yoga", isChoosen: false },  
 };
 
 const formDataInit = {
@@ -91,14 +92,16 @@ const center = {
     lat: 45.501690,
     lng: -73.567253
 };
-const CreateBusiness = ()=>{
+const CreateBusiness = ({type})=>{
     const { authData } = useSelector((state)=>state.auth);   
 
     const [formData, setFormData] = useState(formDataInit);
+    const [status, setStatus] = useState("idle");
     const [disabled, setDisabled] = useState(false); 
     const [validPhoneError, setValidPhoneError] = useState(""); 
     const [validZipError, setValidZipError] = useState("");   
     const [serverError, setServerError] = useState("");   
+    const { id } = useParams();
     const history = useHistory(); 
       
     const  handleChange = (ev, item)=>{
@@ -121,9 +124,11 @@ const CreateBusiness = ()=>{
         ev.preventDefault();
         setServerError("");
         setDisabled(true);
-   
-        fetch('/business/', {
-            method: "POST",
+        const endpoint = type === 'New' ? '/business/': `/business/${id}`;
+        const method = type === 'New' ? 'POST': 'PUT';
+        const confirmationLink = type === 'New' ? '/user/new/confirmation': '/user/confirmation';
+        fetch(endpoint, {
+            method: method,
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -136,7 +141,7 @@ const CreateBusiness = ()=>{
             const {status, data} = json;
                 if (status === 201) {
                     localStorage.setItem("business", data._id);
-                    history.push("/user/newBusiness");
+                    history.push(confirmationLink);
                 }
                 else{
                     setServerError(json.message);
@@ -210,7 +215,29 @@ const CreateBusiness = ()=>{
         return isValid;
       }, [formData.phone]);
 
-   useEffect(() => { 
+    useEffect(() => {
+        if (type === 'Modify' && id) {
+        setStatus("loading");
+        fetch(`/business/${id}`)
+          .then((res) => res.json())
+          .then((json) => {
+            const { status, data} = json;     
+            if (status === 200) {  
+                setFormData({...data}); 
+                setStatus("idle");
+            } else {         
+                setStatus("error");
+                console.log(json.message);
+            }
+          })
+          .catch((e) => {       
+                setStatus("error");
+          });
+        }
+
+     },[type, id]);
+
+    useEffect(() => { 
         let isDisabled = false;
       
         if (!formZipValidation() || 
@@ -223,10 +250,14 @@ const CreateBusiness = ()=>{
          setDisabled(isDisabled);
       }, [ formData.name, formData.location.coordinates, formData.address.formatted,  formZipValidation, formPhoneValidation, setDisabled]);
 
+    if (status ==="error") return "error loading business item";
+
     return (
         <Wrapper>           
-            <UserHeader title='Create Business'/> 
+            <UserHeader title={type=='New' ? 'Create Business' : 'Modify Business'}/> 
             <MainWrapper>  
+            {status === 'loading' && <Spinner />}
+            {status === 'idle' && 
                 <Form>
                     <Image src={formData.image[0] || '/noYogaImage.jpg'} alt="yogaPicture"></Image>
                     <TextBoxWrapper>
@@ -393,7 +424,7 @@ const CreateBusiness = ()=>{
                     <Divider />   
                     <Button width={'100%'} onclick={handleOnClick} disabled={disabled}>Submit</Button>  
                     <Error >{serverError}</Error>                                   
-                </Form>              
+                </Form> }             
                
             </MainWrapper>  
         </Wrapper>

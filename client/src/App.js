@@ -48,11 +48,20 @@ const App= () => {
             <SingleBusiness />
           </Route> 
           <Route exact path="/user/business">           
-            <CreateBusiness />
+            <Business />
           </Route> 
-          <Route exact path="/user/newBusiness">           
-            <Confirmation type='Create' />
+          <Route exact path="/user/new/business">           
+            <CreateBusiness type='New'/>
+          </Route> 
+          <Route exact path="/user/business/:id">           
+            <CreateBusiness type='Modify'/>
+          </Route>
+          <Route exact path="/user/new/confirmation">           
+            <Confirmation type='New' />
           </Route>  
+          <Route exact path="/user/confirmation">           
+            <Confirmation type='Modify' />
+          </Route>
           <Route exact path="/user/auth">           
             <SignIn />
           </Route>       

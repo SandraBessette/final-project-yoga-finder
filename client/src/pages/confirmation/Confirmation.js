@@ -47,7 +47,7 @@ const Confirmation = ({type})=>{
             {status === 'loading' && <Spinner />}
             {status === 'idle' && 
             <MainWrapper> 
-            {type === "Create" ?
+            {type === 'New' ?
                 <p>Your business has been created succesfully!</p> :
                 <p>Your business has been modified succesfully!</p>
             }

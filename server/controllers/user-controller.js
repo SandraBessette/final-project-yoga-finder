@@ -124,7 +124,7 @@ const getFavorites = async (req, res) => {
 };
 
 const getBusiness = async (req, res) =>{
- // const id = "6046b5958f1dc73f986be1d0"; //temporary, will recuperate that from the token
+
  const id = req.userId; 
   if (!id) {
       return res.status(400).json({ status: 400, message: "The user is not authenticated" });
@@ -137,8 +137,8 @@ const getBusiness = async (req, res) =>{
     else
       res.status(404).json({ status: 404,  message: "Business for this user not found"});
   } catch (error) {
-    res.status(500).json({ status: 500, error: error?.message});    
-   console.log(error);
+    res.status(500).json({ status: 500, message: error?.message});    
+   console.log(erro.message);
   }
 }
 

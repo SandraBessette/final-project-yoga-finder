@@ -11,7 +11,7 @@ const UserHeader = ({title})=>{
 
     const handleClick = (e) => { 
         e.preventDefault(); 
-        history.push('/');     
+        history.goBack();     
       };    
 
     return (               

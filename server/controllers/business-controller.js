@@ -94,10 +94,10 @@ const getFilteredBusiness = async (req, res) => {
 
 const getSingleBusiness = async (req, res) => {
     const { id } = req.params;  
-
+    
     if (!mongoose.Types.ObjectId.isValid(id))
        return res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
-
+      
     try {   
         const result = await BusinessModel.findOne({ _id: id }).populate('userId').exec();    
         if (result) {     
