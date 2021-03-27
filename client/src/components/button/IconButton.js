@@ -2,15 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../api/helper';
 
-const IconButton = ({reverse=false, type='Primary', padding, margin, onclick, children})=>{
-
+const IconButton = ({reverse=false, type='Primary', padding, margin, onclick, disabled=false, children})=>{
+       
     return (
         <Wrapper                        
             padding={padding}
             margin={margin}   
             type={type}   
             reverse={reverse}  
-            onClick={onclick}       
+            onClick={onclick}
+            disabled={disabled}       
         >
             {children}
         </Wrapper>
@@ -33,7 +34,7 @@ const Wrapper = styled.button`
     background: ${(p)=>(p.reverse ? colors[p.type].color : 'white')};  
     transition: all 0.40s ease-in-out;
 
-     &:hover {  
+     &:hover:not(:disabled) {  
         color: ${(p)=>(colors[p.type].colorDark)};  
         background: ${(p)=>colors[p.type].colorLight};       
     }  
@@ -43,8 +44,7 @@ const Wrapper = styled.button`
     }
 
     &:disabled {
-        cursor: not-allowed;
-        opacity: 0.5;
+        cursor: not-allowed;  
     }   
 `;
 

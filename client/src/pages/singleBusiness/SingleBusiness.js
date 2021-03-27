@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
-import { useParams, useHistory  } from "react-router-dom";
+import React, {useState, useEffect, useCallback} from 'react';
+import { useParams, useHistory, Link  } from "react-router-dom";
 import styled from 'styled-components';
+import { useSelector, useDispatch } from "react-redux";
 import { BiArrowBack } from "react-icons/bi"; 
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md"; 
 import { BsChatDots } from "react-icons/bs"; 
@@ -9,16 +10,20 @@ import { FaMapMarkerAlt } from "react-icons/fa";
 import Spinner from '../../components/spinner/Spinner';
 import IconButton from '../../components/button/IconButton';
 import Map from '../../components/map/Map';
+import Error from '../error/Error';
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
-
+import { updateFavorites } from '../../store/reducers/auth/action'
+//updateFavorites
 const SingleBusiness = ()=>{
-  
+    const { authData } = useSelector((state)=>state.auth);   
     const [business, setBusiness] = useState(null);    
     const [status, setStatus] = useState("loading");
+    const [error, setError] = useState("");
     const [hoursHidden, setHoursHidden] = useState(true);
     const { id } = useParams();
-    const history = useHistory();   
+    const history = useHistory();  
+    const dispatch = useDispatch();  
 
     const handleClick = (e) => { 
         e.preventDefault(); 
@@ -28,8 +33,48 @@ const SingleBusiness = ()=>{
     const handleClickHoursButton = (e) =>{
         e.preventDefault();
         setHoursHidden(!hoursHidden); 
+    };
 
-    }
+    const handleClickFavorites = useCallback((e, id)=>{
+        console.log("here");
+        e.preventDefault();
+        fetch(`/user/favorite/${id}`, {
+            method: "PATCH",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authData?.token}`
+            }               
+        })
+        .then((res) => res.json())
+        .then((json) => {
+            const { status, data, message } = json;            
+            if (status === 200) {                
+                if (authData?.data?.favorites?.includes(id)) {
+                    setBusiness(prevBusiness=>({
+                        ...prevBusiness,
+                        favoriteTotal: prevBusiness.favoriteTotal - 1
+                    }))
+                }
+                else {
+                    setBusiness(prevBusiness=>({
+                        ...prevBusiness,
+                        favoriteTotal: prevBusiness.favoriteTotal + 1
+                    }))
+                }
+                dispatch(updateFavorites(data));                
+                setStatus("idle");                  
+            }
+            else {
+                setStatus("error"); 
+                console.log(message);                                    
+            }
+        })
+        .catch((error)=>{               
+            setStatus("error");               
+        });     
+    }, [authData, dispatch]);
+
     useEffect(() => {  
         setStatus("loading");
         fetch(`/business/${id}`)
@@ -40,16 +85,18 @@ const SingleBusiness = ()=>{
                 console.log(data);
                 setBusiness(data);
                 setStatus("idle");
-            } else {         
+            } else {    
+                setError(status.toString());     
                 setStatus("error");
             }
           })
           .catch((e) => {       
             setStatus("error");
+            setError("500");   
           });
       }, [id]);
 
-      if (status ==="error") return "error loading business item"; 
+      if (status ==="error") return <Error type={error}/>; 
 
     return (
         <Wrapper>
@@ -67,8 +114,14 @@ const SingleBusiness = ()=>{
             <MainWrapper>
                 <Image fit={business.image[0] ? "cover" : "contain"} src={business.image[0] || '/noYogaImage.jpg'} alt="YogaImage"></Image>
                 <TopIconWrapper color={colors[business.type].colorLight}>
-                    <IconButton type={business.type} padding={'10px'} margin={'4px 0 5px 0'}>
-                        <MdFavoriteBorder size={50}/>
+                    <IconButton                         
+                        disabled={!authData} 
+                        onclick={(e)=>handleClickFavorites(e, business._id)} 
+                        type={business.type} 
+                        padding={'10px'} 
+                        margin={'4px 0 5px 0'}
+                    >
+                        {authData?.data?.favorites?.includes(business._id)? <MdFavorite size={50}/> : <MdFavoriteBorder size={50}/>}
                         {business.favoriteTotal > 0 && 
                             <SpanIcon color={colors[business.type].color}>
                                 <p>{business.favoriteTotal}</p>
@@ -108,10 +161,12 @@ const SingleBusiness = ()=>{
                             business.address.formatted}</Par>
                         </Block>
                     </IconWrapper>
-                    <ProfilWrapper>
-                    <ProfilImage src={business.userId.image || '/user.svg'} atl="userProfile"/> 
-                        <p>{business.userId.userName}</p>
-                    </ProfilWrapper>
+                    <StyledLink to={`/user/profile/${business.userId._id}`}>
+                        <ProfilWrapper>                    
+                            <ProfilImage src={business.userId.image || '/user.svg'} atl="userProfile"/> 
+                                <p>{business.userId.userName}</p>
+                        </ProfilWrapper>
+                    </StyledLink>
                     {business.tags.length !==0 && <>
                         <span><strong>tags: </strong></span>
                         {business.tags.map((tag, index)=>(
@@ -119,7 +174,7 @@ const SingleBusiness = ()=>{
                         ))}
                     </>}
                     <p>{business.description}</p>
-                    <a href={`http://${business.website}`} >{business.website}</a>
+                    <a href={business.website} >{business.website}</a>
                     < MapWrapper>
                         <Map lat={business.location.coordinates[1]} lng={business.location.coordinates[0]} type={business.type} />
                     </ MapWrapper>
@@ -295,4 +350,10 @@ const MapWrapper = styled.div`
     height: 300px;
     margin: 15px 0;
 `;
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: inherit;
+`;
+
 export default SingleBusiness;

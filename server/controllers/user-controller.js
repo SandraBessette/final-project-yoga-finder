@@ -17,7 +17,35 @@ const getUsers = async (req, res) => {
     
     console.log(error);
   }
+};
 
+const getUserProfile = async (req, res) => { 
+  const { id } = req.params;  
+ 
+  const userid = req.userId;
+
+  if (!userid) {
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
+  }
+    
+  if (!mongoose.Types.ObjectId.isValid(id))
+      return res.status(404).json({ status: 404, message: `No user with id: ${id}` }); 
+      
+  try {   
+      const result = await UserModel.findOne({ _id: id });    
+      if (result) {     
+          res.status(200).json({ status: 200, message: "success", data: {userName: result.userName, email: result.email, image: result.image} });  
+      }
+           
+      else {        
+          res.status(404).json({ status: 404, message: `No user with id: ${id}` }); 
+      } 
+            
+  }
+  catch (error) {
+      console.log("500", error.message);
+      res.status(500).json({ status: 500, message: error?.message });   
+  }
 
 };
 
@@ -31,7 +59,7 @@ const signin = async (req, res) => {
 
     const isPasswordOk = await bcrypt.compare(password, oldUser.password);
     if (!isPasswordOk)
-      return res.status(400).json({ status: 400, message: "Invalid credentials", data: req.body });
+      return res.status(401).json({ status: 401, message: "Invalid credentials", data: req.body });
 
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
@@ -67,13 +95,13 @@ const signup = async (req, res) => {
 };
 
 const updateFavorite = async (req, res) => {
-  const businessId = req.body._id; 
- 
+  //const businessId = req.body._id; 
+  const businessId = req.params.id;
  // const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
 
   const id = req.userId; 
   if (!id) {
-      return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
   }
 
   if (!mongoose.Types.ObjectId.isValid(businessId))
@@ -82,7 +110,7 @@ const updateFavorite = async (req, res) => {
   try {  
     const user = await UserModel.findOne({ _id: id }) ;
     if (!user)
-      return res.status(404).json({ status: 404, message: `User not found` , data: req.body}); 
+      return res.status(404).json({ status: 404, message: `User not found` }); 
 
     const index = user.favorites.findIndex((id) => id.toString() === businessId);   
     if (index === -1) {
@@ -108,7 +136,7 @@ const getFavorites = async (req, res) => {
   //const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
   const id = req.userId; 
   if (!id) {
-      return res.status(400).json({ status: 400, message: "The user is not authenticated" });
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
   }
 
   try {
@@ -127,7 +155,7 @@ const getBusiness = async (req, res) =>{
 
  const id = req.userId; 
   if (!id) {
-      return res.status(400).json({ status: 400, message: "The user is not authenticated" });
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
   }
 
   try {
@@ -144,6 +172,7 @@ const getBusiness = async (req, res) =>{
 
 module.exports = { 
   getUsers, 
+  getUserProfile,
   signin,
   signup,
   updateFavorite,

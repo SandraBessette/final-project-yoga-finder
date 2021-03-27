@@ -6,7 +6,7 @@ import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { logout } from '../../store/reducers/auth/action'
 
 
-const menuItem = [ "Profil", "Favorite", "Business"];
+const menuItem = [ "Favorites", "Business"];
 
 const Navbar = ()=>{
     const {authData} = useSelector((state)=>state.auth); 
@@ -24,7 +24,12 @@ const Navbar = ()=>{
         <>
         <ImageWrapper >
             <ProfilImage src={authData?.data?.image || '/user.svg'} atl="userProfile"/>          
-            <List>               
+            <List>  
+                <li key="Profile">
+                    <StyledNavLink  activeClassName='active' to={`/user/profile/${authData?.data?._id}`}>
+                        Profile
+                    </StyledNavLink>            
+                </li>             
                 {menuItem.map((item)=>{
                    return (
                     <li key={item}>

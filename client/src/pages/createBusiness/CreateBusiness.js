@@ -13,6 +13,7 @@ import TextArea from './components/TextArea';
 import Map from '../../components/map/Map';
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
+import Error from '../error/Error';
 
 const typeArray = ["Yoga", "Meditation", "Accessory"];
 const daysArray = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
@@ -97,6 +98,7 @@ const CreateBusiness = ({type})=>{
 
     const [formData, setFormData] = useState(formDataInit);
     const [status, setStatus] = useState("idle");
+    const [error, setError] = useState("");
     const [disabled, setDisabled] = useState(false); 
     const [validPhoneError, setValidPhoneError] = useState(""); 
     const [validZipError, setValidZipError] = useState("");   
@@ -225,12 +227,14 @@ const CreateBusiness = ({type})=>{
             if (status === 200) {  
                 setFormData({...data}); 
                 setStatus("idle");
-            } else {         
+            } else {    
+                setError(status.toString());     
                 setStatus("error");
                 console.log(json.message);
             }
           })
-          .catch((e) => {       
+          .catch((e) => {    
+                setError("500");    
                 setStatus("error");
           });
         }
@@ -250,7 +254,7 @@ const CreateBusiness = ({type})=>{
          setDisabled(isDisabled);
       }, [ formData.name, formData.location.coordinates, formData.address.formatted,  formZipValidation, formPhoneValidation, setDisabled]);
 
-    if (status ==="error") return "error loading business item";
+    if (status ==="error") return <Error type={error}/>;;
 
     return (
         <Wrapper>           
@@ -294,7 +298,7 @@ const CreateBusiness = ({type})=>{
                             id='phone'
                             /> 
                     </TextBoxWrapper>
-                    <Error >{validPhoneError}</Error>
+                    <ErrorMessage>{validPhoneError}</ErrorMessage >
                     <Divider/>
                     < SearchBoxWrapper>                                   
                         <SearchBox 
@@ -341,7 +345,7 @@ const CreateBusiness = ({type})=>{
                             type={formData.type}                              
                             />
                     </ MapWrapper> 
-                    <Error >{validZipError}</Error>
+                    <ErrorMessage>{validZipError}</ErrorMessage >
                     <Divider />
                     <TextAreaWrapper>
                     <Label htmlFor='description'>Description</Label>                     
@@ -423,7 +427,7 @@ const CreateBusiness = ({type})=>{
                     </TextAreaWrapper> 
                     <Divider />   
                     <Button width={'100%'} onclick={handleOnClick} disabled={disabled}>Submit</Button>  
-                    <Error >{serverError}</Error>                                   
+                    <ErrorMessage>{serverError}</ErrorMessage >                                   
                 </Form> }             
                
             </MainWrapper>  
@@ -511,7 +515,7 @@ const HoursWrapper = styled.div`
     align-items: center;
 `;
 
-const Error= styled.div`
+const ErrorMessage = styled.div`
     font-size: 13px;
     color: red;
 `;

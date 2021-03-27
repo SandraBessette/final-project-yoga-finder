@@ -2,14 +2,23 @@ import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../../GlobalStyles';
 import BusinessItem from '../../../components/businessItem/BusinessItem';
+import Spinner from '../../../components/spinner/Spinner';
 import { VscSearchStop} from "react-icons/vsc";
 
 
 
-const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave })=>{  
+const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, status })=>{  
 
     return(
         <Wrapper>
+            {status === 'loading' && <Spinner />}
+            {status === 'error' && 
+            <NoResultWrapper>
+                <p><strong>Oups...</strong></p>
+                <p>Something went wrong</p>
+                <VscSearchStop color='lightgray' size={40}/>
+            </NoResultWrapper>}
+            {status === 'idle' && <>
             {data && data.length === 0 &&
              <NoResultWrapper>
                  <p><strong>No results found.</strong></p>
@@ -26,7 +35,7 @@ const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave })=>{
                         
                     />                       
                 );
-            })}
+            })} </>}
         </Wrapper>      
     );
 };

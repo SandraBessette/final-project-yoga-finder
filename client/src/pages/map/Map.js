@@ -244,6 +244,7 @@ const Map = ()=>{
                 data={business}
                 handleOnMouseEnter={handleOnMouseEnter}
                 handleOnMouseLeave={handleOnMouseLeave}
+                status={status}
             />
             </>}            
         </Wrapper>

@@ -124,7 +124,7 @@ const createBusiness = async (req, res) => {
 
     const userId = req.userId; 
     if (!userId) {
-        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+        return res.status(401).json({ status: 401, message: "The user is not authenticated", data: req.body });
       }
 
     try {
@@ -160,7 +160,7 @@ const updateBusiness = async (req, res) => {
 
     const userId = req.userId; 
     if (!userId) {
-        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: req.body });
+        return res.status(401).json({ status: 401, message: "The user is not authenticated", data: req.body });
     }
     
     if (!mongoose.Types.ObjectId.isValid(id))
@@ -191,7 +191,7 @@ const deleteBusiness = async (req, res) => {
 
     const userId = req.userId; 
     if (!userId) {
-        return res.status(400).json({ status: 400, message: "The user is not authenticated", data: id });
+        return res.status(401).json({ status: 401, message: "The user is not authenticated", data: id });
     }
     
 

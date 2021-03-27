@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import { useHistory  } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { MdDeleteForever } from 'react-icons/md'
 import { BsPencilSquare } from 'react-icons/bs'
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
@@ -10,34 +10,30 @@ import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
 import Button from '../../components/button/Button';
 import IconButton from '../../components/button/IconButton';
+import { updateFavorites } from '../../store/reducers/auth/action';
 import Error from '../error/Error';
 
 
-const Business = ()=>{
+const Favorites = ()=>{
     const { authData } = useSelector((state)=>state.auth); 
     const [status, setStatus] = useState("loading");
     const [error, setError] = useState("");
-    const [business, setBusiness] = useState(null);
+    const [favorites, setFavorites] = useState(null);
     const history = useHistory();
+    const dispatch = useDispatch(); 
 
-    const handleNewClick = (e) =>{
-        e.preventDefault();
-        history.push('/user/new/business');
-    };
-
-    const deleteItem = useCallback((id)=>{       
-        let newBusiness = business.filter((item)=>{
+    const updateItem = useCallback((id)=>{       
+        let newFavorites = favorites.filter((item)=>{
             return item._id !== id;
         })
-        setBusiness(newBusiness);
-    },[business]);
+        setFavorites(newFavorites);
+    },[favorites]);
 
-
-    const handleDeleteClick = useCallback((e, id)=>{
-        e.preventDefault();
+    const handleDeleteClick = useCallback((e, id)=>{       
       //  setStatus("loading");   
-        fetch(`/business/${id}`, {
-            method: "DELETE",
+        e.preventDefault();
+        fetch(`/user/favorite/${id}`, {
+            method: "PATCH",
             headers: {
                 Accept: "application/json",
                 "Content-Type": "application/json",
@@ -46,31 +42,29 @@ const Business = ()=>{
         })
         .then((res) => res.json())
         .then((json) => {
-            const { status, message } = json;            
-            if (status === 201) { 
-                deleteItem(id);
+            const { status, data, message } = json;            
+            if (status === 200) { 
+                updateItem(id);  
+                dispatch(updateFavorites(data));                
                 setStatus("idle");                  
             }
             else {
                 setError(status.toString());
-                setStatus("error");                                      
+                setStatus("error"); 
+                console.log(message);                                    
             }
         })
-        .catch((error)=>{  
-            setError("500");             
+        .catch((error)=>{    
+            setError("500");           
             setStatus("error");               
         });     
-    }, [authData?.token, deleteItem]);
+    }, [authData?.token, dispatch, updateItem]);
 
-    const handleModifyClick = (e, id)=>{
-        e.preventDefault();
-        history.push(`/user/business/${id}`)
-    };
-
+  
     useEffect(() => {       
     
             setStatus("loading");   
-            fetch('/user/business', {
+            fetch('/user/favorites', {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
@@ -82,7 +76,7 @@ const Business = ()=>{
             .then((json) => {
                 const { status, data, message } = json;            
                 if (status === 200) {               
-                    setBusiness(data);
+                    setFavorites(data);                   
                     setStatus("idle");                  
                 }
                 else {
@@ -90,8 +84,8 @@ const Business = ()=>{
                     setStatus("error");                                                      
                 }
             })
-            .catch((error)=>{ 
-                setError("500");              
+            .catch((error)=>{  
+                setError("500");             
                 setStatus("error");               
             });     
         
@@ -103,23 +97,17 @@ const Business = ()=>{
 
   return(
         <Wrapper>           
-            <UserHeader title="My Business"/> 
+            <UserHeader title="Favorites"/> 
             {status === 'loading' && <Spinner />}
             {status === 'idle' && 
-            <MainWrapper> 
-                <ButtonWrapper>
-                    <Button width={'200px'} onclick={handleNewClick} >+ New Business</Button> 
-                </ButtonWrapper>          
-                {business.map((singleBusiness)=>{
+            <MainWrapper>                        
+                {favorites.map((favorite)=>{
                     return (
-                    <BusinessWrapper key={singleBusiness._id}>
-                        <TopIconWrapper title='Delete Business'>
-                            <IconButton padding='5px' onclick={(e)=>handleDeleteClick(e, singleBusiness._id)} ><MdDeleteForever size={25}/></IconButton>
+                    <BusinessWrapper key={favorite._id}>
+                        <TopIconWrapper title='Delete Favorite'>
+                            <IconButton padding='5px' onclick={(e)=>handleDeleteClick(e, favorite._id)} ><MdDeleteForever size={25}/></IconButton>
                         </TopIconWrapper>                        
-                        <BusinessItem data={singleBusiness} height='150px'/>
-                        <BottomIconWrapper title='Modify Business'>
-                            <IconButton padding='5px' onclick={(e)=>handleModifyClick(e, singleBusiness._id)}>< BsPencilSquare size={25}/></IconButton>
-                        </BottomIconWrapper>                        
+                        <BusinessItem data={favorite} height='150px'/>                                               
                     </BusinessWrapper>
                     )              
                 })}
@@ -135,7 +123,7 @@ const Wrapper = styled.div`
 `;
 
 const MainWrapper = styled.div`
-    margin: 0 auto;
+    margin: 20px auto;
     max-width: 700px;
    // height: 100%;
     padding: 20px;
@@ -144,10 +132,6 @@ const MainWrapper = styled.div`
     flex-direction: column;
     flex: 1;
     align-items: center;
-`;
-
-const ButtonWrapper = styled.div`
-    margin: 10px 10px 25px 10px;
 `;
 
 
@@ -165,13 +149,5 @@ const TopIconWrapper = styled.div`
     z-index: 3;
 `;
 
-const BottomIconWrapper = styled.div`
-    position: absolute;
-    bottom: 10px;
-    right: 7px;
-    z-index: 3;
-`;
 
-
-
-export default Business;
+export default Favorites;

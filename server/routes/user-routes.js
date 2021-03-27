@@ -9,7 +9,8 @@ router.get("/favorites", auth, userController.getFavorites);
 router.get("/business", auth, userController.getBusiness);
 router.post("/signin", userController.signin);
 router.post("/signup", userController.signup);
-router.patch("/favorite", auth, userController.updateFavorite);
+router.patch("/favorite/:id", auth, userController.updateFavorite);
+router.get("/profile/:id", auth, userController.getUserProfile);
 
 
 module.exports = router;

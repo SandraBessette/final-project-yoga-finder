@@ -28,7 +28,29 @@ const authReducer = (state = initialState, action) => {
           error: null
       };
     }
-    case 'RECEIVE_AUTH_INFO_ERROR': {
+    case 'UPDATE_FAVORITES': {
+      /*let newFavorites = [... state.authData.data.favorites];    
+      if (newFavorites.includes(action.id)){
+          newFavorites = newFavorites.filter((favorite)=>(favorite._id !== action.id));
+      }
+      else{
+        newFavorites.push(action.id);
+      }*/
+
+      return {
+          ...state,                
+          authData: {
+                    ...state.authData,
+                    data: {
+                          ...state.authData.data,
+                          favorites: [...action.favorites]
+
+                          }
+
+                    }
+            };
+    }
+    case'RECEIVE_AUTH_INFO_ERROR': {
       return {
           ...state,                
           status: "error",
