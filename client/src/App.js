@@ -77,7 +77,7 @@ const App= () => {
             {authData ? <Profile /> : <Error type='401'/>}
           </Route> 
           <Route path="/*">           
-            <Error type='401'/>
+            <Error type='404'/>
           </Route>       
         </Switch>
         }

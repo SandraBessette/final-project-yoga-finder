@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLORS } from '../../../GlobalStyles';
+import { COLORS } from '../../GlobalStyles';
 
 const TextArea = ({handleOnChanged, height, width, value, placeholder="", disabled=false, id=""})=>{
 

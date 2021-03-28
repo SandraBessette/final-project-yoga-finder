@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../api/helper';
 
-const IconButton = ({reverse=false, type='Primary', padding, margin, onclick, disabled=false, children})=>{
+const IconButton = ({reverse=false, type='Primary', padding, margin, onclick, disabled=false, title="", children})=>{
        
     return (
-        <Wrapper                        
+        <Wrapper   
+            title={title}                     
             padding={padding}
             margin={margin}   
             type={type}   

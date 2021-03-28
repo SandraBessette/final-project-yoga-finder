@@ -9,7 +9,7 @@ import TextBox from '../../components/textBox/TextBox.js';
 import SearchBox from '../map/components/SearchBox';
 import DropDown from './components/DropDown';
 import Checkbox from './components/Checkbox';
-import TextArea from './components/TextArea';
+import TextArea from '../../components/textArea/TextArea';
 import Map from '../../components/map/Map';
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';

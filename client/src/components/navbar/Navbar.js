@@ -33,7 +33,7 @@ const Navbar = ()=>{
                 {menuItem.map((item)=>{
                    return (
                     <li key={item}>
-                        <StyledNavLink  activeClassName='active' to={`/user/${item.toLowerCase()}`}>
+                        <StyledNavLink  activeClassName='active' exact to={`/user/${item.toLowerCase()}`}>
                             {item}
                         </StyledNavLink>            
                     </li>

@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { colors, isOpen} from '../../api/helper';
+import Rating from '../rating/Rating';
 
 const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMouseLeave =null })=>{   
 
@@ -24,7 +25,13 @@ const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMo
                 </ImageWrapper >
                 <ContentWapper>
                     <Title>{data.name}</Title>
-                    <Content>{data.ratingCount === 0 ? 'No rating': '⭐⭐⭐⭐⭐'}</Content>
+                    <Content>
+                        <Rating 
+                            value={data.ratingResult}
+                            disabled={true}
+                            size={10}
+                        />
+                    </Content>
                     <MiddleContent>               
                     <Content>{formatAdress(data.address.formatted)}</Content>
                     <Content>{data.phone} - <Hour isOpen={isOpen(data.hours)}>{isOpen(data.hours) ? 'Open': 'Close'}</Hour></Content>

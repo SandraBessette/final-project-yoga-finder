@@ -7,10 +7,14 @@ import { MdFavoriteBorder, MdFavorite } from "react-icons/md";
 import { BsChatDots } from "react-icons/bs"; 
 import { AiOutlineClockCircle, AiOutlineNodeIndex, AiOutlinePhone } from "react-icons/ai";
 import { FaMapMarkerAlt } from "react-icons/fa";
+import { GiEarthAmerica } from "react-icons/gi";
 import Spinner from '../../components/spinner/Spinner';
 import IconButton from '../../components/button/IconButton';
 import Map from '../../components/map/Map';
+import Rating from '../../components/rating/Rating';
+import ProfileInfo from './components/ProfileInfo';
 import Error from '../error/Error';
+import Comments from './components/Comments';
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
 import { updateFavorites } from '../../store/reducers/auth/action'
@@ -27,7 +31,7 @@ const SingleBusiness = ()=>{
 
     const handleClick = (e) => { 
         e.preventDefault(); 
-        history.push('/');       
+        history.goBack();       
       };
 
     const handleClickHoursButton = (e) =>{
@@ -108,28 +112,38 @@ const SingleBusiness = ()=>{
                 </IconButton>
                 <TopContentWrapper >
                     <Title>{business.name}</Title> 
-                    <Par>{business.ratingCount === 0 ? 'No rating': '⭐⭐⭐⭐⭐'}</Par>              
+                    <RatingWrapper>
+                        <Rating 
+                                value={business.ratingResult}
+                                disabled={true}                                
+                            />  
+                            <Par>{`(${business.ratingCount} reviews)`}</Par> 
+                    </RatingWrapper>                             
                 </TopContentWrapper>
             </TopWrapper>
             <MainWrapper>
                 <Image fit={business.image[0] ? "cover" : "contain"} src={business.image[0] || '/noYogaImage.jpg'} alt="YogaImage"></Image>
                 <TopIconWrapper color={colors[business.type].colorLight}>
-                    <IconButton                         
+                    <IconButton 
+                        title='Favorite'                        
                         disabled={!authData} 
                         onclick={(e)=>handleClickFavorites(e, business._id)} 
                         type={business.type} 
                         padding={'10px'} 
                         margin={'4px 0 5px 0'}
                     >
-                        {authData?.data?.favorites?.includes(business._id)? <MdFavorite size={50}/> : <MdFavoriteBorder size={50}/>}
+                        {authData?.data?.favorites?.includes(business._id)? <MdFavorite size={48}/> : <MdFavoriteBorder size={48}/>}
                         {business.favoriteTotal > 0 && 
                             <SpanIcon color={colors[business.type].color}>
                                 <p>{business.favoriteTotal}</p>
                             </SpanIcon>
                         }
                     </IconButton>
-                    <IconButton type={business.type} padding={'10px'} margin={'0 0 5px 0'}>
+                    <IconButton title='Chat' type={business.type} padding={'10px'} margin={'0 0 5px 0'}>
                         <BsChatDots size={45}/>
+                    </IconButton> 
+                    <IconButton title='Website' type={business.type} padding={'10px'} margin={'0 0 5px 0'} onclick={()=>(window.location.href=`${business.website}`)}>
+                        <GiEarthAmerica size={45}/>
                     </IconButton>                    
                 </TopIconWrapper>
                 <ContentWrapper>                   
@@ -161,12 +175,7 @@ const SingleBusiness = ()=>{
                             business.address.formatted}</Par>
                         </Block>
                     </IconWrapper>
-                    <StyledLink to={`/user/profile/${business.userId._id}`}>
-                        <ProfilWrapper>                    
-                            <ProfilImage src={business.userId.image || '/user.svg'} atl="userProfile"/> 
-                                <p>{business.userId.userName}</p>
-                        </ProfilWrapper>
-                    </StyledLink>
+                    <ProfileInfo user={business.userId} />                   
                     {business.tags.length !==0 && <>
                         <span><strong>tags: </strong></span>
                         {business.tags.map((tag, index)=>(
@@ -183,6 +192,12 @@ const SingleBusiness = ()=>{
  
             
             </>}
+            <MainWrapper>
+                <CommentWrapper>
+                    <h2>Reviews</h2>
+                    <Comments/>
+                </CommentWrapper>
+            </MainWrapper>
             
         </Wrapper>
     )
@@ -213,6 +228,11 @@ const TopContentWrapper = styled.div`
    // justify-content: space-between;
 `;
 
+const RatingWrapper = styled.div`
+    display: flex;
+    margin: 5px 0;
+
+`;
 const Title = styled.h1`
     font-weight: 600;
 `;
@@ -232,7 +252,6 @@ const Image = styled.img`
 const ContentWrapper = styled.div`
     padding: 10px 20px;
     border: 1px solid ${COLORS.lightGray};
-
 `;
 
 const IconWrapper = styled.div`
@@ -329,31 +348,14 @@ const SpanIcon = styled.div`
     }
 `;
 
-const ProfilWrapper = styled.div`
-    display: flex;
-
-    & p {
-        color: ${COLORS.primary}; 
-        font-weight: 600;  
-    }
-`;
-
-const ProfilImage = styled.img`
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    display: inline-block;
-    margin: 0 15px 15px 0;
-`;
-
 const MapWrapper = styled.div`
     height: 300px;
     margin: 15px 0;
 `;
 
-const StyledLink = styled(Link)`
-    text-decoration: none;
-    color: inherit;
+const CommentWrapper = styled.div`
+    padding: 10px 20px;
+  
 `;
 
 export default SingleBusiness;

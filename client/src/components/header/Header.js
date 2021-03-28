@@ -5,9 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import decode from 'jwt-decode';
 import { logout } from '../../store/reducers/auth/action'
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
-import {CgProfile} from "react-icons/cg"; 
+import { FaMapMarkedAlt } from "react-icons/fa";
 import Button from '../button/Button';
 import Navbar from '../navbar/Navbar';
+import IconButton from '../../components/button/IconButton';
 
 
 const Header = ()=>{
@@ -18,36 +19,61 @@ const Header = ()=>{
 
     useEffect(() => {
         const token = authData?.token;
-    
+        let timer = null;
         if (token) {
-          
-          const decodedToken = decode(token);
-    
-          if (decodedToken.exp * 1000 < new Date().getTime()){
-            console.log("here");
-            history.push('/');
-            dispatch(logout());            
-          }
-            
-        }  
-        
-      }, [authData?.token, location, dispatch]);
+            console.log("hereloguseEffect");          
+              
+            const decodedToken = decode(token);
+            const timeNow = new Date().getTime();           
+       
+            if (decodedToken.exp * 1000 < timeNow){
+                console.log("herelogout");
+                history.push('/');
+                dispatch(logout());             
+            }  
+            else {
+                const timeBeforeExp = decodedToken.exp * 1000 - timeNow;
+                console.log('timeBeforeExp', timeBeforeExp);
+                timer = setTimeout(function(){ 
+                    console.log("hereinTimer");
+                    history.push('/');
+                    dispatch(logout());
+                }, timeBeforeExp);
+            }
+        }
+        return () =>{
+            if(timer){
+                console.log("clearTimeout");
+                clearTimeout(timer);
+            }  
+        }
+        //location
+      }, [authData?.token, dispatch]);
 
     const handleClick = (e)=>{
         e.preventDefault();
         history.push("/user/auth");
     };
 
+    const handleClickHome = (e)=>{
+        e.preventDefault();
+        history.push("/");
+    };
 
     return(
         <Wrapper>
+            <LeftWrapper>
              <StyledLink to={`/`}  >
                 <Logo>                
                     <Image src='/yoga3.jpg' alt='logo'/>              
                     <Title>Yoga Finder</Title>
                 </Logo>
             </StyledLink>
-            <RightWrapper>
+            <IconButton title='Map' reverse={true} padding={'5px'} onclick={handleClickHome}>
+                <FaMapMarkedAlt size={30}/>
+            </IconButton>
+            </LeftWrapper>
+            <RightWrapper>            
             { !authData ? <Button background={'white'} color={COLORS.primary} width={'90px'} onclick={handleClick}>Sign In</Button> :<> 
                 <p>{authData.data.userName}</p><Navbar /></>}                     
             </RightWrapper>
@@ -86,15 +112,21 @@ const Image = styled.img`
 const StyledLink = styled(Link)`
   text-decoration: none;
   color: inherit;
+  margin-right: 50px;
 `;
 
 const RightWrapper = styled.div`
     display: flex;
     align-items: center;
     height: ${HEADER_HEIGHT};
-    position: relative;
-   
+    position: relative;  
+`;
 
+const LeftWrapper = styled.div`
+    display: flex;
+    align-items: center;
+    height: ${HEADER_HEIGHT};
+    
 `;
 
 export default Header;

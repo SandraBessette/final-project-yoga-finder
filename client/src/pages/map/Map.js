@@ -59,19 +59,12 @@ const Map = ()=>{
     const [selected, setSelected] = useState(null);
    //const [map, setMap] = React.useState(null)  
 
-    const mapRef = React.useRef();
+    const mapRef = React.useRef();  
     const onMapLoad = useCallback((map) => {     
        
         mapRef.current = map; 
     }, []);  
-    
-    const windowRef = React.useRef();
-    const onWindowLoad = useCallback((window) => {     
-        //setMap(map);
-        windowRef.current = window;
-       
-        console.log(window);
-    }, []); 
+   
 
     const onUnmount = useCallback((map) =>{       
         mapRef.current = null;
@@ -198,8 +191,7 @@ const Map = ()=>{
                 <Marker
                     key={marker._id}
                     position={{ lat: marker.location.coordinates[1], lng: marker.location.coordinates[0] }} 
-                    animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}   
-                    onLoad={onWindowLoad}                               
+                    animation={animatedId === marker._id ? window.google.maps.Animation.BOUNCE: null}                     
                     onClick={() => { handleClickMarker(marker)}}  
                       icon={{
                         url: icons[marker.type].icon,                 
@@ -256,6 +248,10 @@ const Wrapper = styled.div`
     position: relative;
     width: 100%;
     height: calc(100vh - ${HEADER_HEIGHT});
+
+    & *:focus {
+        outline: none;
+    }
 `;
 
 const AreaWrapper = styled.div`
