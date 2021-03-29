@@ -45,7 +45,8 @@ const Wrapper = styled.button`
     }
 
     &:disabled {
-        cursor: not-allowed;  
+        pointer-events: none;
+        cursor: default;
     }   
 `;
 

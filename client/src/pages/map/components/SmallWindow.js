@@ -2,37 +2,25 @@ import React, {useEffect, useRef} from 'react';
 import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { currentOpenHours, isOpen} from '../../../api/helper';
+import Rating from '../../../components/rating/Rating';
 
-const SmallWindow = ({data})=>{
-    const windowRef = useRef(null);
-
-    useEffect(()=>{
-        if (windowRef.current){
-            windowRef.current.focus();
-            console.log("useEffect", windowRef.current);
-        }
-            
-
-    }, []);
-
-    const handleOnBlur = (e)=>{
-        console.log('blur');
-        console.log("test", e);
-        if (windowRef.current){
-            windowRef.current.focus();
-            
-        }
-
-    };
+const SmallWindow = ({data})=>{    
+   
     return (
-        <StyledLink ref={windowRef}       
+        <StyledLink       
             to={`/business/${data._id}`}
         >
         <Wrapper >
             <Image src={data.image[0] || '/noYogaImage.jpg'} alt="yogaImage"/>
             <div>
             <Title>{data.name}</Title>
-            <Content>{data.ratingCount === 0 ? 'No rating': '⭐⭐⭐⭐⭐'}</Content>
+            <Content>
+                <Rating 
+                    value={data.ratingResult}
+                    disabled={true}
+                    size={12}
+                />
+            </Content>
             </div>
             <Content>{data.type}</Content>
             <Content><Hour isOpen={isOpen(data.hours)}>{isOpen(data.hours) ? 'Open': 'Close'}</Hour> - {currentOpenHours(data.hours)}</Content>    

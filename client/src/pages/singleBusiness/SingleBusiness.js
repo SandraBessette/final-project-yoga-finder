@@ -39,6 +39,16 @@ const SingleBusiness = ()=>{
         setHoursHidden(!hoursHidden); 
     };
 
+    const handleRatingChange = (rating) =>{
+        setBusiness(prevBusiness=>({
+            ...prevBusiness,
+            ratingCount: rating.ratingCount,
+            ratingTotal: rating.ratingTotal,
+            ratingResult: rating.ratingResult
+
+        }));      
+    }
+
     const handleClickFavorites = useCallback((e, id)=>{
         console.log("here");
         e.preventDefault();
@@ -195,7 +205,7 @@ const SingleBusiness = ()=>{
             <MainWrapper>
                 <CommentWrapper>
                     <h2>Reviews</h2>
-                    <Comments/>
+                    <Comments onRatingChange={handleRatingChange}/>
                 </CommentWrapper>
             </MainWrapper>
             

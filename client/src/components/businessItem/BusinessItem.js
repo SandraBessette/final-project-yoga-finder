@@ -29,7 +29,7 @@ const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMo
                         <Rating 
                             value={data.ratingResult}
                             disabled={true}
-                            size={10}
+                            size={12}
                         />
                     </Content>
                     <MiddleContent>               
@@ -91,7 +91,7 @@ const MiddleContent = styled.div`
 
 const Content = styled.p`
     font-size: 11px;
-    margin: 2px;
+    margin: 5px 0;
 `;
 
 const Hour = styled.span`

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { useParams, useHistory, Link  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from 'styled-components';
@@ -12,10 +12,11 @@ import { COLORS } from '../../../GlobalStyles';
 
 const intitialState = {rating: 0, message: ""}
 
-const Comments = ()=>{  
+const Comments = ({onRatingChange})=>{  
     const { authData } = useSelector((state)=>state.auth);   
     const [formData, setFormData] = useState(intitialState);
     const [disabled, setDisabled] = useState(false);
+    const [valid, setValid] = useState("");
     const [comments, setComments] = useState(null);
     const [error, setError] = useState("");
     const [status, setStatus] = useState("loading");
@@ -29,11 +30,24 @@ const Comments = ()=>{
         setFormData({...formData, rating: newRating});
     };
 
-    const handleOnClick = (e)=>{
+    const formValidation = useCallback(() => {  
+        let isValid = true;
+        if (formData.rating === 0) {
+            setValid( "Don't forget to rate this business.");  
+            isValid = false;
+        }
+        else {
+            setValid("");
+        }
+        return isValid;
+      }, [formData.rating]);
+
+    const handleOnClick = useCallback((e)=>{
         e.preventDefault();
-        //setServerError("");
-        //setDisabled(true);
+        if (!formValidation())
+            return;
        
+        setDisabled(true);       
         fetch(`/comment/${id}`, {
             method: 'POST',
             headers: {
@@ -46,27 +60,23 @@ const Comments = ()=>{
         .then((res)=>res.json())
         .then((json)=>{
             const {status, data, message} = json;
-                if (status === 201) {
-                    console.log(data, data);
-                    let newComment = [...comments];
-                    newComment.push({...data, userId:{_id:authData.data._id, userName: authData.data.userName, image: authData.data.image} });
-                    //setComments((previous)=>(previous.push(data)));
-                    setComments(newComment);
-                    
+                if (status === 201) {                
+                    setComments((previous)=>([ {...data.comment, userId:{_id:authData.data._id, userName: authData.data.userName, image: authData.data.image} }, ...previous]));
+                    onRatingChange(data.business);
+                    setFormData(intitialState);
+                    setDisabled(false);
                 }
                 else{
                     setStatus("error");
-                    console.log(message);
-                   // setServerError(json.message);
-                   // setDisabled(false);
+                    console.log(message);              
+                    setDisabled(false);
                 }
         })
-        .catch((error)=>{
-           // setServerError("unknown error");
-            //setDisabled(false);
+        .catch((error)=>{         
             setStatus("error");
+            setDisabled(false);           
         }); 
-    }
+    },[authData, formData, formValidation, id, onRatingChange]);
 
     useEffect(() => { 
         console.log('id', id);
@@ -90,7 +100,7 @@ const Comments = ()=>{
             setStatus("error");               
         });     
     
-  }, []);
+  }, [id]);
 
     if (status ==="error") return <Error type={error}/>; 
 
@@ -102,9 +112,10 @@ const Comments = ()=>{
                 value={formData.rating} 
                 onChange={(e, newRating) => {handleChangeRating(e, newRating)}}
                 size={30}
+                disabled={!authData}
             />
              </RatingWrapper>
-                                
+             <ErrorMessage>{valid}</ErrorMessage >               
             <TextArea
                 handleOnChanged={(e)=>handleChange(e, 'message')}  
                 value={formData.message}
@@ -112,10 +123,11 @@ const Comments = ()=>{
                 height='200px'
                 placeholder='Share details of your own experience at this place.'
                 id='comment'
+                disabled={!authData}
             /> 
             <ButtonWrapper>
-                <Button width={'100px'} onclick={handleOnClick} disabled={disabled}>Submit</Button> 
-            </ButtonWrapper> 
+                <Button width={'100px'} onclick={handleOnClick} disabled={disabled || !authData}>Send</Button> 
+            </ButtonWrapper>             
         </form>
         {status === 'loading' && <Spinner />}
         {status === 'idle' && <>
@@ -135,16 +147,12 @@ const Label = styled.label`
     padding: 5px 10px 5px 0;
     color: ${COLORS.primary};
     display: block;
-    min-width: 80px;
-    //float: left;
-    //margin-right: 15px; // remove with cell vue,,, same with the dropbox
-    //text-align: start;
-
+    min-width: 80px;   
 `;
 
 const RatingWrapper = styled.div`
     display: flex;
-    margin: 15px;
+    margin: 15px 15px 15px 0px;
 
 `;
 
@@ -152,7 +160,11 @@ const ButtonWrapper = styled.div`
     display: flex;
     justify-content: flex-end;
     margin: 15px 0px 15px auto;
+`;
 
+const ErrorMessage = styled.div`
+    font-size: 14px;
+    color: red;
 `;
 
 export default Comments;

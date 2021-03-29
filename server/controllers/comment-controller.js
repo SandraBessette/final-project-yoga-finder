@@ -8,14 +8,13 @@ const CommentModel = require('../models/comment');
 
 const getBusinessComments = async (req, res) => {
     const businessId = req.params.id;
-    console.log('businessId', businessId);
-
+  
     if (!mongoose.Types.ObjectId.isValid( businessId ))
         return res.status(404).json({ status: 404, message: `No business with id: ${ businessId }` }); 
       
     try {
       const result = await CommentModel.find({ businessId }).populate('userId').exec(); 
-      console.log('result', result);
+    
       if (result)
         res.status(200).json({ status: 200, message: "success", data: result });
       else
@@ -28,6 +27,12 @@ const getBusinessComments = async (req, res) => {
 
   const getUserComments = async (req, res) => {
     const userId = req.params.id;
+
+    const userConnectedId = req.userId;
+
+  if (!userConnectedId) {
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
+  }
 
     if (!mongoose.Types.ObjectId.isValid( userId ))
         return res.status(404).json({ status: 404, message: `No user with id: ${ userId }` }); 
@@ -74,7 +79,17 @@ const getBusinessComments = async (req, res) => {
             //create the comment
             const result = await CommentModel.create({ userId, businessId, rating: numberRating, message});             
             
-            res.status(201).json({ status: 201, message: "success", data: result });
+            res.status(201).json({ status: 201,
+                                 message: "success", 
+                                 data: {
+                                        comment: result,
+                                        business: {
+                                              ratingCount: resultBusiness.ratingCount,
+                                              ratingTotal: resultBusiness.ratingTotal, 
+                                              ratingResult: resultBusiness.ratingResult
+                                            } 
+                                      }
+                                  });
     
           } catch (error) {
             res.status(500).json({ status: 500, error: error?.message, message: "Something went wrong", data: req.body });        

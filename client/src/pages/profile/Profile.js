@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import Spinner from '../../components/spinner/Spinner';
 import UserHeader from '../../components/userHeader/UserHeader';
+import Comments from './components/Comments';
 import Error from '../error/Error';
 
 
@@ -63,7 +64,8 @@ const Profile = ({title})=>{
                     <Label htmlFor='email'>Email</Label>                     
                     <p>{user.email}</p>
                 </TextBoxWrapper>   
-            </MainWrapper>}           
+            </MainWrapper>}   
+            <Comments/>        
         </Wrapper>
     )
 
@@ -81,9 +83,9 @@ const MainWrapper = styled.div`
     max-width: 400px;
     padding: 20px;
     display: flex;
-    flex-direction: column;
- 
+    flex-direction: column; 
 `;
+
 const Label = styled.label`  
     padding: 5px 10px 5px 0;
     color: ${COLORS.primary};

@@ -1,19 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import  moment from 'moment'; 
-import { useParams, useHistory, Link  } from "react-router-dom";
-import ProfileInfo from './ProfileInfo';
-import { COLORS } from '../../../GlobalStyles';
-import Rating from '../../../components/rating/Rating'
+import Rating from '../../../components/rating/Rating';
+import { colors } from '../../../api/helper';
 
 
 const CommentItem = ({ comment })=>{
     
-    
     return (
-        <>
-        <Divider />
-        <ProfileInfo user={comment.userId}/>
+        <>       
+        <TitleWrapper color={colors[comment.businessId.type].color}>
+            <p>{comment.businessId.name}</p>
+        </TitleWrapper>      
         <RatingWrapper>
             <Rating         
                 value={comment.rating} 
@@ -26,13 +24,6 @@ const CommentItem = ({ comment })=>{
     )
 
 };
-
-const Divider = styled.div`
-    height: 0;
-    width: 100%;
-    border-top: 1px solid ${COLORS.lightGray};
-    margin: 0 0 10px 0;
-`;
 
 const Text = styled.p`
     margin: 0 0 20px 0;
@@ -49,6 +40,18 @@ const RatingWrapper = styled.div`
     align-items: center;
     margin: 5px 15px 15px 0;
 
+`;
+
+const TitleWrapper = styled.div`
+    background-color: ${(p)=>p.color};
+    color: white;
+    padding: 0 20px;
+    margin: 15px 0;
+
+    & p {
+        font-size: 20px;
+        font-weight: 600;
+    }
 `;
 
 export default CommentItem;

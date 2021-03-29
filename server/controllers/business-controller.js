@@ -1,6 +1,8 @@
 
 const mongoose = require('mongoose');
 const BusinessModel = require('../models/business');
+const UserModel = require('../models/user');
+const CommentModel = require('../models/comment');
 
 const getBusiness = async (req, res) => {
     const {lat, long, dist} = req.params;
@@ -200,8 +202,12 @@ const deleteBusiness = async (req, res) => {
 
     try {
         const result = await BusinessModel.findByIdAndRemove(id);        
-        if (result)
-            res.status(201).json({ status: 201, message: "Business deleted successfully." });  
+        if (result){
+            await UserModel.updateMany( { $pull: { favorites: id } }); 
+            await CommentModel.deleteMany({ businessId: id });
+           
+            res.status(201).json({ status: 201, message: "Business deleted successfully." }); 
+        }             
         else  
             res.status(404).json({ status: 404, message: `No business with id: ${id}`, data: id }); 
 
