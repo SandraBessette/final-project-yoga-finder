@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useHistory } from "react-router-dom";
@@ -111,14 +111,10 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: inherit;
   display: flex;
-  align-items: center;
-  
-  
+  align-items: center; 
   width: 100%;
   height: 100%;
   padding: 0 15px;
-  
-  
 
   &.active {
     background-color: ${COLORS.primary};
@@ -135,12 +131,10 @@ const StyledNavLink = styled(NavLink)`
   text-decoration: none;
   color: inherit;
   display: flex;
-  align-items: center;
-  
+  align-items: center;  
   width: 100%;
   height: 100%;
-  padding: 0 15px; 
-
+  padding: 0 15px;
 
   &:hover {     
     background-color: ${COLORS.primary};

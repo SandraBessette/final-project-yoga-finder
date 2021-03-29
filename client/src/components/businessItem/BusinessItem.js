@@ -43,15 +43,14 @@ const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMo
     )
 
 };
-//{`${data.address.street} ${data.address.city} ${data.address.zip} ${data.address.province} ${data.address.country}`}
+
 const Wrapper = styled.div`
     display: flex;
     border-radius: 5px;
     border: ${(p)=> ('1px solid' + p.colorBorder) };
     padding: 0; 
     min-height: ${(p)=>p.height? p.height : '125px'}; 
-    margin: 5px 0;  
-   
+    margin: 5px 0;     
 
     &:hover img {      
         transform: scale(1.092);     
@@ -106,9 +105,8 @@ const Dist = styled.p`
     font-size: 10px;
     color: black;    
     padding: 0;
-    margin: 0;    
+    margin: 0;   
 `;
-
 
 const StyledLink = styled(Link)`
   text-decoration: none;

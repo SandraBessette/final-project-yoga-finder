@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import  moment from 'moment'; 
-import { useParams, useHistory, Link  } from "react-router-dom";
 import ProfileInfo from './ProfileInfo';
 import { COLORS } from '../../../GlobalStyles';
 import Rating from '../../../components/rating/Rating'
 
 
-const CommentItem = ({ comment })=>{
-    
+const CommentItem = ({ comment })=>{    
     
     return (
         <>
@@ -23,8 +21,7 @@ const CommentItem = ({ comment })=>{
          </RatingWrapper>       
         <Text>{comment.message}  </Text>
       </>
-    )
-
+    );
 };
 
 const Divider = styled.div`

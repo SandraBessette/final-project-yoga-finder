@@ -14,9 +14,8 @@ import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
 
 const initialState = { userName: '', email: '', password: '', confirmPassword: '', type: "Client", image: ""};
 
-const SignIn = ({title})=>{
-    const {status, error} = useSelector((state)=>state.auth);   
-   // const [status, setStatus] = useState("loading");   
+const SignIn = ()=>{
+    const {status, error} = useSelector((state)=>state.auth);  
     const [isSignup, setIsSignup] = useState(false);
     const [formData, setFormData] = useState(initialState);
     const [disabled, setDisabled] = useState(false); 
@@ -24,7 +23,6 @@ const SignIn = ({title})=>{
     const [validPassword, setValidPassword] = useState(""); 
     const [validPasswordLenght, setValidPasswordLenght] = useState("");  
     const [validEmail, setValidEmail] = useState("");  
-   // const [serverError, setServerError] = useState("");   
     const dispatch = useDispatch(); 
     const history = useHistory(); 
    
@@ -221,8 +219,7 @@ const Wrapper = styled.div`
 
 const MainWrapper = styled.div`
     margin: 0 auto;
-    max-width: 550px;
-   // height: 100%;
+    max-width: 550px; 
     padding: 20px;
     display: flex;
     justify-content: center;

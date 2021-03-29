@@ -1,5 +1,4 @@
 import React from 'react';
-import { AiTwotoneRightSquare } from 'react-icons/ai';
 import styled from 'styled-components';
 import { COLORS} from '../../../GlobalStyles';
 

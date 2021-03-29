@@ -1,7 +1,7 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import Spinner from '../../components/spinner/Spinner';
 import UserHeader from '../../components/userHeader/UserHeader';
@@ -9,16 +9,12 @@ import Comments from './components/Comments';
 import Error from '../error/Error';
 
 
-const Profile = ({title})=>{
+const Profile = ()=>{
     const {authData} = useSelector((state)=>state.auth);   
     const [status, setStatus] = useState("loading"); 
     const [error, setError] = useState("");
     const [user, setUser] = useState(null);
-   // const dispatch = useDispatch(); 
-   // const history = useHistory(); 
     const { id } = useParams();  
-
-  
 
       useEffect(() => {       
         setStatus("loading");
@@ -67,15 +63,12 @@ const Profile = ({title})=>{
             </MainWrapper>}   
             <Comments/>        
         </Wrapper>
-    )
-
-
+    );
 };
 
 const Wrapper = styled.div`
-   height: calc(100vh - ${HEADER_HEIGHT}); 
-   font-size: 15px;
-
+    height: calc(100vh - ${HEADER_HEIGHT}); 
+    font-size: 15px;
 `;
 
 const MainWrapper = styled.div`

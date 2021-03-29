@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState } from 'react';
 import { 
   BrowserRouter as Router,
   Switch,
@@ -31,10 +31,6 @@ const App= () => {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries,
     });
-    
-
-   
-
 
   return (
     <> 
@@ -86,8 +82,7 @@ const App= () => {
       </Router>
     </>
   );
-}
-
+};
 
 const Wrapper = styled.div`    
     width: 100%;

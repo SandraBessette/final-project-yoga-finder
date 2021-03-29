@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { BsStarFill, BsStarHalf, BsStar } from 'react-icons/bs';
 import RatingElement from './RatingElement';
 
 const ratingArray = [1, 2, 3, 4, 5];

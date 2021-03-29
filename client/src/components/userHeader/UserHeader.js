@@ -3,7 +3,6 @@ import { useHistory  } from "react-router-dom";
 import styled from 'styled-components';
 import { BiArrowBack } from "react-icons/bi"; 
 import IconButton from '../../components/button/IconButton';
-import { HEADER_HEIGHT } from '../../GlobalStyles';
 
 
 const UserHeader = ({title})=>{

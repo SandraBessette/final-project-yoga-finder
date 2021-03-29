@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import styled from 'styled-components';
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import decode from 'jwt-decode';
 import { logout } from '../../store/reducers/auth/action'
@@ -15,27 +15,22 @@ const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
     const history = useHistory(); 
     const dispatch = useDispatch();
-    let location = useLocation();   
 
     useEffect(() => {
         const token = authData?.token;
         let timer = null;
-        if (token) {
-            console.log("hereloguseEffect");          
-              
+        if (token) {  
             const decodedToken = decode(token);
             const timeNow = new Date().getTime();           
        
-            if (decodedToken.exp * 1000 < timeNow){
-                console.log("herelogout");
+            if (decodedToken.exp * 1000 < timeNow){            
                 history.push('/');
                 dispatch(logout());             
             }  
             else {
                 const timeBeforeExp = decodedToken.exp * 1000 - timeNow;
                 console.log('timeBeforeExp', timeBeforeExp);
-                timer = setTimeout(function(){ 
-                    console.log("hereinTimer");
+                timer = setTimeout(function(){                    
                     history.push('/');
                     dispatch(logout());
                 }, timeBeforeExp);
@@ -47,8 +42,8 @@ const Header = ()=>{
                 clearTimeout(timer);
             }  
         }
-        //location
-      }, [authData?.token, dispatch]);
+    
+      }, [authData?.token, dispatch, history]);
 
     const handleClick = (e)=>{
         e.preventDefault();

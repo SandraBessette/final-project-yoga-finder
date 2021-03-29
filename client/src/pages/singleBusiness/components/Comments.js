@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import { useParams, useHistory, Link  } from "react-router-dom";
+import { useParams  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import styled from 'styled-components';
 import CommentItem from './CommentItem';
@@ -8,7 +8,6 @@ import TextArea from '../../../components/textArea/TextArea';
 import Button from '../../../components/button/Button';
 import Spinner from '../../../components/spinner/Spinner';
 import Error from '../../error/Error';
-import { COLORS } from '../../../GlobalStyles';
 
 const intitialState = {rating: 0, message: ""}
 
@@ -143,17 +142,9 @@ const Comments = ({onRatingChange})=>{
 
 };
 
-const Label = styled.label`  
-    padding: 5px 10px 5px 0;
-    color: ${COLORS.primary};
-    display: block;
-    min-width: 80px;   
-`;
-
 const RatingWrapper = styled.div`
     display: flex;
     margin: 15px 15px 15px 0px;
-
 `;
 
 const ButtonWrapper = styled.div`

@@ -6,7 +6,6 @@ import Spinner from '../../../components/spinner/Spinner';
 import { VscSearchStop} from "react-icons/vsc";
 
 
-
 const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, status })=>{  
 
     return(
@@ -77,34 +76,6 @@ const Wrapper = styled.div`
         border-radius: 10px;
        
     }
-/*&::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	background-color: #F5F5F5;
-    opacity: 0.5;
-}
-
-&::-webkit-scrollbar
-{
-	width: 5px;
-	background-color: #F5F5F5;
-}
-
-&::-webkit-scrollbar-thumb
-{
-	background-color: #808080;
-	border: 1px solid #808080;
-}*/
-
-
-   /* &::-webkit-scrollbar {
-        display: none;
-    }*/
-
-    //-ms-overflow-style: none; /* IE and Edge */
-    //scrollbar-width: none; /* Firefox */
-
-
 `;
 
 const NoResultWrapper = styled.div`
@@ -115,7 +86,6 @@ const NoResultWrapper = styled.div`
     padding: 15px;
     color: grey;
 `;
-
 
 
 export default SideBar;

@@ -258,7 +258,7 @@ const CreateBusiness = ({type})=>{
 
     return (
         <Wrapper>           
-            <UserHeader title={type=='New' ? 'Create Business' : 'Modify Business'}/> 
+            <UserHeader title={type === 'New' ? 'Create Business' : 'Modify Business'}/> 
             <MainWrapper>  
             {status === 'loading' && <Spinner />}
             {status === 'idle' && 

@@ -1,14 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
-import { useHistory  } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { MdDeleteForever } from 'react-icons/md'
-import { BsPencilSquare } from 'react-icons/bs'
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { HEADER_HEIGHT } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
-import Button from '../../components/button/Button';
 import IconButton from '../../components/button/IconButton';
 import { updateFavorites } from '../../store/reducers/auth/action';
 import Error from '../error/Error';
@@ -18,8 +15,7 @@ const Favorites = ()=>{
     const { authData } = useSelector((state)=>state.auth); 
     const [status, setStatus] = useState("loading");
     const [error, setError] = useState("");
-    const [favorites, setFavorites] = useState(null);
-    const history = useHistory();
+    const [favorites, setFavorites] = useState(null);  
     const dispatch = useDispatch(); 
 
     const updateItem = useCallback((id)=>{       
@@ -29,8 +25,7 @@ const Favorites = ()=>{
         setFavorites(newFavorites);
     },[favorites]);
 
-    const handleDeleteClick = useCallback((e, id)=>{       
-      //  setStatus("loading");   
+    const handleDeleteClick = useCallback((e, id)=>{   
         e.preventDefault();
         fetch(`/user/favorite/${id}`, {
             method: "PATCH",
@@ -74,7 +69,7 @@ const Favorites = ()=>{
             })
             .then((res) => res.json())
             .then((json) => {
-                const { status, data, message } = json;            
+                const { status, data } = json;            
                 if (status === 200) {               
                     setFavorites(data);                   
                     setStatus("idle");                  
@@ -125,7 +120,6 @@ const Wrapper = styled.div`
 const MainWrapper = styled.div`
     margin: 20px auto;
     max-width: 700px;
-   // height: 100%;
     padding: 20px;
     display: flex;
     justify-content: center;

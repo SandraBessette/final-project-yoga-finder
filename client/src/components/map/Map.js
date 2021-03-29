@@ -1,25 +1,14 @@
-import React, {useCallback} from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
     GoogleMap,
-    useLoadScript,
-    Marker,
-
+    Marker
 } from "@react-google-maps/api";
-import { HEADER_HEIGHT } from '../../GlobalStyles'
 import MapStyled  from '../../MapStyled';
-
-import Spinner from '../../components/spinner/Spinner';
 
 const mapContainerStyle = {
     width: '100%',
-    height: '100%',    
-   
-};
-
-const center = {
-    lat: 45.501690,
-    lng: -73.567253
+    height: '100%',  
 };
 
 const options ={
@@ -43,9 +32,7 @@ const icons = {
 const Map = ({lat, lng, type })=>{   
  
     return(
-        <Wrapper>
-            {/*!isLoaded && <Spinner />*/}
-            {/*isLoaded && */
+            <Wrapper> 
                 <GoogleMap 
                     mapContainerStyle={mapContainerStyle} 
                     zoom={15}
@@ -64,11 +51,9 @@ const Map = ({lat, lng, type })=>{
                         scaledSize: new window.google.maps.Size(35, 35),
                     }}                  
                 />
-                </GoogleMap>   
-            }                  
-        </Wrapper>
-    );  
-
+                </GoogleMap>  
+            </Wrapper>
+        );  
 };
 
 const Wrapper = styled.div`

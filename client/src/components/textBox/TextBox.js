@@ -25,10 +25,8 @@ const Input = styled.input`
     height: 30px;
     width: ${(p)=>p.width};  
     padding: 0 12px;
-    transition: all 0.30s ease-in-out;  
-   // margin: 15px;
-    box-shadow: 0 0 5px lightgrey;    
-    
+    transition: all 0.30s ease-in-out;    
+    box-shadow: 0 0 5px lightgrey;        
     
     &:focus  {
         box-shadow: 0 0 5px ${COLORS.primary};

@@ -2,7 +2,6 @@ import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import {
     GoogleMap,
-    useLoadScript,
     Marker,
     InfoWindow
 
@@ -14,7 +13,6 @@ import SearchBox from './components/SearchBox';
 import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 import SmallWindow from './components/SmallWindow';
-import Spinner from '../../components/spinner/Spinner';
 
 const mapContainerStyle = {
     width: '100%',
@@ -44,12 +42,7 @@ const icons = {
     }
 };
 
-const Map = ()=>{
-   /* const [ libraries ] = useState(['places', 'geometry' ]); 
-    const {isLoaded, loadError} = useLoadScript ({
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
-        libraries,
-    });*/
+const Map = ()=>{ 
    
     const [business, setBusiness] = useState(null);
     const [animatedId, setAnimatedId] = useState(null);
@@ -70,8 +63,7 @@ const Map = ()=>{
         mapRef.current = null;
     }, [])
 
-    const updateCoordinates = useCallback(() => {
-        //console.log("map in hangle change", mapRef.current);
+    const updateCoordinates = useCallback(() => {    
         const NECorner = mapRef.current.getBounds().getNorthEast();
         const SWCorner = mapRef.current.getBounds().getSouthWest();
    
@@ -101,28 +93,11 @@ const Map = ()=>{
     }, []);
 
     const panTo = useCallback(({ lat, lng, bounds = null }) => {
-        mapRef.current.panTo({ lat, lng });
-       // console.log(' bounds',  bounds);
-      //  if (bounds)
-       //     mapRef.current.fitBounds(bounds); 
-    //    else
-            mapRef.current.setZoom(14);
+        mapRef.current.panTo({ lat, lng });       
+        mapRef.current.setZoom(14);
         updateCoordinates();
-    }, [updateCoordinates]);
-    
-   /* const fitMapToData = useCallback((data) => {
-        const bounds = new window.google.maps.LatLngBounds();
-        data.forEach((marker)=>{
-            bounds.extend(new window.google.maps.LatLng(marker.location.coordinates[1], marker.location.coordinates[0]));
-        });
-
-        if (data.length > 0) {
-            bounds.extend(mapRef.current.getCenter());
-            mapRef.current.fitBounds(bounds);
-            
-        }    // faut que ca retourne une promise.... pour que ca marche avec le bouton sera this area
-
-    }, []);*/
+    }, [updateCoordinates]);    
+   
 
     useEffect(()=>{
         if(!coordinates)
@@ -139,8 +114,7 @@ const Map = ()=>{
         .then((res)=>res.json())
         .then((json)=>{
             const {status, data} = json;
-                if (status === 201) {
-                   // fitMapToData([...data]);
+                if (status === 201) {              
                     setBusiness([...data]);
                     setStatus("idle");
                     setAreaButtonVisible(false);
@@ -153,14 +127,9 @@ const Map = ()=>{
             setStatus("error");
         })
     }, [coordinates]);
-
-
-   // if(loadError) return "error loading map"; 
     
     return(
-        <Wrapper>
-            {/*!isLoaded && <Spinner />*/}
-            {/*isLoaded &&*/ <>
+        <Wrapper> 
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
                 zoom={15}
@@ -174,16 +143,7 @@ const Map = ()=>{
                     }
                     else {                       
                         setAreaButtonVisible(true);
-                    }
-                        
-                 
-                 /*   console.log("newbound", map.getBounds().getNorthEast().toJSON());
-                    console.log("newbcenter", map.getCenter().toJSON());
-                    const test =  window.google.maps.geometry.spherical.computeDistanceBetween(
-                        new window.google.maps.LatLng(map.getCenter().lat(), map.getCenter().lng()),
-                         new window.google.maps.LatLng(map.getBounds().getNorthEast().lat(), map.getBounds().getNorthEast().lng()));
-                    console.log('dist', test);   */                 
-                 
+                    }   
                 }
             }
             >
@@ -215,13 +175,11 @@ const Map = ()=>{
                 <InfoWindow                  
                     position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}  
                     options={{pixelOffset: new window.google.maps.Size(0, -42)}}                                
-                    onCloseClick={() => {
-                        //windowRef.current.content.focus();
+                    onCloseClick={() => {                
                         setSelected(null);
-                    }}                    
-                   
+                    }} 
                 >
-                   <SmallWindow data={selected}/>
+                <SmallWindow data={selected}/>
                 </InfoWindow>
                 ) : null}
             </GoogleMap>
@@ -237,13 +195,12 @@ const Map = ()=>{
                 handleOnMouseEnter={handleOnMouseEnter}
                 handleOnMouseLeave={handleOnMouseLeave}
                 status={status}
-            />
-            </>}            
+            />                  
         </Wrapper>
     );
 
 };
-//position={{ lat: selected.location.coordinates[1], lng: selected.location.coordinates[0] }}   
+
 const Wrapper = styled.div`
     position: relative;
     width: 100%;

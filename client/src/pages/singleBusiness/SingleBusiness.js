@@ -1,11 +1,11 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import { useParams, useHistory, Link  } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { BiArrowBack } from "react-icons/bi"; 
 import { MdFavoriteBorder, MdFavorite } from "react-icons/md"; 
 import { BsChatDots } from "react-icons/bs"; 
-import { AiOutlineClockCircle, AiOutlineNodeIndex, AiOutlinePhone } from "react-icons/ai";
+import { AiOutlineClockCircle, AiOutlinePhone } from "react-icons/ai";
 import { FaMapMarkerAlt } from "react-icons/fa";
 import { GiEarthAmerica } from "react-icons/gi";
 import Spinner from '../../components/spinner/Spinner';
@@ -18,7 +18,7 @@ import Comments from './components/Comments';
 import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
 import { updateFavorites } from '../../store/reducers/auth/action'
-//updateFavorites
+
 const SingleBusiness = ()=>{
     const { authData } = useSelector((state)=>state.auth);   
     const [business, setBusiness] = useState(null);    
@@ -214,8 +214,7 @@ const SingleBusiness = ()=>{
 }
 
 const Wrapper = styled.div`
-   height: calc(100vh - ${HEADER_HEIGHT}); 
-
+    height: calc(100vh - ${HEADER_HEIGHT});
 `;
 
 const TopWrapper = styled.div`
@@ -224,8 +223,7 @@ const TopWrapper = styled.div`
     background-color:${(p)=>p.color};
     display: flex;
     color: white;
-    align-items: center;
-  
+    align-items: center;  
 `;
 
 const TopContentWrapper = styled.div` 
@@ -233,16 +231,13 @@ const TopContentWrapper = styled.div`
     width: 870px;
     display: flex;
     flex-direction: column;
-
-    
-   // justify-content: space-between;
 `;
 
 const RatingWrapper = styled.div`
     display: flex;
     margin: 5px 0;
-
 `;
+
 const Title = styled.h1`
     font-weight: 600;
 `;
@@ -257,29 +252,29 @@ const Image = styled.img`
     width: 100%;
     height: 400px;  
     display: block;
-
 `;
+
 const ContentWrapper = styled.div`
     padding: 10px 20px;
     border: 1px solid ${COLORS.lightGray};
 `;
 
 const IconWrapper = styled.div`
-   display: flex;
-   justify-content: space-evenly;
-   align-items: flex-start;
-   padding: 10px 0 20px 0;
-   margin: 10px 0 20px 0;
-   border-bottom: 1px solid ${COLORS.lightGray};     
+    display: flex;
+    justify-content: space-evenly;
+    align-items: flex-start;
+    padding: 10px 0 20px 0;
+    margin: 10px 0 20px 0;
+    border-bottom: 1px solid ${COLORS.lightGray};     
 `;
 
 const TopIconWrapper = styled.div`
-   display: flex;
-   justify-content: space-evenly;
-   align-items: center;
-   border: 1px solid ${COLORS.lightGray};    
-   border-bottom: none;  
-   background-color: ${(p)=>p.color};
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    border: 1px solid ${COLORS.lightGray};    
+    border-bottom: none;  
+    background-color: ${(p)=>p.color};
 `;
 
 const Hour = styled.span`

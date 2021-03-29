@@ -4,7 +4,7 @@ import { useHistory  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MdDeleteForever } from 'react-icons/md'
 import { BsPencilSquare } from 'react-icons/bs'
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { HEADER_HEIGHT } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
@@ -34,8 +34,7 @@ const Business = ()=>{
 
 
     const handleDeleteClick = useCallback((e, id)=>{
-        e.preventDefault();
-      //  setStatus("loading");   
+        e.preventDefault();   
         fetch(`/business/${id}`, {
             method: "DELETE",
             headers: {
@@ -46,7 +45,7 @@ const Business = ()=>{
         })
         .then((res) => res.json())
         .then((json) => {
-            const { status, message } = json;            
+            const { status } = json;            
             if (status === 201) { 
                 deleteItem(id);
                 setStatus("idle");                  
@@ -80,7 +79,7 @@ const Business = ()=>{
             })
             .then((res) => res.json())
             .then((json) => {
-                const { status, data, message } = json;            
+                const { status, data} = json;            
                 if (status === 200) {               
                     setBusiness(data);
                     setStatus("idle");                  
@@ -137,7 +136,6 @@ const Wrapper = styled.div`
 const MainWrapper = styled.div`
     margin: 0 auto;
     max-width: 700px;
-   // height: 100%;
     padding: 20px;
     display: flex;
     justify-content: center;

@@ -19,13 +19,12 @@ const Error = ({type})=>{
 
 const Wrapper = styled.div`
     position: relative;
-     height: calc(100vh - ${HEADER_HEIGHT}); 
-     width: 100%;  
-     display: flex;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     
+    height: calc(100vh - ${HEADER_HEIGHT}); 
+    width: 100%;  
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;     
 `;
 
 const Image = styled.img`
