@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 
 const Error = ({type})=>{
@@ -24,7 +25,12 @@ const Wrapper = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;     
+    align-items: center; 
+
+    ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
+    
 `;
 
 const Image = styled.img`

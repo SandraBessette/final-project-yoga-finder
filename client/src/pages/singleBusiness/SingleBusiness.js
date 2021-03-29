@@ -15,9 +15,10 @@ import Rating from '../../components/rating/Rating';
 import ProfileInfo from './components/ProfileInfo';
 import Error from '../error/Error';
 import Comments from './components/Comments';
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
-import { updateFavorites } from '../../store/reducers/auth/action'
+import { updateFavorites } from '../../store/reducers/auth/action';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 const SingleBusiness = ()=>{
     const { authData } = useSelector((state)=>state.auth);   
@@ -117,9 +118,11 @@ const SingleBusiness = ()=>{
             {status === 'loading' && <Spinner />}
             {status === 'idle' && <>
             <TopWrapper color={colors[business.type].color}>
-                <IconButton type={business.type} reverse={true} padding={'5px'} margin='0 40px 0 20px' onclick={handleClick}>
-                    <BiArrowBack size={40}/>
+                <IconButtonWrapper>
+                <IconButton type={business.type} reverse={true} padding={'5px'} margin='0 25px 0 20px' onclick={handleClick}>
+                    <BiArrowBack size={35}/>
                 </IconButton>
+                </IconButtonWrapper>
                 <TopContentWrapper >
                     <Title>{business.name}</Title> 
                     <RatingWrapper>
@@ -159,7 +162,7 @@ const SingleBusiness = ()=>{
                 <ContentWrapper>                   
                     <IconWrapper>
                         <Block>
-                            <AiOutlineClockCircle size={45} color={COLORS.primary}/>
+                            <AiOutlineClockCircle size={40} color={COLORS.primary}/>
                             <div>
                                 <Hour isOpen={isOpen(business.hours)}>{isOpen(business.hours) ? 'Open': 'Close'} </Hour>
                                 <Par>{currentOpenHours(business.hours)}</Par>
@@ -176,11 +179,11 @@ const SingleBusiness = ()=>{
                             </div>
                         </Block>
                         <Block>
-                            <AiOutlinePhone size={45} color={COLORS.primary}/>
+                            <AiOutlinePhone size={40} color={COLORS.primary}/>
                             <Par>{business.phone}</Par>
                         </Block>
                         <Block>
-                            <FaMapMarkerAlt size={60} color={COLORS.primary}/>
+                            <FaMapMarkerAlt size={55} color={COLORS.primary}/>
                             <Par>{business.address.app ? `${business.address.app}, ${business.address.formatted}` :
                             business.address.formatted}</Par>
                         </Block>
@@ -192,8 +195,10 @@ const SingleBusiness = ()=>{
                             <span key={tag}>{index === business.tags.length - 1 ? tag : `${tag}, ` }</span>
                         ))}
                     </>}
-                    <p>{business.description}</p>
-                    <a href={business.website} >{business.website}</a>
+                    <Description>
+                        <p>{business.description}</p>
+                        <a href={business.website} >{business.website}</a>
+                    </Description>
                     < MapWrapper>
                         <Map lat={business.location.coordinates[1]} lng={business.location.coordinates[0]} type={business.type} />
                     </ MapWrapper>
@@ -215,6 +220,10 @@ const SingleBusiness = ()=>{
 
 const Wrapper = styled.div`
     height: calc(100vh - ${HEADER_HEIGHT});
+
+    ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 const TopWrapper = styled.div`
@@ -224,6 +233,7 @@ const TopWrapper = styled.div`
     display: flex;
     color: white;
     align-items: center;  
+  
 `;
 
 const TopContentWrapper = styled.div` 
@@ -236,10 +246,31 @@ const TopContentWrapper = styled.div`
 const RatingWrapper = styled.div`
     display: flex;
     margin: 5px 0;
+    ${onSmallTabletMediaQuery()} {
+       font-size: 14px;
+    }
 `;
 
 const Title = styled.h1`
     font-weight: 600;
+    font-size: 28px;
+
+    ${onSmallTabletMediaQuery()} {
+       font-size: 22px;
+    }
+
+    ${onPhoneMediaQuery()} {        
+        font-size: 20px;
+    }
+`;
+
+const IconButtonWrapper = styled.div`
+    ${onSmallTabletMediaQuery()} {
+        & svg {
+            width: 30px;
+            height: 30px;
+        }
+    }
 `;
 
 const MainWrapper = styled.div`
@@ -257,15 +288,26 @@ const Image = styled.img`
 const ContentWrapper = styled.div`
     padding: 10px 20px;
     border: 1px solid ${COLORS.lightGray};
+
+    ${onSmallTabletMediaQuery()} {
+        padding: 10px 25px;
+       
+    }
 `;
 
 const IconWrapper = styled.div`
     display: flex;
     justify-content: space-evenly;
     align-items: flex-start;
-    padding: 10px 0 20px 0;
-    margin: 10px 0 20px 0;
+    padding: 15px 0 28px 0;
+    margin: 10px 0 25px 0;
     border-bottom: 1px solid ${COLORS.lightGray};     
+
+    ${onSmallTabletMediaQuery()} {
+        padding: 10px 0 10px 0;
+       flex-direction: column;
+       justify-content: flex-start;       
+    }
 `;
 
 const TopIconWrapper = styled.div`
@@ -275,6 +317,21 @@ const TopIconWrapper = styled.div`
     border: 1px solid ${COLORS.lightGray};    
     border-bottom: none;  
     background-color: ${(p)=>p.color};
+    padding: 5px 0;
+
+    ${onSmallTabletMediaQuery()} {        
+        & svg {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    ${onPhoneMediaQuery()} {        
+        & svg {
+            width: 35px;
+            height: 35px;
+        }
+    }
 `;
 
 const Hour = styled.span`
@@ -287,6 +344,23 @@ const Block = styled.div`
     flex:1;
     display: flex;
     align-items: flex-start;
+
+    ${onSmallTabletMediaQuery()} {
+        margin: 0px 10px;   
+        padding: 20px 0px;
+        border-bottom: 1px solid ${COLORS.lightGray}; 
+        width: 100%;  
+
+        &:last-child {
+            border-bottom: none;
+            padding: 20px 0 0 0 0;
+        } 
+
+        & svg {
+            height: 33px;
+            width: 33px;
+        }
+    }
 `;
 
 const Par = styled.p`
@@ -353,14 +427,19 @@ const SpanIcon = styled.div`
     }
 `;
 
+const Description = styled.div`
+    ${onSmallTabletMediaQuery()} {
+        font-size: 14px;
+        }
+`;
+
 const MapWrapper = styled.div`
     height: 300px;
     margin: 15px 0;
 `;
 
 const CommentWrapper = styled.div`
-    padding: 10px 20px;
-  
+    padding: 10px 20px;  
 `;
 
 export default SingleBusiness;

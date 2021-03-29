@@ -9,6 +9,7 @@ import Button from '../../../components/button/Button';
 import Spinner from '../../../components/spinner/Spinner';
 import Error from '../../error/Error';
 
+
 const intitialState = {rating: 0, message: ""}
 
 const Comments = ({onRatingChange})=>{  

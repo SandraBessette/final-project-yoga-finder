@@ -4,13 +4,14 @@ import { useHistory  } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { MdDeleteForever } from 'react-icons/md'
 import { BsPencilSquare } from 'react-icons/bs'
-import { HEADER_HEIGHT } from '../../GlobalStyles';
+import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL} from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
 import Button from '../../components/button/Button';
 import IconButton from '../../components/button/IconButton';
 import Error from '../error/Error';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 
 const Business = ()=>{
@@ -131,6 +132,10 @@ const Business = ()=>{
 const Wrapper = styled.div`
    font-size: 15px;
    height: calc(100vh - ${HEADER_HEIGHT});
+
+   ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 const MainWrapper = styled.div`

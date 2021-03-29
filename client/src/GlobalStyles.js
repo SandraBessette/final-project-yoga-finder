@@ -18,6 +18,7 @@ export const COLORS = {
 };
 
 export const HEADER_HEIGHT = '74px';
+export const HEADER_HEIGHT_SMALL = '64px';
 
 
 const GlobalStyles = createGlobalStyle`

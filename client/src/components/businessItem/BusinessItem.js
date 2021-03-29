@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { colors, isOpen} from '../../api/helper';
 import Rating from '../rating/Rating';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 const BusinessItem = ({data, height= null, handleOnMouseEnter = null, handleOnMouseLeave =null })=>{   
 
@@ -49,12 +50,16 @@ const Wrapper = styled.div`
     border-radius: 5px;
     border: ${(p)=> ('1px solid' + p.colorBorder) };
     padding: 0; 
-    min-height: ${(p)=>p.height? p.height : '125px'}; 
+    height: ${(p)=>p.height? p.height : '125px'}; 
     margin: 5px 0;     
 
     &:hover img {      
         transform: scale(1.092);     
     }    
+
+    ${onSmallTabletMediaQuery()} {
+        height: ${(p)=>p.height? p.height : '100px'}; 
+    }
 `;
 
 const ImageWrapper = styled.div`

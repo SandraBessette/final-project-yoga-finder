@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Link } from "react-router-dom";
 import { currentOpenHours, isOpen} from '../../../api/helper';
 import Rating from '../../../components/rating/Rating';
+import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 
 const SmallWindow = ({data})=>{    
    
@@ -38,14 +39,23 @@ const Wrapper = styled.div`
     width: 200px;
     height: 200px;   
     overflow: hidden !important;
+
+    ${onSmallTabletMediaQuery()} {
+        width: 175px;
+        height: 150px;
+    }
 `;
 
-const Image = styled.img`
-   
+const Image = styled.img`   
     width: 200px;
     height: 100px;
     object-fit: cover;  
     margin-bottom: 5px;
+
+    ${onSmallTabletMediaQuery()} {
+        width: 175px;
+        height: 65px;
+    }
 `;
 
 const Title = styled.p`

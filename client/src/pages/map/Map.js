@@ -6,13 +6,14 @@ import {
     InfoWindow
 
 } from "@react-google-maps/api";
-import { HEADER_HEIGHT } from '../../GlobalStyles'
+import { HEADER_HEIGHT,  HEADER_HEIGHT_SMALL } from '../../GlobalStyles'
 import MapStyled  from '../../MapStyled';
 import Button from '../../components/button/Button';
 import SearchBox from './components/SearchBox';
 import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 import SmallWindow from './components/SmallWindow';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 const mapContainerStyle = {
     width: '100%',
@@ -129,6 +130,7 @@ const Map = ()=>{
     }, [coordinates]);
     
     return(
+        <MainWrapper>
         <Wrapper> 
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
@@ -190,16 +192,30 @@ const Map = ()=>{
                     Search this area...
                 </Button>
             </AreaWrapper>}
-            <SideBar 
+                        
+        </Wrapper>
+        <SideBar 
                 data={business}
                 handleOnMouseEnter={handleOnMouseEnter}
                 handleOnMouseLeave={handleOnMouseLeave}
                 status={status}
-            />                  
-        </Wrapper>
+            />    
+        </MainWrapper>
     );
 
 };
+
+const MainWrapper = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction:column;
+    width: 100%;
+    height: calc(100vh - ${HEADER_HEIGHT});
+
+    ${onSmallTabletMediaQuery()} {
+        height: calc(100vh - ${HEADER_HEIGHT_SMALL});      
+    }
+`;
 
 const Wrapper = styled.div`
     position: relative;
@@ -208,6 +224,10 @@ const Wrapper = styled.div`
 
     & *:focus {
         outline: none;
+    }
+
+    ${onSmallTabletMediaQuery()} {
+        height: calc(55vh - ${HEADER_HEIGHT_SMALL});      
     }
 `;
 

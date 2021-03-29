@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import styled from 'styled-components';
-import { HEADER_HEIGHT } from '../../GlobalStyles';
+import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
 import Error from '../error/Error';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 
 const Confirmation = ({type})=>{
@@ -68,7 +69,10 @@ const Confirmation = ({type})=>{
 const Wrapper = styled.div`
    height: calc(100vh - ${HEADER_HEIGHT}); 
    font-size: 15px;
-
+   
+   ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    }
 `;
 
 const MainWrapper = styled.div`

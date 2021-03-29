@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import  moment from 'moment'; 
 import Rating from '../../../components/rating/Rating';
 import { colors } from '../../../api/helper';
+import { onSmallTabletMediaQuery} from '../../../utils/responsives';
 
 
 const CommentItem = ({ comment })=>{
@@ -27,12 +28,19 @@ const CommentItem = ({ comment })=>{
 
 const Text = styled.p`
     margin: 0 0 20px 0;
+    ${onSmallTabletMediaQuery()} {
+        font-size: 14px;
+    }
 `;
 
 const Date = styled.p`
     margin: 0 15px;;
     font-size: 13px;
     text-align: right;
+
+    ${onSmallTabletMediaQuery()} {
+        font-size: 12px;
+    }
 `;
 
 const RatingWrapper = styled.div`
@@ -51,6 +59,13 @@ const TitleWrapper = styled.div`
     & p {
         font-size: 20px;
         font-weight: 600;
+    }
+
+    ${onSmallTabletMediaQuery()} {       
+        & p {
+            font-size: 16px;
+            font-weight: 600;
+        }
     }
 `;
 

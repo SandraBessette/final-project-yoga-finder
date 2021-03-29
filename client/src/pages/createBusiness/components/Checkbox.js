@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 
 const CheckBox = ({ value, handleChange, isChecked, children })=>{
    
@@ -29,6 +30,10 @@ const Wrapper = styled.div`
 const Label = styled.label`
     display: flex;
     align-items: center;
+
+    ${onSmallTabletMediaQuery()} {        
+        font-size: 14px;
+    }
 `;
 
 const Input = styled.input`

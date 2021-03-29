@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { COLORS } from '../../GlobalStyles';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 const Button = ({background, color, width, radius, onclick, disabled=false, children})=>{
 
@@ -42,6 +43,15 @@ const Wrapper = styled.button`
     &:disabled {
         cursor: not-allowed;
         opacity: 0.5;
+    }
+
+    ${onSmallTabletMediaQuery()} {
+       font-size: 16px;
+       height: 30px;
+    }
+    ${onPhoneMediaQuery()} {
+       font-size: 14px;
+       height: 30px;
     }
 
 `;

@@ -3,6 +3,7 @@ import { useHistory  } from "react-router-dom";
 import styled from 'styled-components';
 import { BiArrowBack } from "react-icons/bi"; 
 import IconButton from '../../components/button/IconButton';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 
 const UserHeader = ({title})=>{
@@ -16,7 +17,7 @@ const UserHeader = ({title})=>{
     return (               
             <TopWrapper >
                 <IconButton reverse={true} padding={'5px'} margin='0 40px 0 20px' onclick={handleClick}>
-                    <BiArrowBack size={40}/>
+                    <BiArrowBack size={35}/>
                 </IconButton>
                 <TopContentWrapper >
                     <Title>{title}</Title>                                
@@ -32,15 +33,28 @@ const TopWrapper = styled.div`
     display: flex;
     color: white;
     align-items: center;  
+
+    ${onSmallTabletMediaQuery()} {
+        min-height: 85px;
+
+        & svg {
+            height: 27px;
+            width: 27px;
+        }
+    }
 `;
 
 const TopContentWrapper = styled.div` 
     margin: 0 auto;
-    width: 870px;  
+    width: 770px;
 `;
 
 const Title = styled.h1`
     font-weight: 600;
+
+    ${onSmallTabletMediaQuery()} {
+       font-size: 24px;
+    }
 `;
 
 export default UserHeader;

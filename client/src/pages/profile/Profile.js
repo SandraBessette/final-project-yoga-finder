@@ -2,11 +2,12 @@ import React, {useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import Spinner from '../../components/spinner/Spinner';
 import UserHeader from '../../components/userHeader/UserHeader';
 import Comments from './components/Comments';
 import Error from '../error/Error';
+import { onSmallTabletMediaQuery} from '../../utils/responsives';
 
 
 const Profile = ()=>{
@@ -69,6 +70,10 @@ const Profile = ()=>{
 const Wrapper = styled.div`
     height: calc(100vh - ${HEADER_HEIGHT}); 
     font-size: 15px;
+
+    ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 const MainWrapper = styled.div`
@@ -100,6 +105,11 @@ const Image = styled.img`
     margin: 20px auto 35px auto;
     object-fit: cover;
     border-radius: 50%;
+
+    ${onSmallTabletMediaQuery()} {
+        width: 150px;
+        height: 150px;
+    }
 `;
 
 

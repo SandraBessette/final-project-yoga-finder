@@ -2,13 +2,14 @@ import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { MdDeleteForever } from 'react-icons/md'
-import { HEADER_HEIGHT } from '../../GlobalStyles';
+import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import BusinessItem from '../../components/businessItem/BusinessItem';
 import Spinner from '../../components/spinner/Spinner';
 import IconButton from '../../components/button/IconButton';
 import { updateFavorites } from '../../store/reducers/auth/action';
 import Error from '../error/Error';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 
 const Favorites = ()=>{
@@ -115,6 +116,10 @@ const Favorites = ()=>{
 const Wrapper = styled.div`
    font-size: 15px;
    height: calc(100vh - ${HEADER_HEIGHT});
+
+   ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 const MainWrapper = styled.div`

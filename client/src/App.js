@@ -21,8 +21,9 @@ import { useSelector } from "react-redux";
  import Header from './components/header/Header';
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
+ import { onSmallTabletMediaQuery } from './utils/responsives';
 
- import { HEADER_HEIGHT } from './GlobalStyles'
+ import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from './GlobalStyles'
 
 const App= () => {  
   const { authData } = useSelector((state)=>state.auth); 
@@ -87,6 +88,10 @@ const App= () => {
 const Wrapper = styled.div`    
     width: 100%;
     height: calc(100vh - ${HEADER_HEIGHT});
+
+    ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 export default App; 

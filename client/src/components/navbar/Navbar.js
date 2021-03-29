@@ -2,8 +2,9 @@ import React from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useHistory } from "react-router-dom";
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
-import { logout } from '../../store/reducers/auth/action'
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
+import { logout } from '../../store/reducers/auth/action';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 
 const menuItem = [ "Favorites", "Business"];
@@ -59,6 +60,16 @@ const ProfilImage = styled.img`
     padding: 0px;
     background: white;
     border-radius: 50%;
+
+    ${onSmallTabletMediaQuery()} {
+        width: 45px;
+        height: 45px; 
+    }
+
+    ${onPhoneMediaQuery()} {
+        width: 40px;
+        height: 40px; 
+    }
 `;
 
 const ImageWrapper = styled.div`
@@ -78,6 +89,14 @@ const ImageWrapper = styled.div`
     &:hover ul {
         display: block;
 
+    }
+
+    ${onSmallTabletMediaQuery()} {
+       height: ${HEADER_HEIGHT_SMALL};  
+    }
+
+    ${onPhoneMediaQuery()} {
+        width: 75px;
     }
 `;
 
@@ -105,6 +124,11 @@ const List = styled.ul`
     font-size: 14px;   
     
    }  
+
+   ${onSmallTabletMediaQuery()} {
+        top: ${HEADER_HEIGHT_SMALL};    
+        right: -5px; 
+    }
 `;
 
 const StyledNavLink = styled(NavLink)`

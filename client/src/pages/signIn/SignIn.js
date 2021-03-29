@@ -2,14 +2,15 @@ import React, {useState, useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import { useHistory  } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import FileBase from 'react-file-base64';
 import TextBox from '../../components/textBox/TextBox.js';
 import IconButton from '../../components/button/IconButton';
 import Button from '../../components/button/Button';
 import { authenticate, requestAuthInfo, receiveAuthInfoError } from '../../store/reducers/auth/action'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
+import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 
 const initialState = { userName: '', email: '', password: '', confirmPassword: '', type: "Client", image: ""};
@@ -214,7 +215,10 @@ const SignIn = ()=>{
 const Wrapper = styled.div`
    height: calc(100vh - ${HEADER_HEIGHT}); 
    font-size: 15px;
-
+   
+   ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 
 const MainWrapper = styled.div`
@@ -233,6 +237,11 @@ const Form = styled.form`
   padding: 35px 35px 20px 35px;
   display: block;
   width: 100%;
+
+  ${onSmallTabletMediaQuery()} {       
+        padding: 20px;
+    }
+
 `;
 
 const Label = styled.label`  
@@ -240,9 +249,16 @@ const Label = styled.label`
     color: ${COLORS.primary};
     display: block;
     min-width: 100px;
-    float: left;
-   // margin-right: 15px; // remove with cell vue,,, same with the dropbox
+    float: left;  
     text-align: start;
+
+    ${onSmallTabletMediaQuery()} {       
+        font-size: 14px;
+    }
+
+    ${onPhoneMediaQuery()}{
+      font-size: 13px;
+    }
 `;
 
 const TextBoxWrapper = styled.div`    
@@ -258,6 +274,11 @@ const Image = styled.img`
     margin: 20px auto 35px auto;
     object-fit: cover;
     border-radius: 50%;
+
+    ${onSmallTabletMediaQuery()} {
+        width: 150px;
+        height: 150px;
+    }
 `;
 
 const InputWrapper = styled.div`

@@ -4,6 +4,7 @@ import { COLORS } from '../../../GlobalStyles';
 import BusinessItem from '../../../components/businessItem/BusinessItem';
 import Spinner from '../../../components/spinner/Spinner';
 import { VscSearchStop} from "react-icons/vsc";
+import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 
 
 const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, status })=>{  
@@ -76,6 +77,16 @@ const Wrapper = styled.div`
         border-radius: 10px;
        
     }
+
+    ${onSmallTabletMediaQuery()} {
+        position: static;
+        width: 100%;
+        height: 600px;
+        padding: 20px;
+        border-radius: 0px;
+        border: none;      
+    }
+
 `;
 
 const NoResultWrapper = styled.div`

@@ -3,7 +3,7 @@ import { useParams, useHistory  } from "react-router-dom";
 import styled from 'styled-components';
 import { useSelector } from "react-redux";
 import FileBase from 'react-file-base64';
-import { COLORS, HEADER_HEIGHT } from '../../GlobalStyles';
+import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import TextBox from '../../components/textBox/TextBox.js';
 import SearchBox from '../map/components/SearchBox';
@@ -14,6 +14,7 @@ import Map from '../../components/map/Map';
 import Button from '../../components/button/Button';
 import Spinner from '../../components/spinner/Spinner';
 import Error from '../error/Error';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 const typeArray = ["Yoga", "Meditation", "Accessory"];
 const daysArray = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
@@ -378,8 +379,8 @@ const CreateBusiness = ({type})=>{
                                 <DropDown 
                                     id={`${day}From`}
                                     label='from'
-                                    width='80px'
-                                    labelWidth='20px'
+                                    width='75px'
+                                    labelWidth='45px'
                                     defaultValue={formData.hours[day].start}
                                     handleSelect={(e)=>handleHoursChange(e, day, 'start')}
                                     valueArray={hoursArray()}
@@ -388,8 +389,8 @@ const CreateBusiness = ({type})=>{
                                 <DropDown 
                                     id={`${day}To`}
                                     label='to'
-                                    width='80px'
-                                    labelWidth='20px'
+                                    width='75px'
+                                    labelWidth='25px'
                                     defaultValue={formData.hours[day].end}
                                     handleSelect={(e)=>handleHoursChange(e, day, 'end')}
                                     valueArray={hoursArray()}
@@ -398,8 +399,8 @@ const CreateBusiness = ({type})=>{
                                 <DropDown 
                                     id={`${day}Type`}
                                     label='type'
-                                    width='80px'
-                                    labelWidth='20px'
+                                    width='75px'
+                                    labelWidth='45px'
                                     defaultValue={formData.hours[day].type}
                                     handleSelect={(e)=>handleHoursChange(e, day, 'type')}
                                     valueArray={typeHourArray}
@@ -439,6 +440,9 @@ const Wrapper = styled.div`
    height: calc(100vh - ${HEADER_HEIGHT}); 
    font-size: 15px;
 
+   ${onSmallTabletMediaQuery()} {   
+        height: ${HEADER_HEIGHT_SMALL};
+    } 
 `;
 const Divider = styled.div`
     height: 0;
@@ -461,8 +465,17 @@ const Label = styled.label`
     display: block;
     min-width: 80px;
     float: left;
-    margin-right: 15px; // remove with cell vue,,, same with the dropbox
+    margin-right: 15px; 
     text-align: start;
+
+    ${onSmallTabletMediaQuery()} {
+        margin-right: 0; 
+        font-size: 14px;
+    }
+
+    ${onPhoneMediaQuery()}{
+      font-size: 13px;
+    }
 
 `;
 
@@ -485,12 +498,16 @@ const TextAreaWrapper = styled.div`
 `;
     
 const Form = styled.form`
-  border: 1px solid ${COLORS.primary};
-  border-radius: 5px;
-  margin: 20px 0;
-  padding: 25px;
-  display: block;
-  width: 100%;
+    border: 1px solid ${COLORS.primary};
+    border-radius: 5px;
+    margin: 20px 0;
+    padding: 25px;
+    display: block;
+    width: 100%;
+
+    ${onSmallTabletMediaQuery()} {        
+         margin: 5px 0;
+    }
 `;
 
 const MapWrapper = styled.div`
@@ -505,6 +522,11 @@ const Image = styled.img`
     margin: auto;
     object-fit: cover;
     border-radius: 10px;
+
+    ${onPhoneMediaQuery()}{      
+        width: 275px;
+        height: 275px;
+    }
 `;
 
 const HoursWrapper = styled.div`

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { COLORS} from '../../../GlobalStyles';
+import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../../utils/responsives';
 
 
 const Dropdown = ({handleSelect, id, label, valueArray, defaultValue, width, labelWidth='80px', disabled = false})=>{
@@ -30,10 +31,19 @@ const Label = styled.label`
     padding-right: 10px;
     color: ${COLORS.primary};
     display: block;
-    min-width: ${(p)=>p.labelWidth}; 
+    width: ${(p)=>p.labelWidth}; 
     float: left;
     margin-right: 15px;
     text-align: start;
+
+    ${onSmallTabletMediaQuery()} {
+        margin-right: 0; 
+        font-size: 14px;
+    }
+
+    ${onPhoneMediaQuery()}{
+      font-size: 13px;
+    }
 
 `;
 
