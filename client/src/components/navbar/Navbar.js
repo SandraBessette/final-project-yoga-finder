@@ -109,8 +109,7 @@ const List = styled.ul`
     background-color: white;
     border-radius: 5px;
     width: 100px;    
-    box-shadow: 1px 3px 7px 3px #D3D3D3;
-        //line-height: normal;
+    box-shadow: 1px 3px 7px 3px #D3D3D3;     
     padding: 0;  
     margin: 0px; 
     z-index: 2;
@@ -127,7 +126,7 @@ const List = styled.ul`
 
    ${onSmallTabletMediaQuery()} {
         top: ${HEADER_HEIGHT_SMALL};    
-        right: -5px; 
+        right: -15px; 
     }
 `;
 

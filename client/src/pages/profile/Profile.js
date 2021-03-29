@@ -72,7 +72,7 @@ const Wrapper = styled.div`
     font-size: 15px;
 
     ${onSmallTabletMediaQuery()} {   
-        height: ${HEADER_HEIGHT_SMALL};
+        height: calc(100vh - ${HEADER_HEIGHT_SMALL});
     } 
 `;
 

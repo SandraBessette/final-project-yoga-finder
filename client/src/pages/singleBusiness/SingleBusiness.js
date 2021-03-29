@@ -222,7 +222,7 @@ const Wrapper = styled.div`
     height: calc(100vh - ${HEADER_HEIGHT});
 
     ${onSmallTabletMediaQuery()} {   
-        height: ${HEADER_HEIGHT_SMALL};
+        height: calc(100vh - ${HEADER_HEIGHT_SMALL});
     } 
 `;
 

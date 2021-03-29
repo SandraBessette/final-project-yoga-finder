@@ -194,7 +194,11 @@ const RightWrapper = styled.div`
 const LeftWrapper = styled.div`
     display: flex;
     align-items: center;
-    height: ${HEADER_HEIGHT};    
+    height: ${HEADER_HEIGHT};   
+
+    ${onSmallTabletMediaQuery()} {       
+        height: ${HEADER_HEIGHT_SMALL};
+    }  
 `;
 
 export default Header;

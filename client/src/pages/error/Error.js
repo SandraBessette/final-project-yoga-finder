@@ -6,8 +6,10 @@ import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 const Error = ({type})=>{
     return(
-        <Wrapper>        
+        <Wrapper>
+            <ImageWrapper>        
         < Image src='/error3.svg' alt='errorImage'/>
+        </ImageWrapper>
         <TextWrapper>
             <p>{type}</p>
             <Text>Oups... something went wrong.</Text>
@@ -26,16 +28,25 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center; 
+    overflow: hidden;
 
     ${onSmallTabletMediaQuery()} {   
-        height: ${HEADER_HEIGHT_SMALL};
+        height: calc(100vh - ${HEADER_HEIGHT_SMALL});
     } 
     
 `;
 
+const ImageWrapper = styled.div`
+    display: flex;
+    align-items:center;
+    justify-content:center;
+    width: 60%;
+    max-width: 600px;    
+`;
+
 const Image = styled.img`
     object-fit: cover;
-    height: 70%;    
+    width: 100%;  
 `;
 
 const TextWrapper = styled.div` 
@@ -47,10 +58,16 @@ const TextWrapper = styled.div`
         margin: 0;
         padding: 0;
     }
+
+    ${onSmallTabletMediaQuery()} {   
+        & p:first-child { 
+            font-size: 60px;
+        }
+   }
 `;
 
 const Text= styled.p`
-    font-size: 20px;
+    font-size: 20px;    
 `;
 
 export default Error;
