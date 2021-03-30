@@ -61,6 +61,14 @@ const getFilteredBusiness = async (req, res) => {
         }
     }); 
     pipeline.push( { $limit: 100 });
+
+    pipeline.push({
+        $match: {
+            type: {
+                $in: ["Meditation", "Accessory"]
+            }
+        }
+    });
     /*pipeline.push( {
         $geoNear: {
             near: { type: "Point", coordinates: center },

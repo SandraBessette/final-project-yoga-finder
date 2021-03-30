@@ -7,8 +7,8 @@ import { onSmallTabletMediaQuery } from '../../utils/responsives';
 const Error = ({type})=>{
     return(
         <Wrapper>
-            <ImageWrapper>        
-        < Image src='/error3.svg' alt='errorImage'/>
+        <ImageWrapper>        
+            < Image src='/error3.svg' alt='errorImage'/>
         </ImageWrapper>
         <TextWrapper>
             <p>{type}</p>

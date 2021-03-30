@@ -19,6 +19,7 @@ import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import { colors, isOpen, currentOpenHours } from '../../api/helper';
 import { updateFavorites } from '../../store/reducers/auth/action';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
+import TypeButton from '../../components/button/TypeButton';
 
 const SingleBusiness = ()=>{
     const { authData } = useSelector((state)=>state.auth);   
@@ -125,7 +126,8 @@ const SingleBusiness = ()=>{
                 </IconButtonWrapper>
                 <TopContentWrapper >
                     <Title>{business.name}</Title> 
-                    <RatingWrapper>
+                    <RatingWrapper >
+                    <TypeButton margin='0 15px 0 0' disabled={true} type={business.type}/>
                         <Rating 
                                 value={business.ratingResult}
                                 disabled={true}                                

@@ -26,16 +26,9 @@ export const colors = {
 };
 
 export const isOpen = (hours)=>{
-    //in the database.... make string with hours of the day not date!
     const date = new Date();
     const day = moment(date).format('dddd').toLowerCase();
-    const todayHourFormat =  moment(date).format('HH:mm');
-   /* const startHourFormat = moment(hours[day].start).format('HH:mm');  
-    const endHourFormat = moment(hours[day].end).format('HH:mm');    
-    const todayHour = moment(todayHourFormat,'HH:mm');
-    const startHour = moment(startHourFormat, 'HH:mm');  
-    const endHour = moment(endHourFormat, 'HH:mm');  */    
-    //add later data.hours[day].type === "open" &&
+    const todayHourFormat =  moment(date).format('HH:mm'); 
     const todayHour = moment(todayHourFormat,'HH:mm');
     const startHour = moment(hours[day].start, 'HH:mm');  
     const endHour = moment(hours[day].end, 'HH:mm');
@@ -48,8 +41,5 @@ export const isOpen = (hours)=>{
 export const currentOpenHours = (hours)=>{
     const date = new Date();
     const day = moment(date).format('dddd').toLowerCase();
-   // const startHourFormat = moment(hours[day].start).format('HH:mm'); 
-   // const endHourFormat = moment(hours[day].end).format('HH:mm'); 
-
     return (hours[day].type === "Open" ? `${hours[day].start} - ${hours[day].end}` : "");
 }

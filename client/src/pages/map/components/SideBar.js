@@ -5,12 +5,18 @@ import BusinessItem from '../../../components/businessItem/BusinessItem';
 import Spinner from '../../../components/spinner/Spinner';
 import { VscSearchStop} from "react-icons/vsc";
 import { onSmallTabletMediaQuery } from '../../../utils/responsives';
+import TypeButton from '../../../components/button/TypeButton';
 
 
-const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, status })=>{  
+const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, handleTypeButtonClick, status, filter })=>{  
 
     return(
         <Wrapper>
+            <TypeWrapper>
+                <TypeButton className={"selected"} type='Yoga' margin='0 5px 0 0'/>
+                <TypeButton  type='Meditation' margin='0 5px 0 0'/>
+                <TypeButton className="selected" type='Accessory'/>
+            </TypeWrapper>
             {status === 'loading' && <Spinner />}
             {status === 'error' && 
             <NoResultWrapper>
@@ -85,6 +91,17 @@ const Wrapper = styled.div`
         padding: 20px;
         border-radius: 0px;
         border: none;      
+    }
+
+`;
+
+const TypeWrapper = styled.div`
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+
+    ${onSmallTabletMediaQuery()} {
+        margin: 0;      
     }
 
 `;

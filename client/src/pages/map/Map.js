@@ -43,6 +43,12 @@ const icons = {
     }
 };
 
+const filter ={
+    Meditation: true,
+    Yoga: true,
+    Accessory: true
+   }
+
 const Map = ()=>{ 
    
     const [business, setBusiness] = useState(null);
@@ -51,6 +57,7 @@ const Map = ()=>{
     const [coordinates, setCoordinates] = useState(null);
     const [areaButtonVisible, setAreaButtonVisible] = useState(false);
     const [selected, setSelected] = useState(null);
+    const [filter, setFilter] = useState(filter);
    //const [map, setMap] = React.useState(null)  
 
     const mapRef = React.useRef();  
@@ -74,6 +81,11 @@ const Map = ()=>{
                             se: [NECorner.lng(), SWCorner.lat()],
                             sw:[SWCorner.lng(), SWCorner.lat()]}
                     });
+    }, []);
+
+    const handleTypeButtonClick = useCallback((e, type)=>{
+        e.preventDefault();
+       setFilter(prev=>({...prev, [type]: !prev[type]}))
     }, []);
 
     const handleAreaButtonClick = useCallback((e)=>{
@@ -198,7 +210,9 @@ const Map = ()=>{
                 data={business}
                 handleOnMouseEnter={handleOnMouseEnter}
                 handleOnMouseLeave={handleOnMouseLeave}
+                handleTypeButtonClick={handleTypeButtonClick}
                 status={status}
+                filter={filter}
             />    
         </MainWrapper>
     );
