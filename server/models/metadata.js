@@ -1,8 +1,8 @@
 const metadata = {
     type:{
-        Meditation: true,
-        Yoga: true,
-        Accessory: true
+        Meditation: false,
+        Yoga: false,
+        Accessory: false
     },
     filter :{ 
         0: { name: "Online", isChoosen: false },

@@ -34,29 +34,31 @@ const Wrapper = styled.button`
     justify-content: center;
     
     border:${(p)=>( `1px solid ${colors[p.type].color}`)};
-    border-radius: 20px;
+    border-radius: 19px;
     margin: ${(p)=>p.margin || '0'};   
     padding: 0px 10px 0px 0px; 
     cursor: pointer;   
-    color: ${(p)=>(colors[p.type].color)};  
+    color: ${(p)=>(colors[p.type].colorDark)};  
     background: white;  
     transition: all 0.40s ease-in-out;
     width: auto;
+    box-shadow: 0 0 5px lightgray;
 
     & p {
         margin: 0 0 0 5px;
         padding: 0;
+        color: black;
     }
 
     & svg{
        
-        width: 18px;
-        height: 18px;
+        width: 19px;
+        height: 19px;
     }
 
     & img{
-        width: 18px;
-        height: 18px;
+        width: 19px;
+        height: 19px;
     }
 
     & div {

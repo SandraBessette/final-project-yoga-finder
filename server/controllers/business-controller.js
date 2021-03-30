@@ -63,7 +63,8 @@ const getFilteredBusiness = async (req, res) => {
     }); 
     
     const filterType = Object.keys(type).filter((typeItem)=>type[typeItem]);  
-    if (filterType.length < 3){      
+ 
+    if (filterType.length < 3 && filterType.length > 0){      
         pipeline.push({
             $match: {
                 type: {
