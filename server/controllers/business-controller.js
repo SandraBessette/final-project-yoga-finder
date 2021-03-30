@@ -38,7 +38,7 @@ const getFilteredBusiness = async (req, res) => {
         bounds, 
         center,
         dist,
-        filters,
+        filter,
         sort,
         type,
         limit       
@@ -63,8 +63,7 @@ const getFilteredBusiness = async (req, res) => {
     }); 
     
     const filterType = Object.keys(type).filter((typeItem)=>type[typeItem]);  
-    if (filterType.length < 3){
-        console.log(filterType);
+    if (filterType.length < 3){      
         pipeline.push({
             $match: {
                 type: {
@@ -73,7 +72,26 @@ const getFilteredBusiness = async (req, res) => {
             }
         });
 
-    };    
+    };  
+    
+    const filterFilter =[];
+    Object.keys(filter).forEach((filterItem)=>{
+        if (filter[filterItem].isChoosen)  
+            filterFilter.push(filter[filterItem].name)
+
+    });
+
+    if (filterFilter.length !== 0 ){
+       
+        pipeline.push({
+            $match: {
+                tags: {
+                    $in: filterFilter
+                }
+            }
+        });
+
+    };  
 
     pipeline.push( { $limit: 100 });
     /*pipeline.push( {

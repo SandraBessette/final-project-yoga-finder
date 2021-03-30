@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../api/helper';
 import { GiMeditation } from 'react-icons/gi';
+import {BiFilter} from 'react-icons/bi';
+import { onSmallTabletMediaQuery } from '../../utils/responsives';
 
 const TypeButton = ({className=null, type='Primary', margin, onclick, disabled=false})=>{
    
@@ -16,9 +18,10 @@ const TypeButton = ({className=null, type='Primary', margin, onclick, disabled=f
             <div>
                 {(type === 'Meditation' && <GiMeditation />) ||
                 (type === 'Yoga' && <img src='/yoga-pose.svg' alt="yoga" />) ||
-                (type === 'Accessory' && <img src='/yoga-mat.svg' alt="accessory" />)}
+                (type === 'Accessory' && <img src='/yoga-mat.svg' alt="accessory" />) ||
+                (type === 'Primary' && <BiFilter size={15} />)}
             </div>
-           <p>{type}</p>
+           <p>{type === 'Primary' ? 'more filter' : type}</p>     
         </Wrapper>
 
     );
@@ -47,13 +50,13 @@ const Wrapper = styled.button`
 
     & svg{
        
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     & img{
-        width: 20px;
-        height: 20px;
+        width: 18px;
+        height: 18px;
     }
 
     & div {
@@ -87,6 +90,18 @@ const Wrapper = styled.button`
         pointer-events: none;
         cursor: default;      
     }  
+
+    ${onSmallTabletMediaQuery()} {
+        & svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        & img{
+            width: 15px;
+            height: 15px;
+        }
+    }
 `;
 
 export default TypeButton;

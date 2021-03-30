@@ -101,7 +101,7 @@ const Map = ()=>{
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...coordinates, type: {...filters.type} }),
+            body: JSON.stringify({ ...coordinates, type: {...filters.type}, filter: {...filters.filter} }),
         })
         .then((res)=>res.json())
         .then((json)=>{
@@ -118,12 +118,11 @@ const Map = ()=>{
         .catch((error)=>{
             setStatus("error");
         })
-    }, [coordinates, filters.type]);
+    }, [coordinates, filters]);
     
     return(
         
-        <MainWrapper>
-            {console.log('coordinates', coordinates)}
+        <MainWrapper>          
         <Wrapper> 
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 

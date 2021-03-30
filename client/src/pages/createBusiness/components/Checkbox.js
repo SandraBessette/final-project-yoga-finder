@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 
-const CheckBox = ({ value, handleChange, isChecked, children })=>{
+const CheckBox = ({ index, value, handleChange, isChecked, children })=>{
    
     return (
         <Wrapper > 
             <Label >           
-                <Input type="checkbox" name={value} onChange={(ev)=>handleChange(ev, value)} value={value} checked={isChecked} />
+                <Input type="checkbox" name={value} onChange={(ev)=>handleChange(ev, value, index)} value={value} checked={isChecked} />
             {children}
             </Label>         
         </Wrapper>  
