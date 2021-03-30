@@ -16,23 +16,8 @@ import Spinner from '../../components/spinner/Spinner';
 import Error from '../error/Error';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
-const typeArray = ["Yoga", "Meditation", "Accessory"];
 const daysArray = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday","sunday"];
 const typeHourArray = ["Open", "Close"];
-
-const tagObject = {
-     0: { name: "Online", isChoosen: false },
-     1: { name: "Corporate", isChoosen: false },
-     2: { name: "Hot yoga", isChoosen: false },
-     3: { name: "Therapeutic yoga", isChoosen: false },
-     4: { name: "Hatha Yoga", isChoosen: false },
-     5: { name: "Ashtanga Yoga", isChoosen: false },
-     6: { name: "Vinyasa/Flow Yoga", isChoosen: false },
-     7: { name: "Yin Yoga", isChoosen: false },
-     8: { name: "Kundalini Yoga", isChoosen: false },
-     9: { name: "Prenatal Yoga", isChoosen: false },
-     10: { name: "Kripalu Yoga", isChoosen: false },  
-};
 
 const formDataInit = {
     name: "",
@@ -96,6 +81,7 @@ const center = {
 };
 const CreateBusiness = ({type})=>{
     const { authData } = useSelector((state)=>state.auth);   
+    const { filters } = useSelector((state)=>state.map);
 
     const [formData, setFormData] = useState(formDataInit);
     const [status, setStatus] = useState("idle");
@@ -287,7 +273,7 @@ const CreateBusiness = ({type})=>{
                         width='150px'                     
                         defaultValue={formData.type}
                         handleSelect={(e)=>handleChange(e, 'type')}
-                        valueArray={typeArray}
+                        valueArray={Object.keys(filters.type)}
                     /> 
                     <TextBoxWrapper>
                     <Label htmlFor='phone'>Phone *</Label>                     
@@ -412,7 +398,7 @@ const CreateBusiness = ({type})=>{
                     <Divider />   
                     <TextAreaWrapper>
                     <Label>Tags</Label>  
-                    {Object.values(tagObject).map((tag)=>{
+                    {Object.values(filters.filter).map((tag)=>{
                         return(
                             <Checkbox
                             key={tag.name}

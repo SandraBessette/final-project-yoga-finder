@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   BrowserRouter as Router,
   Switch,
@@ -7,7 +7,7 @@ import {
  import {  
   useLoadScript,
 } from "@react-google-maps/api";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
  import styled from 'styled-components';
  import Map from './pages/map/Map';
  import SingleBusiness from './pages/singleBusiness/SingleBusiness';
@@ -22,26 +22,53 @@ import { useSelector } from "react-redux";
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
  import { onSmallTabletMediaQuery } from './utils/responsives';
+ import { requestFilterInfo, receiveFilterInfo, receiveFilterInfoError } from './store/reducers/map/actions'
 
  import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from './GlobalStyles'
 
 const App= () => {  
   const { authData } = useSelector((state)=>state.auth); 
+  const { status, error } = useSelector((state)=>state.map);
   const [ libraries ] = useState(['places', 'geometry' ]); 
     const {isLoaded, loadError} = useLoadScript ({
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAP_API_KEY,
         libraries,
     });
+    const dispatch = useDispatch();
+
+    useEffect(() => {  
+      dispatch(requestFilterInfo());
+      fetch(`/business/filters/metadata`)
+        .then((res) => res.json())
+        .then((json) => {
+          const { status, data} = json;     
+          if (status === 200) { 
+              console.log(data);
+              dispatch(receiveFilterInfo(data));             
+          } else {    
+            dispatch(receiveFilterInfoError("error")); 
+            console.log("error")   
+              
+          }
+        })
+        .catch((e) => {       
+          console.log("error")
+          dispatch(receiveFilterInfoError("error"));  
+         
+        });
+    }, [dispatch]);
+
 
   return (
     <> 
       <GlobalStyles />     
       <Router>
        <Header />
-       {loadError ?  <Wrapper><Error type='500'/></Wrapper> :
+       {console.log(error)}
+       {(loadError || error === "error") ?  <Wrapper><Error type='500'/></Wrapper> :
        <>
-        {!isLoaded && <Wrapper><Spinner /></Wrapper>}
-        {isLoaded &&
+        {(!isLoaded || status === "loading") && <Wrapper><Spinner /></Wrapper>}
+        {isLoaded && status === "idle" &&
         <Switch>
           <Route exact path="/">           
             <Map />

@@ -1,26 +1,22 @@
 import React from 'react';
 import styled from 'styled-components';
 import { colors } from '../../api/helper';
-import { GiMeditation } from 'react-icons/gi'
-import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
+import { GiMeditation } from 'react-icons/gi';
 
-const TypeButton = ({className=null, reverse=false, type='Primary', padding, margin, onclick, disabled=false, title="", children})=>{
-       
+const TypeButton = ({className=null, type='Primary', margin, onclick, disabled=false})=>{
+   
     return (
         <Wrapper  
-            className={className} 
-            title={title}                     
-            padding={padding}
+            className={className}    
             margin={margin}   
-            type={type}   
-            reverse={reverse}  
+            type={type}              
             onClick={onclick}
             disabled={disabled}       
         >
             <div>
-           {type === 'Meditation' &&<GiMeditation />  ||
-            type === 'Yoga' && <img src='/yoga-pose.svg' /> ||
-            type === 'Accessory' && <img src='/yoga-mat.svg' />}
+                {(type === 'Meditation' && <GiMeditation />) ||
+                (type === 'Yoga' && <img src='/yoga-pose.svg' alt="yoga" />) ||
+                (type === 'Accessory' && <img src='/yoga-mat.svg' alt="accessory" />)}
             </div>
            <p>{type}</p>
         </Wrapper>
@@ -30,17 +26,17 @@ const TypeButton = ({className=null, reverse=false, type='Primary', padding, mar
 
 const Wrapper = styled.button`
     position: relative;
-   display: flex;
+    display: flex;
     align-items: center; 
     justify-content: center;
     
     border:${(p)=>( `1px solid ${colors[p.type].color}`)};
     border-radius: 20px;
     margin: ${(p)=>p.margin || '0'};   
-   padding: 0px 10px 0px 0px; 
+    padding: 0px 10px 0px 0px; 
     cursor: pointer;   
-    color: ${(p)=>(p.reverse ? colors[p.type].colorLight : colors[p.type].color)};  
-    background: ${(p)=>(p.reverse ? colors[p.type].color : 'white')};  
+    color: ${(p)=>(colors[p.type].color)};  
+    background: white;  
     transition: all 0.40s ease-in-out;
     width: auto;
 
@@ -61,9 +57,14 @@ const Wrapper = styled.button`
     }
 
     & div {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 50%;
         background-color: white;
-        padding: 5px;       
+        margin: 2px;
+        padding: 2px;    
+        border:${(p)=>( `1px solid ${colors[p.type].color}`)};   
     }
     
 
@@ -71,14 +72,10 @@ const Wrapper = styled.button`
         opacity: 0.7;    
     }  
 
-   &.selected {  
-       // color: ${(p)=>(colors[p.type].colorDark)};  
-       // background: ${(p)=>colors[p.type].colorLight};  
-       p { 
-        //color: ${(p)=>(colors[p.type].colorDark)}; 
-        color: white
-       }
-      
+   &.selected {          
+       p {       
+            color: white
+       }      
        background-color: ${(p)=>colors[p.type].color};      
     }  
     
@@ -88,24 +85,8 @@ const Wrapper = styled.button`
 
     &:disabled {
         pointer-events: none;
-        cursor: default;
-       // color: white;  
-       // background: ${(p)=>colors[p.type].color};
-       // border:${(p)=>( `1px solid white`)};
-    }   
-
-    ${onSmallTabletMediaQuery()} {
-        & svg{
-       
-       width: 20px;
-       height: 20px;
-        }
-
-    & img{
-        width: 20px;
-        height: 20px;
-        }      
-    }
+        cursor: default;      
+    }  
 `;
 
 export default TypeButton;

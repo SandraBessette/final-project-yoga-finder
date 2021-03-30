@@ -4,7 +4,7 @@ const initialState = {
   status: 'loading',
   error: null,
 
-}//setUser(JSON.parse(localStorage.getItem('profile')));
+}
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     
@@ -28,14 +28,7 @@ const authReducer = (state = initialState, action) => {
           error: null
       };
     }
-    case 'UPDATE_FAVORITES': {
-      /*let newFavorites = [... state.authData.data.favorites];    
-      if (newFavorites.includes(action.id)){
-          newFavorites = newFavorites.filter((favorite)=>(favorite._id !== action.id));
-      }
-      else{
-        newFavorites.push(action.id);
-      }*/
+    case 'UPDATE_FAVORITES': {  
 
       return {
           ...state,                

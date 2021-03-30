@@ -1,21 +1,46 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
+import { useSelector, useDispatch } from "react-redux";
 import { COLORS } from '../../../GlobalStyles';
 import BusinessItem from '../../../components/businessItem/BusinessItem';
 import Spinner from '../../../components/spinner/Spinner';
 import { VscSearchStop} from "react-icons/vsc";
 import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 import TypeButton from '../../../components/button/TypeButton';
+import { updateTypeBusiness, updataAnimatedId } from '../../../store/reducers/map/actions'
 
 
-const SideBar = ({ data, handleOnMouseEnter, handleOnMouseLeave, handleTypeButtonClick, status, filter })=>{  
+const SideBar = ({ data, status })=>{ 
+    const { filters } = useSelector((state)=>state.map);  
+    const dispatch = useDispatch(); 
 
+    const handleTypeButtonClick = useCallback((e, type)=>{
+        e.preventDefault();
+       dispatch(updateTypeBusiness(type));       
+    }, [dispatch]);
+
+    const handleOnMouseEnter = useCallback((e, id) =>{
+        dispatch(updataAnimatedId(id));
+    }, [dispatch]);
+
+    const handleOnMouseLeave = useCallback(() =>{
+        dispatch(updataAnimatedId(null));
+
+    }, [dispatch]);
+   
     return(
         <Wrapper>
             <TypeWrapper>
-                <TypeButton className={"selected"} type='Yoga' margin='0 5px 0 0'/>
-                <TypeButton  type='Meditation' margin='0 5px 0 0'/>
-                <TypeButton className="selected" type='Accessory'/>
+                {Object.keys(filters.type).map(filterItem=>{               
+                    return (
+                        <TypeButton 
+                            className={filters.type[filterItem] ? "selected" : null} 
+                            type={filterItem}
+                            margin='0 5px 0 0'
+                            onclick={(e)=>handleTypeButtonClick(e, filterItem)}
+                            />
+                    )
+                })}              
             </TypeWrapper>
             {status === 'loading' && <Spinner />}
             {status === 'error' && 
@@ -88,11 +113,10 @@ const Wrapper = styled.div`
         position: static;
         width: 100%;
         height: 600px;
-        padding: 20px;
+        padding: 10px 20px 20px 20px ;
         border-radius: 0px;
         border: none;      
     }
-
 `;
 
 const TypeWrapper = styled.div`

@@ -6,6 +6,7 @@ import {
     InfoWindow
 
 } from "@react-google-maps/api";
+import { useSelector } from "react-redux";
 import { HEADER_HEIGHT,  HEADER_HEIGHT_SMALL } from '../../GlobalStyles'
 import MapStyled  from '../../MapStyled';
 import Button from '../../components/button/Button';
@@ -43,22 +44,13 @@ const icons = {
     }
 };
 
-const filter ={
-    Meditation: true,
-    Yoga: true,
-    Accessory: true
-   }
-
 const Map = ()=>{ 
-   
+    const { filters, animatedId } = useSelector((state)=>state.map); 
     const [business, setBusiness] = useState(null);
-    const [animatedId, setAnimatedId] = useState(null);
     const [status, setStatus] = useState("idle");
     const [coordinates, setCoordinates] = useState(null);
     const [areaButtonVisible, setAreaButtonVisible] = useState(false);
-    const [selected, setSelected] = useState(null);
-    const [filter, setFilter] = useState(filter);
-   //const [map, setMap] = React.useState(null)  
+    const [selected, setSelected] = useState(null);   
 
     const mapRef = React.useRef();  
     const onMapLoad = useCallback((map) => {     
@@ -83,23 +75,10 @@ const Map = ()=>{
                     });
     }, []);
 
-    const handleTypeButtonClick = useCallback((e, type)=>{
-        e.preventDefault();
-       setFilter(prev=>({...prev, [type]: !prev[type]}))
-    }, []);
-
     const handleAreaButtonClick = useCallback((e)=>{
         e.preventDefault();
         updateCoordinates();
     }, [updateCoordinates]);
-
-    const handleOnMouseEnter = useCallback((e, id) =>{
-        setAnimatedId(id);
-    }, []);
-
-    const handleOnMouseLeave = useCallback(() =>{
-        setAnimatedId(null);
-    }, []);
 
     const handleClickMarker = useCallback((marker) =>{       
         setSelected({...marker});         
@@ -122,7 +101,7 @@ const Map = ()=>{
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ ...coordinates }),
+            body: JSON.stringify({ ...coordinates, type: {...filters.type} }),
         })
         .then((res)=>res.json())
         .then((json)=>{
@@ -139,10 +118,12 @@ const Map = ()=>{
         .catch((error)=>{
             setStatus("error");
         })
-    }, [coordinates]);
+    }, [coordinates, filters.type]);
     
     return(
+        
         <MainWrapper>
+            {console.log('coordinates', coordinates)}
         <Wrapper> 
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
@@ -207,12 +188,8 @@ const Map = ()=>{
                         
         </Wrapper>
         <SideBar 
-                data={business}
-                handleOnMouseEnter={handleOnMouseEnter}
-                handleOnMouseLeave={handleOnMouseLeave}
-                handleTypeButtonClick={handleTypeButtonClick}
-                status={status}
-                filter={filter}
+                data={business}                           
+                status={status}            
             />    
         </MainWrapper>
     );

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const BusinessModel = require('../models/business');
 const UserModel = require('../models/user');
 const CommentModel = require('../models/comment');
+const metadata = require('../models/metadata');
 
 const getBusiness = async (req, res) => {
     const {lat, long, dist} = req.params;
@@ -60,15 +61,21 @@ const getFilteredBusiness = async (req, res) => {
             spherical: true,            
         }
     }); 
-    pipeline.push( { $limit: 100 });
-
-    pipeline.push({
-        $match: {
-            type: {
-                $in: ["Meditation", "Accessory"]
+    
+    const filterType = Object.keys(type).filter((typeItem)=>type[typeItem]);  
+    if (filterType.length < 3){
+        console.log(filterType);
+        pipeline.push({
+            $match: {
+                type: {
+                    $in: filterType
+                }
             }
-        }
-    });
+        });
+
+    };    
+
+    pipeline.push( { $limit: 100 });
     /*pipeline.push( {
         $geoNear: {
             near: { type: "Point", coordinates: center },
@@ -100,6 +107,12 @@ const getFilteredBusiness = async (req, res) => {
         res.status(500).json({ status: 500, error: error?.message });      
     }  
 
+};
+
+const getMetadata =  (req, res) => {
+   
+    console.log(metadata);
+    res.status(200).json({ status: 200, message: "success", data: metadata });
 };
 
 const getSingleBusiness = async (req, res) => {
@@ -230,5 +243,6 @@ module.exports = {
     createBusiness,
     updateBusiness, 
     deleteBusiness,
-    getFilteredBusiness
+    getFilteredBusiness,
+    getMetadata
 };
