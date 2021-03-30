@@ -78,8 +78,7 @@ const Comments = ({onRatingChange})=>{
         }); 
     },[authData, formData, formValidation, id, onRatingChange]);
 
-    useEffect(() => { 
-        console.log('id', id);
+    useEffect(() => {       
         setStatus("loading");   
         fetch(`/comment/business/${id}`)
         .then((res) => res.json())

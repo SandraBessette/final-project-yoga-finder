@@ -27,3 +27,9 @@ export const receiveFilterInfoError = (error) => ({
       type: 'UPDATE_ANIMATED_ID',
       id
   });
+
+  export const updateCenter = (center, zoom) =>({
+    type: 'UPDATE_CENTER',
+    center,
+    zoom
+  });

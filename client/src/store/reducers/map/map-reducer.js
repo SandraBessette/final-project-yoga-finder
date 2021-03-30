@@ -5,7 +5,12 @@ const initialState = {
     },
     status: "loading",
     error: null,
-    animatedId: null
+    animatedId: null,
+    center: {
+      lat: 45.501690,
+      lng: -73.567253
+    },
+    zoom: 15
   }
 
   const mapReducer = (state = initialState, action) => {
@@ -51,8 +56,7 @@ const initialState = {
               };
             
     }
-      case 'RECEIVE_FILTER_INFO_ERROR': {
-          console.log('action.error', action.error);
+      case 'RECEIVE_FILTER_INFO_ERROR': {         
         return {
             ...state,                
             status: "error",
@@ -67,6 +71,15 @@ const initialState = {
               };
             
     }
+    case 'UPDATE_CENTER': {  
+  
+      return {
+              ...state,  
+              center: action.center,
+              zoom: action.zoom
+            };
+          
+  }
       default:
         return state;
     }

@@ -86,7 +86,7 @@ const getFilteredBusiness = async (req, res) => {
         pipeline.push({
             $match: {
                 tags: {
-                    $in: filterFilter
+                    $all: filterFilter
                 }
             }
         });
@@ -128,8 +128,7 @@ const getFilteredBusiness = async (req, res) => {
 };
 
 const getMetadata =  (req, res) => {
-   
-    console.log(metadata);
+  
     res.status(200).json({ status: 200, message: "success", data: metadata });
 };
 

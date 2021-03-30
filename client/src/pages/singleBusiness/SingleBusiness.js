@@ -97,8 +97,7 @@ const SingleBusiness = ()=>{
           .then((res) => res.json())
           .then((json) => {
             const { status, data} = json;     
-            if (status === 200) { 
-                console.log(data);
+            if (status === 200) {              
                 setBusiness(data);
                 setStatus("idle");
             } else {    

@@ -13,7 +13,7 @@ import Button from '../../../components/button/Button';
 
 const SideBar = ({ data, status })=>{ 
     const { filters } = useSelector((state)=>state.map); 
-    const [filterShow, setFilterShow] = useState(false);     
+    const [filterShow, setFilterShow] = useState(false);  
     const [tempFilter, setTempFilter] = useState({...filters.filter});  
     const dispatch = useDispatch(); 
 

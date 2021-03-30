@@ -42,17 +42,13 @@ const App= () => {
         .then((res) => res.json())
         .then((json) => {
           const { status, data} = json;     
-          if (status === 200) { 
-              console.log(data);
+          if (status === 200) {           
               dispatch(receiveFilterInfo(data));             
           } else {    
-            dispatch(receiveFilterInfoError("error")); 
-            console.log("error")   
-              
+            dispatch(receiveFilterInfoError("error"));  
           }
         })
-        .catch((e) => {       
-          console.log("error")
+        .catch((e) => { 
           dispatch(receiveFilterInfoError("error"));  
          
         });
@@ -63,8 +59,7 @@ const App= () => {
     <> 
       <GlobalStyles />     
       <Router>
-       <Header />
-       {console.log(error)}
+       <Header />     
        {(loadError || error === "error") ?  <Wrapper><Error type='500'/></Wrapper> :
        <>
         {(!isLoaded || status === "loading") && <Wrapper><Spinner /></Wrapper>}

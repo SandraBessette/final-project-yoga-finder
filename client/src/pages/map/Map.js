@@ -6,7 +6,7 @@ import {
     InfoWindow
 
 } from "@react-google-maps/api";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { HEADER_HEIGHT,  HEADER_HEIGHT_SMALL } from '../../GlobalStyles'
 import MapStyled  from '../../MapStyled';
 import Button from '../../components/button/Button';
@@ -15,15 +15,12 @@ import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 import SmallWindow from './components/SmallWindow';
 import { onSmallTabletMediaQuery } from '../../utils/responsives';
+import { updateCenter } from '../../store/reducers/map/actions';
 
 const mapContainerStyle = {
     width: '100%',
     height: '100%',    
    
-};
-const center = {
-    lat: 45.501690,
-    lng: -73.567253
 };
 
 const options ={
@@ -45,12 +42,13 @@ const icons = {
 };
 
 const Map = ()=>{ 
-    const { filters, animatedId } = useSelector((state)=>state.map); 
+    const { filters, animatedId, center, zoom } = useSelector((state)=>state.map); 
     const [business, setBusiness] = useState(null);
     const [status, setStatus] = useState("idle");
     const [coordinates, setCoordinates] = useState(null);
     const [areaButtonVisible, setAreaButtonVisible] = useState(false);
-    const [selected, setSelected] = useState(null);   
+    const [selected, setSelected] = useState(null); 
+    const dispatch = useDispatch();  
 
     const mapRef = React.useRef();  
     const onMapLoad = useCallback((map) => {     
@@ -59,9 +57,10 @@ const Map = ()=>{
     }, []);  
    
 
-    const onUnmount = useCallback((map) =>{       
+    const onUnmount = useCallback((map) =>{          
+        dispatch(updateCenter({lat: mapRef.current.getCenter().lat(), lng: mapRef.current.getCenter().lng()}, mapRef.current.getZoom() )); 
         mapRef.current = null;
-    }, [])
+    }, [dispatch])
 
     const updateCoordinates = useCallback(() => {    
         const NECorner = mapRef.current.getBounds().getNorthEast();
@@ -126,7 +125,7 @@ const Map = ()=>{
         <Wrapper> 
             <GoogleMap 
                 mapContainerStyle={mapContainerStyle} 
-                zoom={15}
+                zoom={zoom}
                 center={center}
                 options={options}
                 onLoad={onMapLoad} 
