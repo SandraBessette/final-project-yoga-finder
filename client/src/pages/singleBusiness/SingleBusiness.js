@@ -49,7 +49,12 @@ const SingleBusiness = ()=>{
             ratingResult: rating.ratingResult
 
         }));      
-    }
+    };
+
+    const handleClickChat = (e, id) =>{
+        e.preventDefault();
+        history.push(`/user/chat/${id}`);
+    };
 
     const handleClickFavorites = useCallback((e, id)=>{
         console.log("here");
@@ -153,7 +158,7 @@ const SingleBusiness = ()=>{
                             </SpanIcon>
                         }
                     </IconButton>
-                    <IconButton title='Chat' type={business.type} padding={'10px'} margin={'0 0 5px 0'}>
+                    <IconButton title='Chat' type={business.type} padding={'10px'} margin={'0 0 5px 0'} onclick={(e)=>handleClickChat(e, business.userId._id)}>
                         <BsChatDots size={45}/>
                     </IconButton> 
                     <IconButton title='Website' type={business.type} padding={'10px'} margin={'0 0 5px 0'} onclick={()=>(window.location.href=`${business.website}`)}>

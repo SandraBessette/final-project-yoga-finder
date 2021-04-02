@@ -6,6 +6,7 @@ import decode from 'jwt-decode';
 import { logout } from '../../store/reducers/auth/action'
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import { FaMapMarkedAlt } from "react-icons/fa";
+import { GrMail } from "react-icons/gr";
 import Button from '../button/Button';
 import Navbar from '../navbar/Navbar';
 import IconButton from '../../components/button/IconButton';
@@ -46,6 +47,32 @@ const Header = ()=>{
     
       }, [authData?.token, dispatch, history]);
 
+    useEffect(() => {
+        if (authData){
+            fetch('/chat/messages/unread', {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authData?.token}`
+                }               
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                const { status, data, message} = json;            
+                if (status === 200) {
+                    console.log("chatcount", data);
+                }
+                else {  
+                    console.log(message);                                                                   
+                }
+            })
+            .catch((error)=>{
+                console.log("unknown error");                            
+            });    
+        } 
+    }, [authData]);
+
     const handleClick = (e)=>{
         e.preventDefault();
         history.push("/user/auth");
@@ -54,6 +81,11 @@ const Header = ()=>{
     const handleClickHome = (e)=>{
         e.preventDefault();
         history.push("/");
+    };
+
+    const handleClickChat = (e)=>{
+        e.preventDefault();
+        history.push("/user/chat");
     };
 
     return(
@@ -71,8 +103,14 @@ const Header = ()=>{
             </IconButton>
             </IconButtonWrapper>
             </LeftWrapper>
-            <RightWrapper>            
-            { !authData ? <Button background={'white'} color={COLORS.primary} width={'80px'} onclick={handleClick}>Sign In</Button> :<> 
+            <RightWrapper>                          
+            { !authData ? <Button background={'white'} color={COLORS.primary} width={'80px'} onclick={handleClick}>Sign In</Button> :<>
+                <MailIconWrapper>
+                <IconButton title='Map' reverse={true} padding={'5px'} onclick={handleClickChat}>
+                    <GrMail size={20}/>  
+                </IconButton>
+                <SpanIcon >5</SpanIcon>
+                </MailIconWrapper>
                 <p>{authData.data.userName}</p><Navbar /></>}                     
             </RightWrapper>
         </Wrapper>
@@ -199,6 +237,38 @@ const LeftWrapper = styled.div`
     ${onSmallTabletMediaQuery()} {       
         height: ${HEADER_HEIGHT_SMALL};
     }  
+`;
+
+const MailIconWrapper = styled.div`
+    position: relative;
+    margin: 0 10px;
+
+    ${onPhoneMediaQuery()} {
+        margin: 0;
+
+    }
+`;
+
+const SpanIcon = styled.div`
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+    top: 0;
+    right: 0;
+    border-radius: 50%; 
+    background: red;
+    color: white;
+    font-size: 9px;
+    font-weight: bold;
+    width: 15px;
+    height: 15px;
+     
+    & p {
+        padding: 0;
+        margin: 0;
+    }
 `;
 
 export default Header;

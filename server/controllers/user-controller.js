@@ -95,9 +95,8 @@ const signup = async (req, res) => {
 };
 
 const updateFavorite = async (req, res) => {
-  //const businessId = req.body._id; 
+
   const businessId = req.params.id;
- // const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
 
   const id = req.userId; 
   if (!id) {

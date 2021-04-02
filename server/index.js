@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/user-routes');
 const businessRoutes = require('./routes/business-routes');
 const commentRoutes = require('./routes/comment-routes');
+const chatRoutes = require('./routes/chat-routes');
 require("dotenv").config();
 
 const { MONGO_URI } = process.env;
@@ -20,6 +21,8 @@ app.use("/", express.static(__dirname + "/"))
 app.use("/user", userRoutes);
 app.use('/business', businessRoutes);
 app.use('/comment', commentRoutes);
+app.use('/chat', chatRoutes);
+
 app.use('*', (req, res) => {
   return res.status(404).json({
     status: 404,

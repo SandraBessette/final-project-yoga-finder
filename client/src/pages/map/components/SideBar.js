@@ -74,6 +74,7 @@ const SideBar = ({ data, status })=>{
                 {Object.keys(filters.type).map(filterItem=>{               
                     return (
                         <TypeButton 
+                            key={filterItem}
                             className={filters.type[filterItem] ? "selected" : null} 
                             type={filterItem}
                             margin='0 5px 5px 0'
@@ -165,25 +166,20 @@ const Wrapper = styled.div`
     height: 700px;
     overflow-y: auto;
     &::-webkit-scrollbar {       
-        width: 6px;
-             
+        width: 6px;       
+        background: transparent;         
     }
 
-    &:hover::-webkit-scrollbar {
-       // width: 7px;
-
-       
+    &:hover::-webkit-scrollbar {  
+        &-thumb {
+            background: #ae95d7;
+        }
     }
- 
-    &::-webkit-scrollbar-track {
-        background: #ddd;
-       
-    }
+  
  
     &::-webkit-scrollbar-thumb {
-        background: #ae95d7;
-        border-radius: 10px;
-       
+        background: transparent;
+        border-radius: 10px;       
     }
 
     ${onSmallTabletMediaQuery()} {
@@ -205,7 +201,9 @@ const TopWrapper = styled.div`
     flex-wrap: wrap;
     align-items: center;  
     padding: 10px 0 5px 0;
-    background-color: white;
+    //background-color: white;
+    backdrop-filter: blur(40px);
+ background-color: rgba(255, 255, 255, 0.4);
     z-index: 4;  
     ${onSmallTabletMediaQuery()} {
         justify-content:center;    

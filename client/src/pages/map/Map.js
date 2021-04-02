@@ -15,7 +15,7 @@ import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 import SmallWindow from './components/SmallWindow';
 import { onSmallTabletMediaQuery } from '../../utils/responsives';
-import { updateCenter } from '../../store/reducers/map/actions';
+import { updateCenter, updataAnimatedId } from '../../store/reducers/map/actions';
 
 const mapContainerStyle = {
     width: '100%',
@@ -59,6 +59,7 @@ const Map = ()=>{
 
     const onUnmount = useCallback((map) =>{          
         dispatch(updateCenter({lat: mapRef.current.getCenter().lat(), lng: mapRef.current.getCenter().lng()}, mapRef.current.getZoom() )); 
+        dispatch(updataAnimatedId(null));
         mapRef.current = null;
     }, [dispatch])
 

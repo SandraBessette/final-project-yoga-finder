@@ -1,7 +1,6 @@
 
 
-const mongoose = require('mongoose');  
-const UserModel = require('../models/user');
+const mongoose = require('mongoose'); 
 const BusinessModel = require('../models/business');
 const CommentModel = require('../models/comment');
 
@@ -101,5 +100,5 @@ const getBusinessComments = async (req, res) => {
 module.exports = { 
     getBusinessComments, 
     getUserComments,
-    createComment    
+    createComment  
   };
