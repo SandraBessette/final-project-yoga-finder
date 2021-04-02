@@ -1,27 +1,31 @@
 import React, {useState } from 'react';
 import styled from 'styled-components';
+import { useSelector, useDispatch } from "react-redux";
 import  moment from 'moment'; 
 import { COLORS} from '../../../GlobalStyles';
+import { updateSelectedChat } from '../../../store/reducers/chat/actions';
 
 
 
-const ChatListItem = ()=>{
-  
+const ChatListItem = ({id, lastMessage, user})=>{
+    const { count, selected } = useSelector((state)=>state.chat); 
+    const dispatch = useDispatch();
 
     const handleClick = (ev)=>{
         ev.preventDefault();
-       // setSelected(prev=>!prev);
+        dispatch(updateSelectedChat({chatId: id, user: user}));
     }
 
     return (
-        <Wrapper  >
-            <ProfilImage src={'/user.svg'} atl="userProfile"/> 
+        <Wrapper className={selected.chatId === id ? "selected" : null}>
+            <ProfilImage src={user.image} atl="userProfile"/> 
             <TextWrapper onClick={handleClick}>
                 <DatePar>{moment(new Date()).fromNow() }</DatePar>
-                <p>Louise Vezina</p>
+                <p>{user.userName}</p>
                 <MessageWrapper>
-                <Message>Salut ce video est magnifique, j'aimerais pouvoir faire cela moi aussi</Message>
-                <Unread>5</Unread>
+                <Message>{lastMessage}</Message>
+                {count[id] &&  count[id] !== 0 &&
+                <Unread>{count[id]}</Unread>}
                 </MessageWrapper>
             </TextWrapper>
         </Wrapper >
@@ -42,6 +46,10 @@ const Wrapper = styled.button`
     cursor: pointer;
 
     &:hover {
+        background-color: ${COLORS.primaryLight};
+    }
+
+    &.selected {
         background-color: ${COLORS.primaryLight};
     }
  

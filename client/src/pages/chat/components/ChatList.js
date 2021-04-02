@@ -4,32 +4,28 @@ import { useSelector, useDispatch } from "react-redux";
 import ChatListItem from './ChatListItem';
 import { COLORS} from '../../../GlobalStyles';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../../utils/responsives';
+import Chat from '../Chat';
 
 
 
 const ChatList = ()=>{
     const [selectedId, setSelectedId] = useState(null);
     const { authData } = useSelector((state)=>state.auth);  
-    const { chatList, status, error } = useSelector((state)=>state.chat);  
+    const { chatList } = useSelector((state)=>state.chat);  
+
+;      
 
     return (
         <Wrapper>
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />     
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />    
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />     
-            <ChatListItem />
-            <ChatListItem />
-            <ChatListItem />    
-            <ChatListItem />
-            <ChatListItem/>    
+            {chatList.map((chat)=>{
+                return(
+                    <ChatListItem 
+                        data={chat}
+                        id={chat._id}
+                        lastMessage={chat.lastMessage} 
+                        user={chat.users[0]._id === authData.data._id ? chat.users[1] : chat.users[0]}/>
+                )
+            })}            
             
         </Wrapper>
     )

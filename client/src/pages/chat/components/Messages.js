@@ -1,44 +1,132 @@
-import React,  {useEffect, useRef}  from 'react';
+import React,  {useState, useEffect, useRef}  from 'react';
 import styled from 'styled-components';
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import MessageItem from './MessageItem';
 import { MdSend } from 'react-icons/md'
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL} from '../../../GlobalStyles';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../../utils/responsives';
 import IconButton from '../../../components/button/IconButton';
-import ProfileInfo from '../../singleBusiness/components/ProfileInfo'
+import ProfileInfo from '../../singleBusiness/components/ProfileInfo';
+import Spinner from '../../../components/spinner/Spinner';
+import Error from '../../error/Error';
+import { receiveMessageInfo, updateMessage } from '../../../store/reducers/chat/actions';
 
 const Messages = ()=>{
-    const { authData } = useSelector((state)=>state.auth);  
+    const { authData } = useSelector((state)=>state.auth); 
+    const { selected, messages } = useSelector((state)=>state.chat);   
+    const [status, setStatus] = useState("loading"); 
+    const [error, setError] = useState("");
+    const [messageText, setMessageText] = useState("");
     const messagesEndRef = useRef(null);
+    const dispatch = useDispatch();
+
+    const handleChange =(ev)=>{
+        setMessageText(ev.target.value);
+    }
+
+    const handleSendClick = (e) => { 
+        e.preventDefault(); 
+        setStatus("loading");   
+            fetch('/chat/message/', {
+                method: "POST",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authData?.token}`
+                } ,
+                body: JSON.stringify({  receiverId: selected.user._id , message: messageText }),              
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                const { status, data } = json;            
+                if (status === 201) {   
+                    console.log(data)            
+                    dispatch(updateMessage(data.message, data.chat));                 
+                    setStatus("idle");    
+                               
+                }
+                else {
+                    setError(status.toString());
+                    setStatus("error");                                                      
+                }
+            })
+            .catch((error)=>{  
+                setError("500");             
+                setStatus("error");               
+            });         
+      }; 
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
       }
 
-      useEffect(() => {
-        scrollToBottom()
-      }, []);
+     useEffect(() => {
+        scrollToBottom();
+      }, [messages]);
 
+      useEffect(()=>{
+          if(selected.chat){
+            setStatus("loading");   
+            fetch(`/chat/messages/${selected.chat._id}`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authData?.token}`
+                }               
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                const { status, data } = json;            
+                if (status === 200) {   
+                    console.log("messages")            
+                    dispatch(receiveMessageInfo(data));                 
+                    setStatus("idle");    
+                               
+                }
+                else {
+                    setError(status.toString());
+                    setStatus("error");                                                      
+                }
+            })
+            .catch((error)=>{  
+                setError("500");             
+                setStatus("error");               
+            });  
+        } 
+        else{
+            setStatus("idle");  
+        }  
+    
+      },[authData?.token, dispatch, selected.chat]);
+
+      if(status === 'error'){
+          return <Error type={error}/>;
+      }
     return (
         <>
         <Wrapper>
-            <Header><ProfileInfo user={authData.data}></ProfileInfo></Header>
-            <WrapperMessages >           
-            <MessageItem reference={messagesEndRef} sender={true} />
-            <MessageItem sender={false}/>
-            <MessageItem sender={true} />
-            <MessageItem sender={false}/>
-            <MessageItem sender={true} />
-            <MessageItem sender={false}/>
-            
-            <MessageItem sender={true} />
-            <MessageItem sender={false}/>
-            <MessageItem sender={true} />
-            <MessageItem sender={false}/>
-            
+            {status === 'loading' && <Spinner />}
+            {status === 'idle' && <>
+            {selected.user === null ? <p>No message yet</p> : <>
+            <Header><ProfileInfo disabled={true} user={selected.user}></ProfileInfo></Header>
+            <WrapperMessages >
+            {messages.map((message, index)=>{
+                return(
+                    <MessageItem 
+                        reference={index=== 0 ?messagesEndRef: null}
+                        message={message}
+                        sender={message.sender._id === authData.data.user._id}/>
+                )
+            })} 
             </WrapperMessages>
-            <Footer><input type="text" name="fname"/><IconButton margin='0 2px 0 0' padding='5px'><MdSend size={22} /></IconButton ></Footer>
+            <Footer>
+                <input type="text" name="fname" value={messageText} onChange={handleChange} />
+                <IconButton margin='0 2px 0 0' padding='5px' onclick={handleSendClick}>
+                    <MdSend size={22} />
+                </IconButton >
+            </Footer>
+           </>} </>}
         </Wrapper>
        
         </>

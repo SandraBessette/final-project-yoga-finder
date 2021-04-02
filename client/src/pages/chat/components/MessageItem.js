@@ -4,7 +4,7 @@ import  moment from 'moment';
 import { COLORS} from '../../../GlobalStyles';
 
 
-const MessageItem = ({reference = null, sender})=>{
+const MessageItem = ({reference = null, sender, message})=>{
 
     const handleClick = (ev)=>{
 
@@ -13,10 +13,10 @@ const MessageItem = ({reference = null, sender})=>{
 
     return (
         <Wrapper ref={reference}>
-            <ProfilImage sender={sender} src={'/user.svg'} atl="userProfile"/> 
-            <TextWrapper sender={sender} onClick={handleClick}>
-                <DatePar sender={sender}>{moment(new Date()).fromNow() }</DatePar>            
-                <Message sender={sender} >Salut ce video est magnifique</Message>
+            <ProfilImage sender={sender} src={message.sender.image} atl="userProfile"/> 
+            <TextWrapper sender={sender}>
+                <DatePar sender={sender}>{moment(message.createdAt).fromNow() }</DatePar>            
+                <Message sender={sender} >{message.message}</Message>
             </TextWrapper>
         </Wrapper >
     )

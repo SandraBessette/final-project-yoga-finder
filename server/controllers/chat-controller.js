@@ -33,7 +33,7 @@ const getChatList = async (req, res) => {
 
   const getSingleChat = async (req, res) => {
     const user2 = req.params.userId; 
-
+    const userId = req.userId; 
     if (!userId) {
         return res.status(401).json({ status: 401, message: "The user is not authenticated" });
       }   
