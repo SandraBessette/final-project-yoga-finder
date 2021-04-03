@@ -8,6 +8,7 @@ import {
   useLoadScript,
 } from "@react-google-maps/api";
 import { useSelector, useDispatch } from "react-redux";
+
  import styled from 'styled-components';
  import Map from './pages/map/Map';
  import SingleBusiness from './pages/singleBusiness/SingleBusiness';
@@ -24,9 +25,11 @@ import { useSelector, useDispatch } from "react-redux";
  import GlobalStyles from './GlobalStyles';
  import Spinner from './components/spinner/Spinner';
  import { onSmallTabletMediaQuery } from './utils/responsives';
- import { requestFilterInfo, receiveFilterInfo, receiveFilterInfoError } from './store/reducers/map/actions'
+ import { requestFilterInfo, receiveFilterInfo, receiveFilterInfoError } from './store/reducers/map/actions';
 
- import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from './GlobalStyles'
+ import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from './GlobalStyles';
+
+ 
 
 const App= () => {  
   const { authData } = useSelector((state)=>state.auth); 
@@ -39,6 +42,7 @@ const App= () => {
     const dispatch = useDispatch();
 
     useEffect(() => {  
+      
       dispatch(requestFilterInfo());
       fetch(`/business/filters/metadata`)
         .then((res) => res.json())

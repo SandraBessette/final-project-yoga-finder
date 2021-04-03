@@ -1,23 +1,25 @@
  
+
 const initialState = {
   authData: null,
   status: 'loading',
   error: null,
 
 }
+
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     
     case 'AUTHENTICATE': {
-      localStorage.setItem('profile', JSON.stringify({ ...action?.data }));
-
+      localStorage.setItem('profile', JSON.stringify({ ...action?.data }));        
+    
       return {  ...state,
                 authData: action.data,
                 status: 'idle'};
       }
     case 'LOGOUT': {
       localStorage.clear(); 
-
+     
       return { ...initialState };
 
     }
@@ -29,7 +31,7 @@ const authReducer = (state = initialState, action) => {
       };
     }
     case 'UPDATE_FAVORITES': {  
-
+      
       return {
           ...state,                
           authData: {

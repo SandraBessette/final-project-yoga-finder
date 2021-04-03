@@ -6,7 +6,7 @@ import { COLORS} from '../../../GlobalStyles';
 import { reduceCountInfo } from '../../../store/reducers/chat/actions';
 
 
-const MessageItem = ({reference = null, sender, message})=>{
+const MessageItem = ({reference = null, sender, message, unreadStyle})=>{
     const { authData } = useSelector((state)=>state.auth);
     const { count } = useSelector((state)=>state.chat);  
     const dispatch = useDispatch();
@@ -51,7 +51,7 @@ const MessageItem = ({reference = null, sender, message})=>{
             <ProfilImage sender={sender} src={message.sender.image || '/user.svg'} atl="userProfile"/> 
             <TextWrapper sender={sender} >
                 <DatePar sender={sender}>{moment(message.createdAt).fromNow() }</DatePar>            
-                <Message sender={sender} className={!message.read && !sender ? "unread" : null} >{message.message}</Message>
+                <Message sender={sender} className={!message.read && !sender && unreadStyle ? "unread" : null} >{message.message}</Message>
             </TextWrapper>
         </Wrapper >
     )

@@ -57,7 +57,7 @@ const Comments = ()=>{
             {status === 'idle' && <>
                 {comments.map((comment)=>{
                     return(
-                        <CommentItem comment={comment}/>
+                        <CommentItem key={comment._id} comment={comment}/>
                     )
                 })}  
             </> }             

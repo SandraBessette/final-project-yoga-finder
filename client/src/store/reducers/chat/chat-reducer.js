@@ -1,4 +1,4 @@
- 
+
 const initialState = { 
     chatList: [],
     status: "loading",
@@ -8,6 +8,7 @@ const initialState = {
     messages: []
    
   }
+
 
   const chatReducer = (state = initialState, action) => {
    //   console.log(action.type);
@@ -78,7 +79,8 @@ const initialState = {
             }  
             };
       }
-      case 'INCREASE_COUNT_INFO': {   
+      case 'INCREASE_COUNT_INFO': {
+         
         return {
             ...state,                
             count: {

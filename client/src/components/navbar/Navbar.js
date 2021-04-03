@@ -10,14 +10,14 @@ import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsi
 
 const menuItem = [ "Favorites", "Business"];
 
-const Navbar = ()=>{
+const Navbar = ({socket})=>{
     const {authData} = useSelector((state)=>state.auth); 
     const dispatch = useDispatch(); 
     const history = useHistory(); 
    
     const handleClick = (e)=>{
         e.preventDefault();
-       
+        socket.emit('logout', {_id: authData.data._id});  
         history.push('/');
         dispatch(logout());     
         dispatch(resetChat());

@@ -12,7 +12,6 @@ import { authenticate, requestAuthInfo, receiveAuthInfoError } from '../../store
 import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
-
 const initialState = { userName: '', email: '', password: '', confirmPassword: '', type: "Client", image: ""};
 
 const SignIn = ()=>{
@@ -72,7 +71,7 @@ const SignIn = ()=>{
         .then((json)=>{          
             if (json.status === 201) {
                 dispatch(authenticate({data: json.data, token: json.token}));
-                history.push("/");
+                history.push("/");             
             }
              else{
                 dispatch(receiveAuthInfoError(json.message));               

@@ -34,7 +34,7 @@ const getChatList = async (req, res) => {
   const getSingleChat = async (req, res) => {
     const user2 = req.params.userId; 
     const userId = req.userId; 
-    console.log(user2 === userId);
+
     if (!userId) {
         return res.status(401).json({ status: 401, message: "The user is not authenticated" });
       }   
@@ -43,8 +43,12 @@ const getChatList = async (req, res) => {
 //{ users: { "$all" : [userId, user2]} }
         const otherUser = await UserModel.findOne({ _id: user2 });    
         if (otherUser) { 
-            
-            const chat = await ChatModel.findOne({ users: { "$all" : [userId, user2]} } )
+            let query = { users: { "$all" : [userId, user2]} };
+            if (userId === user2){
+                console.log("equal")
+                query = { users:[userId, user2] };
+            }
+            const chat = await ChatModel.findOne(query)
                                         .populate('lastMessage')
                                         .populate('users')
                                         .exec();              
@@ -102,12 +106,18 @@ const getChatList = async (req, res) => {
 
             
     try {
+     
         const receiver = await UserModel.findOne({ _id: receiverId }) ;
         if (!receiver)
             return res.status(404).json({ status: 404, message: `Receiver not found`, data: req.body}); 
 //{ users: { "$all" : [userId, receiverId]} }
-        const chat = await ChatModel.findOne({ users: { "$all" : [userId, receiverId]} });              
-      
+        let query = { users: { "$all" : [userId, receiverId]} };
+        if (userId === receiverId){
+            console.log("equal")
+            query = { users:[userId, receiverId] };
+        }
+        const chat = await ChatModel.findOne(query);              
+       console.log("tupe of receiver", receiverId, typeof receiverId)
         if (chat){       
             const result = await MessageModel.create({ chatId: chat._id, message, sender: userId, receiver: receiverId });                                               
             
@@ -115,7 +125,9 @@ const getChatList = async (req, res) => {
                 chat.lastMessage = result._id;
                 await chat.save();
                 await chat.populate('lastMessage').populate('users').execPopulate();
-                await result.populate('sender').execPopulate();              
+                await result.populate('sender').execPopulate(); 
+             
+                req.app.get('io').in(receiverId).emit('new_msg', {data: {chat, message: result }});                        
                 res.status(201).json({ status: 201, message: "success", data: {chat, message: result }});
             }                
         }
@@ -126,9 +138,13 @@ const getChatList = async (req, res) => {
             newChat = await newChat.save();
             newMessage = await newMessage.save();
             await newChat.populate('lastMessage').populate('users').execPopulate();
-            await newMessage.populate('sender').execPopulate();   
+            await newMessage.populate('sender').execPopulate();  
+         
+            req.app.get('io').in(receiverId).emit('new_msg', {data: {chat: newChat, message: newMessage }});         
             res.status(201).json({ status: 201, message: "success", data: {chat: newChat, message: newMessage } });
         }   
+
+        
     } catch (error) {
         res.status(500).json({ status: 500, message: error?.message, data: req.body});    
         console.log(error?.message);
@@ -181,7 +197,7 @@ const getUnreadCountByChat = async (req, res) => {
     ]);
 
     if (result){
-        console.log('count', result);
+      
         let count = {};
         result.forEach((item)=>{
             count[item._id] = item.count;

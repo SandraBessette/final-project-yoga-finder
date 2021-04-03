@@ -17,7 +17,7 @@ const ChatListItem = ({id, handleClick, date, lastMessage, user})=>{
                 <DatePar>{moment(date).fromNow() }</DatePar>
                 <p>{user.userName}</p>
                 <MessageWrapper>
-                <Message>{lastMessage.message}</Message>
+                <Message>{lastMessage.receiver === user._id ? `You: ${lastMessage.message}` : lastMessage.message}</Message>
                 {count[id] !== undefined && count[id] !== 0 &&
                 <Unread>{count[id]}</Unread>}
                 </MessageWrapper>

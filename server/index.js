@@ -1,16 +1,22 @@
 const express = require('express');
 const cors = require('cors');
+const http = require('http');
 const mongoose = require('mongoose');
+const socketio = require('socket.io');
 const userRoutes = require('./routes/user-routes');
 const businessRoutes = require('./routes/business-routes');
 const commentRoutes = require('./routes/comment-routes');
 const chatRoutes = require('./routes/chat-routes');
+const Websockets = require('./utils/Websockets');
 require("dotenv").config();
 
 const { MONGO_URI } = process.env;
 const PORT = 8000;
 
 const app = express();
+const server = http.createServer(app);
+io = socketio(server);
+
 app.use((cors()));
 
 
@@ -31,8 +37,14 @@ app.use('*', (req, res) => {
   })
 });
 
+io.on('connection', (socket) => Websockets.connection(socket) );
+app.set('io', io);
 
-app.listen(PORT, () => console.info(`Listening on port ${PORT}`));
+
+
+
+
+server.listen(PORT, () => console.info(`Listening on port ${PORT}`));
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true , useUnifiedTopology: true});
 const db = mongoose.connection;

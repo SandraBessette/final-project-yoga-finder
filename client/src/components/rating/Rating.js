@@ -27,6 +27,7 @@ const Rating = ({value, onChange, disabled=false, size=20})=>{
             {ratingArray.map((elem)=>{
                 return (
                     <RatingElement 
+                    key={elem}
                     index={elem}
                     hoverRating={hoverRating}
                     rating={value}

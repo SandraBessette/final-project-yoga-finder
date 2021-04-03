@@ -12,7 +12,7 @@ import IconButton from '../../../components/button/IconButton';
 import ProfileInfo from '../../singleBusiness/components/ProfileInfo';
 import Spinner from '../../../components/spinner/Spinner';
 import Error from '../../error/Error';
-import { receiveMessageInfo, updateMessage, updateSelectedChat } from '../../../store/reducers/chat/actions';
+import { receiveMessageInfo, updateMessage, updateSelectedChat, increaseCountInfo } from '../../../store/reducers/chat/actions';
 
 const Messages = ({singleUser})=>{
     const { authData } = useSelector((state)=>state.auth); 
@@ -20,6 +20,7 @@ const Messages = ({singleUser})=>{
     const [status, setStatus] = useState("loading"); 
     const [error, setError] = useState("");
     const [messageText, setMessageText] = useState("");
+    const [unreadStyle, setUnreadStyle] = useState(true);
     const messagesEndRef = useRef(null);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -72,6 +73,10 @@ const Messages = ({singleUser})=>{
                     dispatch(updateSelectedChat({chatId: data.chat._id, user: user})); 
                 }         
                 dispatch(updateMessage(data.message, data.chat)); 
+                setUnreadStyle(false);
+
+               // if (data.message.sender._id === data.message.receiver)
+                 //   dispatch(increaseCountInfo(data.chat._id)); 
             }
             else {
                 setError(status.toString());
@@ -91,12 +96,12 @@ const Messages = ({singleUser})=>{
       }
   
      useEffect(() => {
-        scrollToBottom();
+        scrollToBottom();     
         console.log("scrool");
       }, [status, messages]);
 
       useEffect(()=>{
-        console.log('selected.chatId', selected.chatId, singleUser)
+     
           if(selected.chatId){
             
             setStatus("loading");   
@@ -111,11 +116,9 @@ const Messages = ({singleUser})=>{
             .then((res) => res.json())
             .then((json) => {
                 const { status, data } = json;            
-                if (status === 200) {   
-                    console.log("messages", data)            
+                if (status === 200) {  
                     dispatch(receiveMessageInfo(data));                 
-                    setStatus("idle");    
-                               
+                    setStatus("idle"); 
                 }
                 else {
                     setError(status.toString());
@@ -164,7 +167,8 @@ const Messages = ({singleUser})=>{
                         key={message._id}
                         reference={index === 0 ? messagesEndRef: null}
                         message={message}
-                        sender={message.sender._id === authData.data._id}/>
+                        sender={message.sender._id === authData.data._id}
+                        unreadStyle={unreadStyle}/>
                 )
             })} 
             </WrapperMessages>

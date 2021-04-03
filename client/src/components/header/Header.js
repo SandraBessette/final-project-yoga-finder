@@ -1,6 +1,7 @@
 import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from "react-router-dom";
+import io from "socket.io-client";
 import { useSelector, useDispatch } from "react-redux";
 import decode from 'jwt-decode';
 import { logout } from '../../store/reducers/auth/action'
@@ -11,9 +12,10 @@ import Button from '../button/Button';
 import Navbar from '../navbar/Navbar';
 import IconButton from '../../components/button/IconButton';
 import { onSmallTabletMediaQuery, onSmallPhoneMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
-import { receiveCountInfo, resetChat } from '../../store/reducers/chat/actions';
+import { receiveCountInfo, resetChat, updateMessage, increaseCountInfo } from '../../store/reducers/chat/actions';
 
-
+const ENDPOINT = 'http://localhost:3000';
+let socket = io(ENDPOINT);
 
 const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
@@ -27,24 +29,39 @@ const Header = ()=>{
        return total;
     }, [count])
 
+    useEffect(()=>{
+        socket.on("new_msg", function(data) {           
+            dispatch(updateMessage(data.data.message, data.data.chat)); 
+            dispatch(increaseCountInfo(data.data.chat._id)); 
+       
+        });
+    }, [dispatch]) 
+
+  
     useEffect(() => {
         const token = authData?.token;
         let timer = null;
-        if (token) {  
+        if (token) { 
+            //socket= io(ENDPOINT); 
             const decodedToken = decode(token);
             const timeNow = new Date().getTime();           
        
-            if (decodedToken.exp * 1000 < timeNow){              
+            if (decodedToken.exp * 1000 < timeNow){   
+                socket.emit('logout', {_id: authData.data._id});            
                 dispatch(resetChat());          
-                history.push('/');
-                dispatch(logout());             
+                history.push('/');            
+                dispatch(logout());  
+              
+                          
             }  
             else {
+                socket.emit('join', {_id: authData.data._id});
                 const timeBeforeExp = decodedToken.exp * 1000 - timeNow;
                 console.log('timeBeforeExp', timeBeforeExp);
                 timer = setTimeout(function(){  
-                    dispatch(resetChat());               
-                    history.push('/');
+                    socket.emit('logout', {_id: authData.data._id});  
+                    dispatch(resetChat());                             
+                    history.push('/');                 
                     dispatch(logout());
                 }, timeBeforeExp);
             }
@@ -56,7 +73,7 @@ const Header = ()=>{
             }  
         }
     
-      }, [authData?.token, dispatch, history]);
+      }, [authData?.token, authData.data._id, dispatch, history]);
 
     useEffect(() => {
         if (authData){
@@ -125,7 +142,7 @@ const Header = ()=>{
                 {totalUnreadMessage() !== 0 &&
                 <SpanIcon >{totalUnreadMessage()}</SpanIcon>}
                 </MailIconWrapper>
-                <p>{authData.data.userName}</p><Navbar /></>}                     
+                <p>{authData.data.userName}</p><Navbar socket={socket}/></>}                     
             </RightWrapper>
         </Wrapper>
     );

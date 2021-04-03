@@ -31,7 +31,7 @@ const Rating = ({index, rating, hoverRating, onMouseEnter, onMouseLeave, onclick
             onClick={(e)=>(onclick(e, index))}
             color={colorStar()}
         >
-          {isHalfStart() ? <BsStarHalf  size={size}/>  : < BsStarFill stroke-width={0.6} stroke='#593796' size={size}/> }
+          {isHalfStart() ? <BsStarHalf  size={size}/>  : < BsStarFill strokeWidth={0.6} stroke='#593796' size={size}/> }
         </Wrapper>
     );
 
