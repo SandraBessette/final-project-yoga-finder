@@ -66,7 +66,10 @@ const initialState = {
             selected: {...action.data}
             };
       }
-      case 'REDUCE_COUNT_INFO': {   
+      case 'REDUCE_COUNT_INFO': { 
+          console.log('REDUCE_COUNT_INFO',!action.chatId || state.count[action.chatId] <= 0);
+        if (!action.chatId || state.count[action.chatId] <= 0)
+            return state;  
         return {
             ...state,                
             count: {

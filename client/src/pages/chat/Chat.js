@@ -86,6 +86,7 @@ const MainWrapper = styled.div`
 
     ${onSmallTabletMediaQuery()} {
         justify-content: center;
+        padding: 0 2px 10px 0;
         height: calc(100vh - ${HEADER_HEIGHT_SMALL} - 85px);//height: auto;
         //padding: 15px;
     }

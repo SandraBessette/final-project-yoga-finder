@@ -49,42 +49,42 @@ const Messages = ({singleUser})=>{
 
     const handleSendClick = (e) => { 
         e.preventDefault(); 
-      //  setStatus("loading");   
-            fetch('/chat/message/', {
-                method: "POST",
-                headers: {
-                    Accept: "application/json",
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${authData?.token}`
-                } ,
-                body: JSON.stringify({  receiverId: selected.user._id , message: messageText }),              
-            })
-            .then((res) => res.json())
-            .then((json) => {
-                const { status, data } = json;            
-                if (status === 201) {   
-                    console.log('post is working', data); 
-                    setMessageText("");
-                    if(!selected.chatId){
-                        const user = data.chat.users[0]._id === authData.data._id ? data.chat.users[1] : data.chat.users[0] 
-                        dispatch(updateSelectedChat({chatId: data.chat._id, user: user})); 
-                    }         
-                    dispatch(updateMessage(data.message, data.chat));                 
-                   // setStatus("idle");    
-                               
-                }
-                else {
-                    setError(status.toString());
-                    setStatus("error");
-                    console.log(json.message) ;                                                      
-                }
-            })
-            .catch((error)=>{  
-                setError("500");             
+        if (messageText === ""){
+            return;
+        }           
+        fetch('/chat/message/', {
+            method: "POST",
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${authData?.token}`
+            } ,
+            body: JSON.stringify({  receiverId: selected.user._id , message: messageText }),              
+        })
+        .then((res) => res.json())
+        .then((json) => {
+            const { status, data } = json;            
+            if (status === 201) {   
+                console.log('post is working', data); 
+                setMessageText("");
+                if(!selected.chatId){
+                    const user = data.chat.users[0]._id === authData.data._id ? data.chat.users[1] : data.chat.users[0] 
+                    dispatch(updateSelectedChat({chatId: data.chat._id, user: user})); 
+                }         
+                dispatch(updateMessage(data.message, data.chat)); 
+            }
+            else {
+                setError(status.toString());
                 setStatus("error");
-                console.log('error', error) ;                      
-            });         
-      }; 
+                console.log(json.message) ;                                                      
+            }
+        })
+        .catch((error)=>{  
+            setError("500");             
+            setStatus("error");
+            console.log('error', error) ;                      
+        });         
+    }; 
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -215,9 +215,16 @@ const Wrapper = styled.div`
         &.singleUser {
             display: block;
         }
+        
         &.selected {
             display: block;            
         }
+
+        &::-webkit-scrollbar {
+            width: 8px;
+        }
+        border: none;
+        
     }
 `;
 

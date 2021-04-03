@@ -39,9 +39,10 @@ const Wrapper = styled.button`
     font-size: 14px;
     box-sizing: border-box; ;
     cursor: pointer;
+    outline: none;
 
     &:hover {
-        background-color: ${COLORS.primaryLight};
+        background-color: #F2F2F2;
     }
 
     &.selected {

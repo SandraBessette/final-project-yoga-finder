@@ -100,7 +100,7 @@ const App= () => {
           <Route exact path="/user/chat/">           
             {authData ? <Chat /> : <Error type='401'/>}
           </Route> 
-          <Route exact path="/user/singlechat/:id">           
+          <Route exact path="/user/chat/:id">           
             {authData ? <SingleChat /> : <Error type='401'/>}
           </Route>            
           <Route path="/*">           

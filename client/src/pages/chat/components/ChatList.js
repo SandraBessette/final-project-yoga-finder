@@ -81,8 +81,13 @@ const Wrapper = styled.div`
         min-width: 335px;
         border-right: 1px solid ${COLORS.lightGray};
         width: 100%;
+        
         &.selected {
             display: none;
+        }
+        
+        &::-webkit-scrollbar {
+            width: 8px;            
         }
     }
 
@@ -93,12 +98,12 @@ const Header = styled.div`
     display: flex;   
     align-items: center;
     justify-content:center;
-    min-height: 65px;  
+    min-height: 60px;  
     backdrop-filter: blur(40px);
     background-color: rgba(255, 255, 255, 0.9);
     z-index: 4;
-   // padding-top: 7px;
-  //  padding-left: 10px;
+  //  padding-top: 7px;
+  // padding-left: 10px;
     position: sticky;
     left: 0;
     top: 0;

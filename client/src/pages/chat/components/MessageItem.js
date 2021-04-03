@@ -12,8 +12,9 @@ const MessageItem = ({reference = null, sender, message})=>{
     const dispatch = useDispatch();
 
     useEffect(()=>{
-        if (!message.read && !sender){
-           // setStatus("loading");   
+     
+        if ((!message.read && !sender) || (!message.read && message.sender._id === message.receiver)){
+          
             fetch(`/chat/message/read/${message._id}`, {
                 method: "PUT",
                 headers: {
@@ -26,8 +27,7 @@ const MessageItem = ({reference = null, sender, message})=>{
             .then((json) => {
                 const { status} = json;            
                 if (status === 201) {  
-                    console.log("message.chatId", message.chatId, message); 
-                  
+                    console.log("message.chatId", message.chatId, message);
                     dispatch(reduceCountInfo(message.chatId));                 
                 }
                 else {
@@ -49,9 +49,9 @@ const MessageItem = ({reference = null, sender, message})=>{
     return (
         <Wrapper ref={reference}>
             <ProfilImage sender={sender} src={message.sender.image || '/user.svg'} atl="userProfile"/> 
-            <TextWrapper sender={sender}>
+            <TextWrapper sender={sender} >
                 <DatePar sender={sender}>{moment(message.createdAt).fromNow() }</DatePar>            
-                <Message sender={sender} >{message.message}</Message>
+                <Message sender={sender} className={!message.read && !sender ? "unread" : null} >{message.message}</Message>
             </TextWrapper>
         </Wrapper >
     )
@@ -78,17 +78,16 @@ const ProfilImage = styled.img`
     height: 30px;
     border-radius: 50%;
     margin: ${(p)=>p.sender ? '0 0px 0 7px' : '0 7px 0 0px'};;
-    order: ${(p)=>p.sender ? 1 : 0};
-   
+    order: ${(p)=>p.sender ? 1 : 0};   
 `; 
 
 const TextWrapper = styled.div`
-    
+    //F0F2F5
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
     align-items: flex-start;
-    background: ${(p)=>(p.sender ? '#0084FF' : '#E4E6EB')};
+    background: ${(p)=>(p.sender ? '#0084FF' : '#E4E6EB')};  
     border-radius: 15px;
     padding: 5px 10px;
     width: fit-content;
@@ -97,13 +96,16 @@ const TextWrapper = styled.div`
      & p {
          margin: 2px;       
     }
-   
-
+  
 `;
 const Message = styled.p`   
     width: fit-content;
     font-size: 13px;
     color: ${(p)=>(p.sender ? 'white' : 'black')};
+
+    &.unread {
+       font-weight: 600;
+   }
 `;
 
 const DatePar = styled.p`

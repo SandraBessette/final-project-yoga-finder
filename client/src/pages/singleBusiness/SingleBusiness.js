@@ -53,7 +53,7 @@ const SingleBusiness = ()=>{
 
     const handleClickChat = (e, id) =>{
         e.preventDefault();
-        history.push(`/user/singlechat/${id}`);
+        history.push(`/user/chat/${id}`);
     };
 
     const handleClickFavorites = useCallback((e, id)=>{
