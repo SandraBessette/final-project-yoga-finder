@@ -33,3 +33,7 @@ export const receiveFilterInfoError = (error) => ({
     center,
     zoom
   });
+
+  export const resetMap = () => ({
+    type: 'RESET_MAP',
+  });

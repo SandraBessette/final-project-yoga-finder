@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Link, useHistory } from "react-router-dom";
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import { logout } from '../../store/reducers/auth/action';
+import { resetChat } from '../../store/reducers/chat/actions';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 
 
@@ -16,8 +17,10 @@ const Navbar = ()=>{
    
     const handleClick = (e)=>{
         e.preventDefault();
+       
         history.push('/');
-        dispatch(logout());
+        dispatch(logout());     
+        dispatch(resetChat());
     }
   
 

@@ -80,6 +80,9 @@ const initialState = {
             };
           
   }
+    case 'RESET_MAP': {   
+      return {...initialState};
+    }
       default:
         return state;
     }

@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
  import Profile from './pages/profile/Profile';
  import CreateBusiness from './pages/createBusiness/CreateBusiness';
  import Chat from './pages/chat/Chat';
+ import SingleChat from './pages/singleChat/SingleChat';
  import SignIn from './pages/signIn/SignIn';
  import Error from './pages/error/Error';
  import Header from './components/header/Header';
@@ -99,8 +100,8 @@ const App= () => {
           <Route exact path="/user/chat/">           
             {authData ? <Chat /> : <Error type='401'/>}
           </Route> 
-          <Route exact path="/user/chat/:id">           
-            {authData ? <Chat /> : <Error type='401'/>}
+          <Route exact path="/user/singlechat/:id">           
+            {authData ? <SingleChat /> : <Error type='401'/>}
           </Route>            
           <Route path="/*">           
             <Error type='404'/>

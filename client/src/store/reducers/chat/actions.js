@@ -9,8 +9,13 @@ export const updateSelectedChat = (data) => ({
     chat
   });
 
-  export const updateCountInfo = (chatId) => ({
-    type: 'UPDATE_COUNT_INFO',
+  export const reduceCountInfo = (chatId) => ({
+    type: 'REDUCE_COUNT_INFO',
+    chatId,
+  });
+
+  export const increaseCountInfo = (chatId) => ({
+    type: 'INCREASE_COUNT_INFO',
     chatId,
   });
 
@@ -37,4 +42,8 @@ export const updateSelectedChat = (data) => ({
   export const receiveChatListInfoError = (error) => ({
     type: 'RECEIVE_CHATLIST_INFO_ERROR',
     error,
+  });//'RESET_CHAT'
+
+  export const resetChat = () => ({
+    type: 'RESET_CHAT',
   });

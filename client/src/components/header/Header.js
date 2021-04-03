@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useCallback} from 'react';
 import styled from 'styled-components';
 import { Link, useHistory } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,12 +11,21 @@ import Button from '../button/Button';
 import Navbar from '../navbar/Navbar';
 import IconButton from '../../components/button/IconButton';
 import { onSmallTabletMediaQuery, onSmallPhoneMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
+import { receiveCountInfo, resetChat } from '../../store/reducers/chat/actions';
+
 
 
 const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
+    const {count} = useSelector((state)=>state.chat);
     const history = useHistory(); 
     const dispatch = useDispatch();
+
+    const totalUnreadMessage = useCallback(()=>{
+       const total = Object.values(count).reduce((total, num)=>(total + num), 0);
+       console.log('total', total);
+       return total;
+    }, [count])
 
     useEffect(() => {
         const token = authData?.token;
@@ -25,14 +34,16 @@ const Header = ()=>{
             const decodedToken = decode(token);
             const timeNow = new Date().getTime();           
        
-            if (decodedToken.exp * 1000 < timeNow){            
+            if (decodedToken.exp * 1000 < timeNow){              
+                dispatch(resetChat());          
                 history.push('/');
                 dispatch(logout());             
             }  
             else {
                 const timeBeforeExp = decodedToken.exp * 1000 - timeNow;
                 console.log('timeBeforeExp', timeBeforeExp);
-                timer = setTimeout(function(){                    
+                timer = setTimeout(function(){  
+                    dispatch(resetChat());               
                     history.push('/');
                     dispatch(logout());
                 }, timeBeforeExp);
@@ -49,6 +60,7 @@ const Header = ()=>{
 
     useEffect(() => {
         if (authData){
+            console.log("request the count total...")
             fetch('/chat/messages/unread', {
                 method: "GET",
                 headers: {
@@ -61,7 +73,8 @@ const Header = ()=>{
             .then((json) => {
                 const { status, data, message} = json;            
                 if (status === 200) {
-                    console.log("chatcount", data);
+                    //console.log("chatcount", data);
+                    dispatch(receiveCountInfo(data));
                 }
                 else {  
                     console.log(message);                                                                   
@@ -71,7 +84,7 @@ const Header = ()=>{
                 console.log("unknown error");                            
             });    
         } 
-    }, [authData]);
+    }, [authData, dispatch]);
 
     const handleClick = (e)=>{
         e.preventDefault();
@@ -109,7 +122,8 @@ const Header = ()=>{
                 <IconButton title='Map' reverse={true} padding={'5px'} onclick={handleClickChat}>
                     <GrMail size={20}/>  
                 </IconButton>
-                <SpanIcon >5</SpanIcon>
+                {totalUnreadMessage() !== 0 &&
+                <SpanIcon >{totalUnreadMessage()}</SpanIcon>}
                 </MailIconWrapper>
                 <p>{authData.data.userName}</p><Navbar /></>}                     
             </RightWrapper>

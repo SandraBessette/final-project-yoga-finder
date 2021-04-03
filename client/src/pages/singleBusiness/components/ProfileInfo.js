@@ -5,12 +5,12 @@ import { Link  } from "react-router-dom";
 import { COLORS } from '../../../GlobalStyles';
 
 
-const ProfileInfo = ({user})=>{
+const ProfileInfo = ({user, disabled = false})=>{
     const { authData } = useSelector((state)=>state.auth);
 
     return (  
             <ProfilWrapper> 
-                <StyledLink className={!authData ? "disabled" : null} to={`/user/profile/${user._id}`}>                 
+                <StyledLink className={!authData || disabled ? "disabled" : null} to={`/user/profile/${user._id}`}>                 
                 <ProfilImage src={user.image || '/user.svg'} atl="userProfile"/> 
                 <p>{user.userName}</p>
                 </StyledLink>    

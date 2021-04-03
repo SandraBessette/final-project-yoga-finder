@@ -4,19 +4,20 @@ const initialState = {
     status: "loading",
     error: null,
     selected: {chatId: null, user: null},
-    count: null,
+    count: {},
     messages: []
    
   }
 
   const chatReducer = (state = initialState, action) => {
+   //   console.log(action.type);
     switch (action.type) {
       
       case 'RECEIVE_CHATLIST_INFO': {        
   
         return {    
             ...state,
-            chatList: action.data,
+            chatList: [...action.data],
             status: 'idle'};
         }
       
@@ -37,23 +38,35 @@ const initialState = {
     case 'RECEIVE_COUNT_INFO': {   
         return {
             ...state,                
-            count: action.data
+            count: {...action.data}
             };
       }
      
       case 'RECEIVE_MESSAGES_INFO': {   
+        
+          console.log('receivemessageinf0', action.data)
         return {
             ...state,                
             messages: action.data
             };
       }
-      case 'UPDATE_SELECTEDCHAT': {   
+      case 'UPDATE_SELECTEDCHAT': {           
+          console.log("here", action.data.chatId)
+          if (action.data.chatId === null)
+          {    
+            console.log("hereinsideCondition", action.data)     
+            return {
+                ...state,                
+                selected: {...action.data},
+                messages: []
+                }
+          } 
         return {
             ...state,                
-            selected: action.data
+            selected: {...action.data}
             };
       }
-      case 'UPDATE_COUNT_INFO': {   
+      case 'REDUCE_COUNT_INFO': {   
         return {
             ...state,                
             count: {
@@ -62,36 +75,45 @@ const initialState = {
             }  
             };
       }
+      case 'INCREASE_COUNT_INFO': {   
+        return {
+            ...state,                
+            count: {
+                ...state.count,
+                [action.chatId]: state.count[action.chatId] ? state.count[action.chatId] + 1 : 1
+            }  
+            };
+      }
       
       case 'UPDATE_MESSAGE': {  
-          let newChatList = [...state.chatList];          
+          let newChatList = [...state.chatList];   
+          console.log('newChatList', newChatList);       
           newChatList = newChatList.filter((chat)=>{
+              console.log('action.chat._id', action.chat._id);
+              console.log('chat', chat);
+              console.log('chat._id', chat._id);
               return (chat._id !== action.chat._id)             
           });
           newChatList.unshift({...action.chat});
 
-          if (state.selectedChat === action.message.chatId){
+          if (state.selected.chatId === action.message.chatId){
+              console.log('here in reducer', newChatList);
               return {
                 ...state,  
                 chatList: newChatList,               
-                messages: [...state.messages, action.message] ,
-                count: {
-                    ...state.count,
-                    [action.message.chatId]: state.count[action.message.chatId] + 1
-                }               
+                messages: [action.message, ...state.messages]
               }
           }
   
         return {
             ...state,  
-            chatList: newChatList, 
-            count: {
-                ...state.count,
-                [action.message.chatId]: state.count[action.message.chatId] + 1
-            }  
+            chatList: newChatList 
               };
             
-    }     
+    } 
+    case 'RESET_CHAT': {   
+        return {...initialState};
+      }    
     
       default:
         return state;

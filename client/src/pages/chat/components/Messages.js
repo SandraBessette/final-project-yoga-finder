@@ -1,32 +1,55 @@
 import React,  {useState, useEffect, useRef}  from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
+import { useParams, useHistory } from "react-router-dom";
 import MessageItem from './MessageItem';
-import { MdSend } from 'react-icons/md'
+import { MdSend } from 'react-icons/md';
+import { SiWechat }from 'react-icons/si';
+import { IoIosArrowDropleft } from 'react-icons/io'
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL} from '../../../GlobalStyles';
 import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../../utils/responsives';
 import IconButton from '../../../components/button/IconButton';
 import ProfileInfo from '../../singleBusiness/components/ProfileInfo';
 import Spinner from '../../../components/spinner/Spinner';
 import Error from '../../error/Error';
-import { receiveMessageInfo, updateMessage } from '../../../store/reducers/chat/actions';
+import { receiveMessageInfo, updateMessage, updateSelectedChat } from '../../../store/reducers/chat/actions';
 
-const Messages = ()=>{
+const Messages = ({singleUser})=>{
     const { authData } = useSelector((state)=>state.auth); 
-    const { selected, messages } = useSelector((state)=>state.chat);   
+    const { selected, messages, count } = useSelector((state)=>state.chat);      
     const [status, setStatus] = useState("loading"); 
     const [error, setError] = useState("");
     const [messageText, setMessageText] = useState("");
     const messagesEndRef = useRef(null);
     const dispatch = useDispatch();
+    const history = useHistory();
+   // const { id } = useParams();
 
     const handleChange =(ev)=>{
         setMessageText(ev.target.value);
     }
+    const handleClickChat =(ev)=>{
+        ev.preventDefault();
+        dispatch(updateSelectedChat({chatId: null, user: null})); 
+        if (singleUser)
+            history.push('/user/chat/');
+       // setMessageText(ev.target.value);
+    };
+
+    const classString = ()=>{    
+       let name = null;
+        if (selected.chatId && singleUser)
+            name = "selected singleUser";
+        else if (selected.chatId )
+            name = "selected";
+        else if (singleUser)
+            name = "singleUser";
+           return name;
+    }
 
     const handleSendClick = (e) => { 
         e.preventDefault(); 
-        setStatus("loading");   
+      //  setStatus("loading");   
             fetch('/chat/message/', {
                 method: "POST",
                 headers: {
@@ -40,34 +63,44 @@ const Messages = ()=>{
             .then((json) => {
                 const { status, data } = json;            
                 if (status === 201) {   
-                    console.log(data)            
+                    console.log('post is working', data); 
+                    setMessageText("");
+                    if(!selected.chatId){
+                        const user = data.chat.users[0]._id === authData.data._id ? data.chat.users[1] : data.chat.users[0] 
+                        dispatch(updateSelectedChat({chatId: data.chat._id, user: user})); 
+                    }         
                     dispatch(updateMessage(data.message, data.chat));                 
-                    setStatus("idle");    
+                   // setStatus("idle");    
                                
                 }
                 else {
                     setError(status.toString());
-                    setStatus("error");                                                      
+                    setStatus("error");
+                    console.log(json.message) ;                                                      
                 }
             })
             .catch((error)=>{  
                 setError("500");             
-                setStatus("error");               
+                setStatus("error");
+                console.log('error', error) ;                      
             });         
       }; 
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
       }
-
+  
      useEffect(() => {
         scrollToBottom();
-      }, [messages]);
+        console.log("scrool");
+      }, [status, messages]);
 
       useEffect(()=>{
-          if(selected.chat){
+        console.log('selected.chatId', selected.chatId, singleUser)
+          if(selected.chatId){
+            
             setStatus("loading");   
-            fetch(`/chat/messages/${selected.chat._id}`, {
+            fetch(`/chat/messages/${selected.chatId}`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
@@ -79,14 +112,15 @@ const Messages = ()=>{
             .then((json) => {
                 const { status, data } = json;            
                 if (status === 200) {   
-                    console.log("messages")            
+                    console.log("messages", data)            
                     dispatch(receiveMessageInfo(data));                 
                     setStatus("idle");    
                                
                 }
                 else {
                     setError(status.toString());
-                    setStatus("error");                                                      
+                    setStatus("error");  
+                    console.log(json.message)                                                    
                 }
             })
             .catch((error)=>{  
@@ -98,25 +132,39 @@ const Messages = ()=>{
             setStatus("idle");  
         }  
     
-      },[authData?.token, dispatch, selected.chat]);
+      },[authData?.token, dispatch, selected.chatId]);
 
       if(status === 'error'){
           return <Error type={error}/>;
       }
     return (
         <>
-        <Wrapper>
+        <Wrapper className={classString()}>
             {status === 'loading' && <Spinner />}
             {status === 'idle' && <>
-            {selected.user === null ? <p>No message yet</p> : <>
-            <Header><ProfileInfo disabled={true} user={selected.user}></ProfileInfo></Header>
+            {selected.user === null ? 
+            <WrapperNoMessages >
+                <p>Messages</p> 
+                <SiWechat size={200}/>
+                </WrapperNoMessages>:
+             <>
+            <Header>
+                <IconWrapper className={singleUser ? "singleUser" : null}>
+                <IconButton margin='0 2px 0 0' padding='0px' onclick={handleClickChat}>
+                    <IoIosArrowDropleft size={22} />
+                </IconButton >
+                </IconWrapper>
+                <ProfileInfo disabled={true} user={selected.user}></ProfileInfo>
+            </Header>
             <WrapperMessages >
             {messages.map((message, index)=>{
+               
                 return(
                     <MessageItem 
-                        reference={index=== 0 ?messagesEndRef: null}
+                        key={message._id}
+                        reference={index === 0 ? messagesEndRef: null}
                         message={message}
-                        sender={message.sender._id === authData.data.user._id}/>
+                        sender={message.sender._id === authData.data._id}/>
                 )
             })} 
             </WrapperMessages>
@@ -142,7 +190,7 @@ const Wrapper = styled.div`
    // border-radius: 10px;
     padding: 0;
     box-sizing: border-box;
-    margin: 10px 20px 10px 0px;   
+  
 
     overflow-y: auto;  
     &::-webkit-scrollbar {
@@ -164,6 +212,12 @@ const Wrapper = styled.div`
 
     ${onSmallTabletMediaQuery()} {
         display: none;
+        &.singleUser {
+            display: block;
+        }
+        &.selected {
+            display: block;            
+        }
     }
 `;
 
@@ -174,8 +228,26 @@ const WrapperMessages = styled.div`
     width: 100%;
     border-radius: 10px;
     padding: 10px 0;
-    box-sizing: border-box;  
-   
+    box-sizing: border-box; 
+`;
+
+const WrapperNoMessages = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:center;
+    color: #cbbae5;//#a083d0;// ${COLORS.lightGray};//#a083d0;
+  
+    height: 100%;
+    width: 100%;
+    border-radius: 10px;
+    padding: 10px 0;
+    box-sizing: border-box; 
+
+    & p{
+        color: ${COLORS.primary};
+        
+    }
 `;
 
 const Footer = styled.div`
@@ -200,7 +272,23 @@ const Footer = styled.div`
     }
 `;
 
+const IconWrapper = styled.div`
+    
+    margin: 0 25px 0 0;
+    display: none;
+    &.singleUser {
+        display: flex;
+        align-items: center;   
+        }
+
+    ${onSmallTabletMediaQuery()} {
+        display: flex;
+        align-items: center;     
+    }
+`;
+
 const Header = styled.div`
+    display: flex;
     height: 65px;  
     backdrop-filter: blur(40px);
     background-color: rgba(255, 255, 255, 0.9);

@@ -1,30 +1,24 @@
-import React, {useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector, } from "react-redux";
 import  moment from 'moment'; 
 import { COLORS} from '../../../GlobalStyles';
-import { updateSelectedChat } from '../../../store/reducers/chat/actions';
 
 
 
-const ChatListItem = ({id, lastMessage, user})=>{
+
+const ChatListItem = ({id, handleClick, date, lastMessage, user})=>{
     const { count, selected } = useSelector((state)=>state.chat); 
-    const dispatch = useDispatch();
-
-    const handleClick = (ev)=>{
-        ev.preventDefault();
-        dispatch(updateSelectedChat({chatId: id, user: user}));
-    }
-
+       
     return (
         <Wrapper className={selected.chatId === id ? "selected" : null}>
-            <ProfilImage src={user.image} atl="userProfile"/> 
-            <TextWrapper onClick={handleClick}>
-                <DatePar>{moment(new Date()).fromNow() }</DatePar>
+            <ProfilImage src={user.image || '/user.svg'} atl="userProfile"/> 
+            <TextWrapper onClick={(e)=>handleClick(e, id, user)}>
+                <DatePar>{moment(date).fromNow() }</DatePar>
                 <p>{user.userName}</p>
                 <MessageWrapper>
-                <Message>{lastMessage}</Message>
-                {count[id] &&  count[id] !== 0 &&
+                <Message>{lastMessage.message}</Message>
+                {count[id] !== undefined && count[id] !== 0 &&
                 <Unread>{count[id]}</Unread>}
                 </MessageWrapper>
             </TextWrapper>
@@ -39,6 +33,7 @@ const Wrapper = styled.button`
     border-top: none;  
     padding: 7px; 
     border-radius: 10px;
+   
     display: flex;
     align-items: center;   
     font-size: 14px;
@@ -70,7 +65,7 @@ const TextWrapper = styled.div`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-   // width: 100%;
+    width: 100%;
   // //display: flex;
   // flex-direction: column;
   // flex: 1;
@@ -93,10 +88,10 @@ const Message = styled.p`
 
 const DatePar = styled.p`
     position: absolute;
-    top: 0;
+    top: -10px;
     right: 0;
     color: grey;
-    font-size: 10px;
+    font-size: 9px;
 `;
 
 const Unread = styled.div`
@@ -113,8 +108,11 @@ const Unread = styled.div`
 `;
 
 const MessageWrapper = styled.div`
+    width: 100%;
     display: flex;
+    justify-content: space-between;
 `;
+
 
 
 export default ChatListItem; 
