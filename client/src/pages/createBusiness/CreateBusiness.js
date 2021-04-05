@@ -359,9 +359,10 @@ const CreateBusiness = ({type})=>{
                     <TextAreaWrapper>
                     <Label htmlFor='hours'>Hours</Label> 
                     {daysArray.map((day)=>{
-                        return (< >
-                            <Label key={day}><strong>{day}</strong></Label> 
-                            <HoursWrapper>                   
+                        return (
+                        <HourFormWrapper key={day}>
+                            <Label ><strong>{day}</strong></Label> 
+                            <HoursWrapper >                   
                                 <DropDown 
                                     id={`${day}From`}
                                     label='from'
@@ -391,7 +392,8 @@ const CreateBusiness = ({type})=>{
                                     handleSelect={(e)=>handleHoursChange(e, day, 'type')}
                                     valueArray={typeHourArray}
                                 /> 
-                            </HoursWrapper>  </> 
+                            </HoursWrapper>  
+                        </HourFormWrapper> 
                         )
                     })}                   
                     </TextAreaWrapper> 
@@ -526,6 +528,11 @@ const HoursWrapper = styled.div`
 const ErrorMessage = styled.div`
     font-size: 13px;
     color: red;
+`;
+
+const HourFormWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
 `;
 
 export default CreateBusiness;

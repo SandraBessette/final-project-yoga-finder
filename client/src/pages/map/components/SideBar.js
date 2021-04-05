@@ -165,6 +165,11 @@ const Wrapper = styled.div`
     width: 360px;
     height: 700px;
     overflow-y: auto;
+    //Firefox
+    scrollbar-color: #ae95d7 transparent;
+    scrollbar-width: thin;
+
+    //Chrome
     &::-webkit-scrollbar {       
         width: 6px;       
         background: transparent;         
@@ -184,8 +189,8 @@ const Wrapper = styled.div`
 
     ${onSmallTabletMediaQuery()} {
         position: static;
-        width: 100%;
-        height: 600px;
+        width: 100%;    
+        height: 420px;
         padding: 0px 20px 20px 20px ;
         border-radius: 0px;
         border: none;      

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';

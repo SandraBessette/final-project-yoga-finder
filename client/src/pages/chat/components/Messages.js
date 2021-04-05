@@ -1,30 +1,29 @@
 import React,  {useState, useEffect, useRef}  from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import MessageItem from './MessageItem';
 import { MdSend } from 'react-icons/md';
 import { SiWechat }from 'react-icons/si';
 import { IoIosArrowDropleft } from 'react-icons/io'
-import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL} from '../../../GlobalStyles';
-import { onSmallTabletMediaQuery, onPhoneMediaQuery } from '../../../utils/responsives';
+import { COLORS} from '../../../GlobalStyles';
+import { onSmallTabletMediaQuery } from '../../../utils/responsives';
 import IconButton from '../../../components/button/IconButton';
 import ProfileInfo from '../../singleBusiness/components/ProfileInfo';
 import Spinner from '../../../components/spinner/Spinner';
 import Error from '../../error/Error';
-import { receiveMessageInfo, updateMessage, updateSelectedChat, increaseCountInfo } from '../../../store/reducers/chat/actions';
+import { receiveMessageInfo, updateMessage, updateSelectedChat } from '../../../store/reducers/chat/actions';
 
 const Messages = ({singleUser})=>{
     const { authData } = useSelector((state)=>state.auth); 
-    const { selected, messages, count } = useSelector((state)=>state.chat);      
+    const { selected, messages } = useSelector((state)=>state.chat);      
     const [status, setStatus] = useState("loading"); 
     const [error, setError] = useState("");
     const [messageText, setMessageText] = useState("");
     const [unreadStyle, setUnreadStyle] = useState(true);
     const messagesEndRef = useRef(null);
     const dispatch = useDispatch();
-    const history = useHistory();
-   // const { id } = useParams();
+    const history = useHistory(); 
 
     const handleChange =(ev)=>{
         setMessageText(ev.target.value);
@@ -33,8 +32,7 @@ const Messages = ({singleUser})=>{
         ev.preventDefault();
         dispatch(updateSelectedChat({chatId: null, user: null})); 
         if (singleUser)
-            history.push('/user/chat/');
-       // setMessageText(ev.target.value);
+            history.push('/user/chat/');    
     };
 
     const classString = ()=>{    
@@ -74,9 +72,6 @@ const Messages = ({singleUser})=>{
                 }         
                 dispatch(updateMessage(data.message, data.chat)); 
                 setUnreadStyle(false);
-
-               // if (data.message.sender._id === data.message.receiver)
-                 //   dispatch(increaseCountInfo(data.chat._id)); 
             }
             else {
                 setError(status.toString());
@@ -173,7 +168,7 @@ const Messages = ({singleUser})=>{
             })} 
             </WrapperMessages>
             <Footer>
-                <input type="text" name="fname" value={messageText} onChange={handleChange} />
+                <textarea type="text" autocomplete="off" name="fname" value={messageText} onChange={handleChange} />
                 <IconButton margin='0 2px 0 0' padding='5px' onclick={handleSendClick}>
                     <MdSend size={22} />
                 </IconButton >
@@ -185,18 +180,19 @@ const Messages = ({singleUser})=>{
     )
 };
 
-const Wrapper = styled.div`
-    display: flex;
-    flex-direction: column;    
+const Wrapper = styled.div`   
     width: 100%;
     border: 1px solid ${COLORS.lightGray};
-    height: 100%;
-   // border-radius: 10px;
+    height: 100%; 
     padding: 0;
     box-sizing: border-box;
-  
+    overflow-y: auto;   
 
-    overflow-y: auto;  
+    //Firefox
+    scrollbar-color: ${COLORS.lightGray} transparent;
+    scrollbar-width: thin;
+
+    //Chrome
     &::-webkit-scrollbar {
         width: 6px;
         background: transparent;      
@@ -270,16 +266,28 @@ const Footer = styled.div`
     align-items: center;
     position: sticky;
     left: 0;
+  //  top:100%;
     bottom: 0;
     width: 100%;
     
 
-    & input {
+    & textarea {
         height: 35px;
         width: 90%;
         border-radius: 15px;
         border: solid 2px lightgray;
-        margin: 10px;
+        margin: 10px;      
+        outline: none;
+        padding: 7px 10px;    
+        font-size: 13px;
+        resize: none;
+
+        &:focus  {
+        box-shadow: 0 0 5px ${COLORS.primary};
+        border: 1px solid ${COLORS.primary};
+      
+    }
+
     }
 `;
 
@@ -313,10 +321,5 @@ const Header = styled.div`
     border-bottom: 1px solid ${COLORS.lightGray};
 
 `;
-
-const Lastdiv = styled.div`
-    height: 0px;
-`;
-
 
 export default Messages; 

@@ -216,7 +216,7 @@ const Wrapper = styled.div`
         outline: none;
     }
 
-    ${onSmallTabletMediaQuery()} {
+    ${onSmallTabletMediaQuery()} {   
         height: calc(55vh - ${HEADER_HEIGHT_SMALL});      
     }
 `;

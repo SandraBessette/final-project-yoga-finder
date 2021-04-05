@@ -27,15 +27,15 @@ const Rating = ({value, onChange, disabled=false, size=20})=>{
             {ratingArray.map((elem)=>{
                 return (
                     <RatingElement 
-                    key={elem}
-                    index={elem}
-                    hoverRating={hoverRating}
-                    rating={value}
-                    onMouseEnter={handleOnMouseEnter}
-                    onMouseLeave={handleOnMouseLeave}
-                    onclick={onClickStar}   
-                    disabled={disabled}  
-                    size={size}               
+                        key={elem}
+                        index={elem}
+                        hoverRating={hoverRating}
+                        rating={value}
+                        onMouseEnter={handleOnMouseEnter}
+                        onMouseLeave={handleOnMouseLeave}
+                        onclick={onClickStar}   
+                        disabled={disabled}  
+                        size={size}               
                     />  
                 )
             })}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { FaRegListAlt } from 'react-icons/fa';
@@ -59,7 +59,12 @@ const Wrapper = styled.div`
     box-sizing: border-box;
     margin: 10px 0px 10px 0;
 
-    overflow-y: auto;  
+    overflow-y: auto;
+       //Firefox
+    scrollbar-color: ${COLORS.lightGray} transparent;
+    scrollbar-width: thin;
+
+    //Chrome  
     &::-webkit-scrollbar {
         width: 6px;
         background: transparent;      

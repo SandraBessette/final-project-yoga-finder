@@ -129,7 +129,7 @@ const List = styled.ul`
 
    ${onSmallTabletMediaQuery()} {
         top: ${HEADER_HEIGHT_SMALL};    
-        right: -15px; 
+        right: -10px; 
     }
 `;
 

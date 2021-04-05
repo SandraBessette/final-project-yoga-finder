@@ -93,7 +93,7 @@ const MiddleContent = styled.div`
     margin: auto 0;
 `;
 
-const Content = styled.p`
+const Content = styled.div`
     font-size: 11px;
     margin: 5px 0;
 `;

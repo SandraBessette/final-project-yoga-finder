@@ -2,13 +2,11 @@ import React, {useEffect} from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import  moment from 'moment'; 
-import { COLORS} from '../../../GlobalStyles';
 import { reduceCountInfo } from '../../../store/reducers/chat/actions';
 
 
 const MessageItem = ({reference = null, sender, message, unreadStyle})=>{
-    const { authData } = useSelector((state)=>state.auth);
-    const { count } = useSelector((state)=>state.chat);  
+    const { authData } = useSelector((state)=>state.auth);  
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -26,25 +24,20 @@ const MessageItem = ({reference = null, sender, message, unreadStyle})=>{
             .then((res) => res.json())
             .then((json) => {
                 const { status} = json;            
-                if (status === 201) {  
-                    console.log("message.chatId", message.chatId, message);
+                if (status === 201) {                  
                     dispatch(reduceCountInfo(message.chatId));                 
                 }
-                else {
-                // setError(status.toString());
-                // setStatus("error");
+                else {              
                     console.log(json.message);                                                      
                 }
             })
             .catch((error)=>{ 
-                console.log("error");
-            // setError("500");              
-            // setStatus("error");               
+                console.log("error");                    
             });   
 
         }
             
-    }, [dispatch, authData?.token, message.chatId, message.read, sender, message._id])
+    }, [dispatch, authData?.token, message, sender])
 
     return (
         <Wrapper ref={reference}>

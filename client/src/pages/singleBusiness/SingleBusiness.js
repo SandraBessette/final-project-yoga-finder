@@ -209,9 +209,7 @@ const SingleBusiness = ()=>{
                         <Map lat={business.location.coordinates[1]} lng={business.location.coordinates[0]} type={business.type} />
                     </ MapWrapper>
                 </ContentWrapper>
-            </MainWrapper>
- 
-            
+            </MainWrapper>            
             </>}
             <MainWrapper>
                 <CommentWrapper>

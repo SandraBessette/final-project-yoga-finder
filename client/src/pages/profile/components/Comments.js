@@ -60,7 +60,7 @@ const Comments = ()=>{
                         <CommentItem key={comment._id} comment={comment}/>
                     )
                 })}  
-            </> }             
+           </>  }             
         </MainWrapper>       
     );
 

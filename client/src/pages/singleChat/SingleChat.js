@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -9,7 +9,7 @@ import Error from '../error/Error';
 import Messages from '../chat/components/Messages';
 
 import { onSmallTabletMediaQuery } from '../../utils/responsives';
-import { updateSelectedChat, receiveMessageInfo } from '../../store/reducers/chat/actions';
+import { updateSelectedChat } from '../../store/reducers/chat/actions';
 
 
 const SingleChat = ()=>{
@@ -41,11 +41,8 @@ const SingleChat = ()=>{
         .then((res) => res.json())
         .then((json) => {
             const { status, data} = json;            
-            if (status === 200) {  
-                console.log('chatIdsingle', data);
-               // dispatch(receiveMessageInfo([]));  //dernier ajout ici
-                const chat = data.chat ? data.chat._id : null; 
-                console.log(data);           
+            if (status === 200) {             
+                const chat = data.chat ? data.chat._id : null;               
                 dispatch(updateSelectedChat({chatId: chat, user: data.user})); 
                 setStatus("idle");                  
             }
@@ -77,8 +74,6 @@ const SingleChat = ()=>{
             }
         </Wrapper>
     )
-
-
 };
 
 const Wrapper = styled.div`

@@ -73,7 +73,7 @@ const Header = ()=>{
             }  
         }
     
-      }, [authData?.token, authData.data._id, dispatch, history]);
+      }, [authData?.token, authData?.data._id, dispatch, history]);
 
     useEffect(() => {
         if (authData){
