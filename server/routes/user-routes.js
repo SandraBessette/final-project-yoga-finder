@@ -4,7 +4,7 @@ const auth = require("../middleware/auth");
 
 const userController = require('../controllers/user-controller');
 
-router.get("/", userController.getUsers);
+router.get("/", auth, userController.getUsers);
 router.get("/favorites", auth, userController.getFavorites);
 router.get("/business", auth, userController.getBusiness);
 router.post("/signin", userController.signin);

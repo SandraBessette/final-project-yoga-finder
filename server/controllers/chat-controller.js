@@ -16,7 +16,7 @@ const getChatList = async (req, res) => {
                                         .sort({ updatedAt: -1 })
                                         .limit(20)
                                         .populate('lastMessage')
-                                        .populate('users')
+                                        .populate('users', '_id userName image')
                                         .exec();    
     
       if (result){   
@@ -40,8 +40,8 @@ const getChatList = async (req, res) => {
       }   
       
     try {
-//{ users: { "$all" : [userId, user2]} }
-        const otherUser = await UserModel.findOne({ _id: user2 });    
+//{ users: { "$all" : [userId, user2]} } .limit(20)
+        const otherUser = await UserModel.findOne({ _id: user2 }, { userName: 1, image: 1 });    
         if (otherUser) { 
             let query = { users: { "$all" : [userId, user2]} };
             if (userId === user2){
@@ -50,7 +50,7 @@ const getChatList = async (req, res) => {
             }
             const chat = await ChatModel.findOne(query)
                                         .populate('lastMessage')
-                                        .populate('users')
+                                        .populate('users', '_id userName image')
                                         .exec();              
             res.status(200).json({ status: 200, message: "success", data: {user: otherUser, chat }});  
         }
@@ -79,7 +79,8 @@ const getChatList = async (req, res) => {
     try {
         const result = await MessageModel.find(({ chatId }))
                                                 .sort({ createdAt: -1 })
-                                                .populate('sender')                                               
+                                                .limit(50)
+                                                .populate('sender', '_id userName image')                                               
                                                 .exec();    
        
     
@@ -124,8 +125,8 @@ const getChatList = async (req, res) => {
             if (result){
                 chat.lastMessage = result._id;
                 await chat.save();
-                await chat.populate('lastMessage').populate('users').execPopulate();
-                await result.populate('sender').execPopulate(); 
+                await chat.populate('lastMessage').populate('users', '_id userName image').execPopulate();
+                await result.populate('sender', '_id userName image').execPopulate(); 
              
                 req.app.get('io').in(receiverId).emit('new_msg', {data: {chat, message: result }});                        
                 res.status(201).json({ status: 201, message: "success", data: {chat, message: result }});
@@ -137,8 +138,8 @@ const getChatList = async (req, res) => {
             newChat.lastMessage = newMessage._id;
             newChat = await newChat.save();
             newMessage = await newMessage.save();
-            await newChat.populate('lastMessage').populate('users').execPopulate();
-            await newMessage.populate('sender').execPopulate();  
+            await newChat.populate('lastMessage').populate('users', '_id userName image').execPopulate();
+            await newMessage.populate('sender', '_id userName image').execPopulate();  
          
             req.app.get('io').in(receiverId).emit('new_msg', {data: {chat: newChat, message: newMessage }});         
             res.status(201).json({ status: 201, message: "success", data: {chat: newChat, message: newMessage } });

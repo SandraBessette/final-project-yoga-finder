@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useSelector, useDispatch } from "react-redux";
 import { FaRegListAlt } from 'react-icons/fa';
 import ChatListItem from './ChatListItem';
+import SearchHeader from './SearchHeader';
 import { COLORS} from '../../../GlobalStyles';
 import { onSmallTabletMediaQuery} from '../../../utils/responsives';
 import { updateSelectedChat } from '../../../store/reducers/chat/actions';
@@ -22,13 +23,13 @@ const ChatList = ()=>{
 
     return (
         <Wrapper className={selected.chatId ? "selected" : null}>
-               <Header>Chat List</Header>
-               {chatList.length === 0 &&
-               <WrapperNoMessages >
-                    <p>No chat list</p> 
-                    <FaRegListAlt size={60}/>
-                </WrapperNoMessages>
-             }
+            <SearchHeader />
+            {chatList.length === 0 &&
+            <WrapperNoMessages >
+                <p>No chat list</p> 
+                <FaRegListAlt size={60}/>
+            </WrapperNoMessages>
+            }
             {chatList.map((chat)=>{
                 return(
                     <ChatListItem 
@@ -53,14 +54,14 @@ const Wrapper = styled.div`
     border: 1px solid ${COLORS.lightGray};
     border-right: none;
     height: 100%;
-    //width: 100%;
-  //  border-radius: 10px;
     padding: 5px;
+    padding-top: 0;
     box-sizing: border-box;
     margin: 10px 0px 10px 0;
 
     overflow-y: auto;
-       //Firefox
+
+    //Firefox
     scrollbar-color: ${COLORS.lightGray} transparent;
     scrollbar-width: thin;
 
@@ -87,6 +88,7 @@ const Wrapper = styled.div`
         border-right: 1px solid ${COLORS.lightGray};
         width: 100%;
         
+        
         &.selected {
             display: none;
         }
@@ -94,27 +96,7 @@ const Wrapper = styled.div`
         &::-webkit-scrollbar {
             width: 8px;            
         }
-    }
-
-    
-`;
-
-const Header = styled.div`
-    display: flex;   
-    align-items: center;
-    justify-content:center;
-    min-height: 60px;  
-    backdrop-filter: blur(40px);
-    background-color: rgba(255, 255, 255, 0.9);
-    z-index: 4;
-  //  padding-top: 7px;
-  // padding-left: 10px;
-    position: sticky;
-    left: 0;
-    top: 0;
-    width: 100%;
-    border-bottom: 1px solid ${COLORS.lightGray};
-
+    }    
 `;
 
 const WrapperNoMessages = styled.div`
@@ -122,10 +104,9 @@ const WrapperNoMessages = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content:center;
-    color: #a083d0;// ${COLORS.lightGray};//#a083d0;
-  
+    color: #a083d0;  
     height: 100%;
-   width: 100%;
+    width: 100%;
     border-radius: 10px;
     padding: 10px 0;
     box-sizing: border-box; 

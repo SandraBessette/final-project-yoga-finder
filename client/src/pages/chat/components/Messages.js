@@ -166,7 +166,7 @@ const Messages = ({singleUser})=>{
                         unreadStyle={unreadStyle}/>
                 )
             })} 
-            </WrapperMessages>
+            </WrapperMessages>           
             <Footer>
                 <textarea type="text" autocomplete="off" name="fname" value={messageText} onChange={handleChange} />
                 <IconButton margin='0 2px 0 0' padding='5px' onclick={handleSendClick}>
@@ -181,12 +181,13 @@ const Messages = ({singleUser})=>{
 };
 
 const Wrapper = styled.div`   
+    position: relative;
     width: 100%;
     border: 1px solid ${COLORS.lightGray};
     height: 100%; 
     padding: 0;
     box-sizing: border-box;
-    overflow-y: auto;   
+    overflow-y: auto;       
 
     //Firefox
     scrollbar-color: ${COLORS.lightGray} transparent;
@@ -230,8 +231,11 @@ const Wrapper = styled.div`
 
 const WrapperMessages = styled.div`
     display: flex;
+   // flex-direction: column;
     flex-direction: column-reverse;
-    height: 100%;
+    flex: 1;
+    min-height: 100%;
+   
     width: 100%;
     border-radius: 10px;
     padding: 10px 0;
@@ -243,7 +247,7 @@ const WrapperNoMessages = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content:center;
-    color: #cbbae5;//#a083d0;// ${COLORS.lightGray};//#a083d0;
+    color: #cbbae5;
   
     height: 100%;
     width: 100%;
@@ -264,9 +268,8 @@ const Footer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    position: sticky;
-    left: 0;
-  //  top:100%;
+    position: sticky;  
+    left: 0;     
     bottom: 0;
     width: 100%;
     

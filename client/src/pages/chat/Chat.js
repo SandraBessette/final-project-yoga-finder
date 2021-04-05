@@ -77,18 +77,14 @@ const MainWrapper = styled.div`
     margin: 0 auto;
     max-width: 1200px;
     padding: 20px;
-    display: flex;
-    //justify-content: center;
-    //flex-direction: column;
-   // flex: 1;
+    display: flex;  
     align-items: center;
-    height: calc(100vh - ${HEADER_HEIGHT} - 100px);//height: auto;
+    height: calc(100vh - ${HEADER_HEIGHT} - 100px);
 
     ${onSmallTabletMediaQuery()} {
         justify-content: center;
         padding: 0 2px 10px 0;
-        height: calc(100vh - ${HEADER_HEIGHT_SMALL} - 85px);//height: auto;
-        //padding: 15px;
+        height: calc(100vh - ${HEADER_HEIGHT_SMALL} - 85px);     
     }
 
 

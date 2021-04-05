@@ -71,7 +71,7 @@ const SearchBox = ({panTo, top='30px', left='20px', width='360px'})=>{
     }
 
     const handleSelect = async ({description}) => {
-        console.log('description', description);
+    
         setValue(description, false);
         clearSuggestions();
         setSelectedSuggestionIndex(0);  
@@ -150,7 +150,7 @@ const List = styled.ul`
     margin-bottom: 20px;   
     line-height: normal;
     padding: 0;   
-    z-index: 2;
+    z-index: 6;
   
    li {
     list-style-type: none;

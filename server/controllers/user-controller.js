@@ -6,8 +6,20 @@ const BusinessModel = require('../models/business');
 
 
 const getUsers = async (req, res) => { 
+  const { search } = req.query; 
+  const userid = req.userId;
+
+  if (!userid) {
+      return res.status(401).json({ status: 401, message: "The user is not authenticated" });
+  }
+
   try {
-    const result = await UserModel.find(); 
+    let result = null;  
+    if (search){
+        result = await UserModel.find({ userName: { $regex: search, $options: 'i' } },  { userName: 1, image: 1 }).sort({ userName: 1 }).limit(10);
+    }else {
+        result = await UserModel.find({}, { userName: 1, image: 1 } ).sort({ userName: 1 }); 
+      }
     if(result)
       res.status(200).json({ status: 200, message: "success", data: result });
     else
@@ -63,7 +75,7 @@ const signin = async (req, res) => {
 
     const token = jwt.sign({ email: oldUser.email, id: oldUser._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
-    res.status(201).json({ status: 201, message: "success", data: oldUser, token });
+    res.status(201).json({ status: 201, message: "success", data: {_id: oldUser._id, userName: oldUser.userName, image: oldUser.image, type: oldUser.type, favorites: oldUser.favorites} , token });
   } catch (error) {
     res.status(500).json({ status: 500, error: error?.message, message: "Something went wrong" });
     console.log(error?.message);
@@ -86,7 +98,7 @@ const signup = async (req, res) => {
 
     const token = jwt.sign( { email: result.email, id: result._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN } );
 
-    res.status(201).json({ status: 201, message: "success", data: result, token });
+    res.status(201).json({ status: 201, message: "success", data: {_id: result._id, userName: result.userName, image: result.image, type: oldUser.type, favorites: oldUser.favorites}, token });
   } catch (error) {
     res.status(500).json({ status: 500, error: error?.message, message: "something went wrong"});
     

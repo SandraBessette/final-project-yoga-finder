@@ -12,7 +12,7 @@ const getBusinessComments = async (req, res) => {
         return res.status(404).json({ status: 404, message: `No business with id: ${ businessId }` }); 
       
     try {
-      const result = await CommentModel.find({ businessId }).populate('userId').exec(); 
+      const result = await CommentModel.find({ businessId }).populate('userId', '_id userName image').exec(); 
     
       if (result)
         res.status(200).json({ status: 200, message: "success", data: result });

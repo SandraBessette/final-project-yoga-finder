@@ -1,12 +1,14 @@
 import React, {useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useParams } from "react-router-dom";
+import { BsChatDots } from "react-icons/bs";
+import { useParams, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import Spinner from '../../components/spinner/Spinner';
 import UserHeader from '../../components/userHeader/UserHeader';
 import Comments from './components/Comments';
 import Error from '../error/Error';
+import IconButton from '../../components/button/IconButton';
 import { onSmallTabletMediaQuery} from '../../utils/responsives';
 
 
@@ -16,6 +18,12 @@ const Profile = ()=>{
     const [error, setError] = useState("");
     const [user, setUser] = useState(null);
     const { id } = useParams();  
+    const history = useHistory();  
+
+    const handleClickChat = (e) =>{
+        e.preventDefault();
+        history.push(`/user/chat/${id}`);
+    };
 
       useEffect(() => {       
         setStatus("loading");
@@ -60,7 +68,12 @@ const Profile = ()=>{
                <TextBoxWrapper>
                     <Label htmlFor='email'>Email</Label>                     
                     <p>{user.email}</p>
-                </TextBoxWrapper>   
+                </TextBoxWrapper> 
+                <div>
+                <IconButton title='Chat' padding={'10px'} margin={'0 0 5px 0'} onclick={(e)=>handleClickChat(e)}>
+                        <BsChatDots size={45}/>
+                </IconButton> 
+                </div>  
             </MainWrapper>}   
             <Comments/>        
         </Wrapper>
@@ -83,6 +96,7 @@ const MainWrapper = styled.div`
     display: flex;
     flex-direction: column; 
 `;
+
 
 const Label = styled.label`  
     padding: 5px 10px 5px 0;

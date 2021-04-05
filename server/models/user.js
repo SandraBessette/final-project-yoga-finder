@@ -15,7 +15,7 @@ const userSchema = new Schema(
         timestamps: true,        
       }
     );
-  
+  userSchema.index({userName: 'text'});
 const UserModel = mongoose.model("User", userSchema);
 module.exports = UserModel;
 

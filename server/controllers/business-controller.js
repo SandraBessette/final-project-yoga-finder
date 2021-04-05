@@ -36,12 +36,9 @@ const getBusiness = async (req, res) => {
 const getFilteredBusiness = async (req, res) => {
     const {
         bounds, 
-        center,
-        dist,
-        filter,
-        sort,
-        type,
-        limit       
+        center,       
+        filter,       
+        type,            
         } = req.body;
 
     const pipeline = [];
@@ -94,27 +91,7 @@ const getFilteredBusiness = async (req, res) => {
 
     };  
 
-    pipeline.push( { $limit: 100 });
-    /*pipeline.push( {
-        $geoNear: {
-            near: { type: "Point", coordinates: center },
-            distanceField: "dist.calculated",           
-            spherical: true
-        }
-    }); 
-    pipeline.push( { $limit: 100 });
-    pipeline.push( {
-        $match: {
-            location: {
-                $geoWithin: {
-                    $geometry: {
-                        type : "Polygon" ,
-                        coordinates: [ [ bounds.nw, bounds.ne, bounds.se, bounds.sw, bounds.nw ] ]
-                    }
-                }
-            }
-        }
-    });*/
+    pipeline.push( { $limit: 100 }); 
        
     try{  
         const query = BusinessModel.aggregate([pipeline]); 
@@ -140,7 +117,7 @@ const getSingleBusiness = async (req, res) => {
        return res.status(404).json({ status: 404, message: `No business with id: ${id}` }); 
       
     try {   
-        const result = await BusinessModel.findOne({ _id: id }).populate('userId').exec();    
+        const result = await BusinessModel.findOne({ _id: id }).populate('userId', '_id userName image').exec();    
         if (result) {     
             res.status(200).json({ status: 200, message: "success", data: result });  
         }
@@ -188,15 +165,7 @@ const updateBusiness = async (req, res) => {
 
     const {  
         name,
-        type,
-        phone,
-        address,
-        location,
-        image,
-        tags,
-        description,
-        website,
-        hours
+        type,       
         } = req.body;
 
     const userId = req.userId; 

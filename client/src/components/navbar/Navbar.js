@@ -115,7 +115,7 @@ const List = styled.ul`
     box-shadow: 1px 3px 7px 3px #D3D3D3;     
     padding: 0;  
     margin: 0px; 
-    z-index: 2;
+    z-index: 5;
     color: ${COLORS.primary};
   
    li  {
