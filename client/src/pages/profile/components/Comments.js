@@ -17,8 +17,7 @@ const Comments = ()=>{
     const { id } = useParams(); 
     
 
-    useEffect(() => { 
-        console.log('id', id);
+    useEffect(() => {       
         setStatus("loading");   
         fetch(`/comment/user/${id}`, {
             method: "GET",

@@ -40,12 +40,10 @@ const getChatList = async (req, res) => {
       }   
       
     try {
-//{ users: { "$all" : [userId, user2]} } .limit(20)
         const otherUser = await UserModel.findOne({ _id: user2 }, { userName: 1, image: 1 });    
         if (otherUser) { 
             let query = { users: { "$all" : [userId, user2]} };
-            if (userId === user2){
-                console.log("equal")
+            if (userId === user2){               
                 query = { users:[userId, user2] };
             }
             const chat = await ChatModel.findOne(query)
@@ -111,14 +109,13 @@ const getChatList = async (req, res) => {
         const receiver = await UserModel.findOne({ _id: receiverId }) ;
         if (!receiver)
             return res.status(404).json({ status: 404, message: `Receiver not found`, data: req.body}); 
-//{ users: { "$all" : [userId, receiverId]} }
+
         let query = { users: { "$all" : [userId, receiverId]} };
-        if (userId === receiverId){
-            console.log("equal")
+        if (userId === receiverId){     
             query = { users:[userId, receiverId] };
         }
-        const chat = await ChatModel.findOne(query);              
-       console.log("tupe of receiver", receiverId, typeof receiverId)
+        const chat = await ChatModel.findOne(query);             
+      
         if (chat){       
             const result = await MessageModel.create({ chatId: chat._id, message, sender: userId, receiver: receiverId });                                               
             
@@ -203,7 +200,7 @@ const getUnreadCountByChat = async (req, res) => {
         result.forEach((item)=>{
             count[item._id] = item.count;
         });
-        console.log('countend', count);
+    
         res.status(200).json({ status: 200, message: "success", data: count });
     }       
       else

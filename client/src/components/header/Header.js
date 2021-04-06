@@ -24,8 +24,7 @@ const Header = ()=>{
     const dispatch = useDispatch();
 
     const totalUnreadMessage = useCallback(()=>{
-       const total = Object.values(count).reduce((total, num)=>(total + num), 0);
-       console.log('total', total);
+       const total = Object.values(count).reduce((total, num)=>(total + num), 0);    
        return total;
     }, [count])
 
@@ -56,8 +55,7 @@ const Header = ()=>{
             }  
             else {
                 socket.emit('join', {_id: authData.data._id});
-                const timeBeforeExp = decodedToken.exp * 1000 - timeNow;
-                console.log('timeBeforeExp', timeBeforeExp);
+                const timeBeforeExp = decodedToken.exp * 1000 - timeNow;         
                 timer = setTimeout(function(){  
                     socket.emit('logout', {_id: authData.data._id});  
                     dispatch(resetChat());                             
@@ -67,8 +65,7 @@ const Header = ()=>{
             }
         }
         return () =>{
-            if(timer){
-                console.log("clearTimeout");
+            if(timer){              
                 clearTimeout(timer);
             }  
         }
@@ -76,8 +73,7 @@ const Header = ()=>{
       }, [authData?.token, authData?.data._id, dispatch, history]);
 
     useEffect(() => {
-        if (authData){
-            console.log("request the count total...")
+        if (authData){          
             fetch('/chat/messages/unread', {
                 method: "GET",
                 headers: {
@@ -89,8 +85,7 @@ const Header = ()=>{
             .then((res) => res.json())
             .then((json) => {
                 const { status, data, message} = json;            
-                if (status === 200) {
-                    //console.log("chatcount", data);
+                if (status === 200) {               
                     dispatch(receiveCountInfo(data));
                 }
                 else {  

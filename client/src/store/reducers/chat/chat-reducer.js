@@ -10,8 +10,7 @@ const initialState = {
   }
 
 
-  const chatReducer = (state = initialState, action) => {
-   //   console.log(action.type);
+  const chatReducer = (state = initialState, action) => { 
     switch (action.type) {
       
       case 'RECEIVE_CHATLIST_INFO': {        
@@ -43,19 +42,15 @@ const initialState = {
             };
       }
      
-      case 'RECEIVE_MESSAGES_INFO': {   
-        
-          console.log('receivemessageinf0', action.data)
+      case 'RECEIVE_MESSAGES_INFO': {  
         return {
             ...state,                
             messages: action.data
             };
       }
-      case 'UPDATE_SELECTEDCHAT': {           
-          console.log("here", action.data.chatId)
+      case 'UPDATE_SELECTEDCHAT': {    
           if (action.data.chatId === null)
           {    
-            console.log("hereinsideCondition", action.data)     
             return {
                 ...state,                
                 selected: {...action.data},
@@ -67,8 +62,7 @@ const initialState = {
             selected: {...action.data}
             };
       }
-      case 'REDUCE_COUNT_INFO': { 
-          console.log('REDUCE_COUNT_INFO',!action.chatId || state.count[action.chatId] <= 0);
+      case 'REDUCE_COUNT_INFO': {    
         if (!action.chatId || state.count[action.chatId] <= 0)
             return state;  
         return {
@@ -91,18 +85,13 @@ const initialState = {
       }
       
       case 'UPDATE_MESSAGE': {  
-          let newChatList = [...state.chatList];   
-          console.log('newChatList', newChatList);       
-          newChatList = newChatList.filter((chat)=>{
-              console.log('action.chat._id', action.chat._id);
-              console.log('chat', chat);
-              console.log('chat._id', chat._id);
+          let newChatList = [...state.chatList];           
+          newChatList = newChatList.filter((chat)=>{        
               return (chat._id !== action.chat._id)             
           });
           newChatList.unshift({...action.chat});
 
-          if (state.selected.chatId === action.message.chatId){
-              console.log('here in reducer', newChatList);
+          if (state.selected.chatId === action.message.chatId){         
               return {
                 ...state,  
                 chatList: newChatList,               

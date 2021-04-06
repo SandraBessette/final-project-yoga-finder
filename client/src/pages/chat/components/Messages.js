@@ -63,8 +63,7 @@ const Messages = ({singleUser})=>{
         .then((res) => res.json())
         .then((json) => {
             const { status, data } = json;            
-            if (status === 201) {   
-                console.log('post is working', data); 
+            if (status === 201) {                   
                 setMessageText("");
                 if(!selected.chatId){
                     const user = data.chat.users[0]._id === authData.data._id ? data.chat.users[1] : data.chat.users[0] 
@@ -91,8 +90,7 @@ const Messages = ({singleUser})=>{
       }
   
      useEffect(() => {
-        scrollToBottom();     
-        console.log("scrool");
+        scrollToBottom();   
       }, [status, messages]);
 
       useEffect(()=>{

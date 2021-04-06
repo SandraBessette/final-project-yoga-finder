@@ -7,9 +7,7 @@ const auth = async (req, res, next) => {
  
      if (token && token !== 'undefined') { 
       jwt.verify(token, process.env.JWT_SECRET, function(err, decoded) {
-        req.userId = decoded?.id;
-       /* if (err)
-          console.log('err', err); */
+        req.userId = decoded?.id;      
       }); 
     };
     next();

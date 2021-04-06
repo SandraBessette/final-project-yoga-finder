@@ -34,33 +34,36 @@ const SearchBox = ()=>{
     const handleOnChanged = (ev) => {
         setValue(ev.target.value); 
         if (ev.target.value !== "") {
-        setStatus("loading");   
-       
-        fetch(`/user/?search=${ev.target.value}`, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${authData?.token}`
-            }               
-        })
-        .then((res) => res.json())
-        .then((json) => {
-            const { status, data } = json;            
-            if (status === 200) { 
-                setData(data)                             
-                setStatus("idle");                
-            }
-            else {            
-                setStatus("error");                 
-                console.log(json.message);                                                    
-            }
-        })
-        .catch((error)=>{                        
-            setStatus("error");
-            console.log("error");                              
-        });   
-    }    
+            setStatus("loading");   
+        
+            fetch(`/user/?search=${ev.target.value}`, {
+                method: "GET",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${authData?.token}`
+                }               
+            })
+            .then((res) => res.json())
+            .then((json) => {
+                const { status, data } = json;            
+                if (status === 200) { 
+                    setData(data)                             
+                    setStatus("idle");                
+                }
+                else {            
+                    setStatus("error");                 
+                    console.log(json.message);                                                    
+                }
+            })
+            .catch((error)=>{                        
+                setStatus("error");
+                console.log("error");                              
+            });   
+        }
+        else {
+            clearSearch();
+        }    
     };
 
     const clearSearch = () =>{
@@ -114,6 +117,10 @@ const SearchBox = ()=>{
             image
         } = suggestion;
 
+        const jonctionIndex = userName.toLowerCase().indexOf(value.toLowerCase()) + value.length;
+        const firstHalf = userName.slice(0, jonctionIndex);
+        const secondHalf = userName.slice(jonctionIndex);
+
         const isSelected = selectedSuggestionIndex === index;
         return (
             <li 
@@ -126,7 +133,7 @@ const SearchBox = ()=>{
             >
             <ProfilWrapper>                           
                 <ProfilImage src={image || '/user.svg'} atl="userProfile"/> 
-                <p>{userName}</p>               
+                <p>{firstHalf}<strong>{secondHalf}</strong></p>               
             </ProfilWrapper>
            
             </li>

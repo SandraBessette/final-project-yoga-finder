@@ -56,8 +56,7 @@ const SingleBusiness = ()=>{
         history.push(`/user/chat/${id}`);
     };
 
-    const handleClickFavorites = useCallback((e, id)=>{
-        console.log("here");
+    const handleClickFavorites = useCallback((e, id)=>{       
         e.preventDefault();
         fetch(`/user/favorite/${id}`, {
             method: "PATCH",
@@ -190,7 +189,7 @@ const SingleBusiness = ()=>{
                         </Block>
                         <Block>
                             <FaMapMarkerAlt size={55} color={COLORS.primary}/>
-                            <Par>{business.address.app ? `${business.address.app}, ${business.address.formatted}` :
+                            <Par>{business.address.app ? `${business.address.app}-${business.address.formatted}` :
                             business.address.formatted}</Par>
                         </Block>
                     </IconWrapper>

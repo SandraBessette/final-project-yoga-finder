@@ -19,10 +19,8 @@ const SingleChat = ()=>{
     const { id } = useParams();
     const dispatch = useDispatch();  
     
-    useEffect(()=>{
-        console.log("return out");
-        return () =>{
-            console.log("return")
+    useEffect(()=>{    
+        return () =>{           
             dispatch(updateSelectedChat({chatId: null, user: null})); 
         }
     }, [dispatch]);

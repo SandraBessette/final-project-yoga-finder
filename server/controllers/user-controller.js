@@ -98,7 +98,7 @@ const signup = async (req, res) => {
 
     const token = jwt.sign( { email: result.email, id: result._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN } );
 
-    res.status(201).json({ status: 201, message: "success", data: {_id: result._id, userName: result.userName, image: result.image, type: oldUser.type, favorites: oldUser.favorites}, token });
+    res.status(201).json({ status: 201, message: "success", data: {_id: result._id, userName: result.userName, image: result.image, type: result.type, favorites: result.favorites}, token });
   } catch (error) {
     res.status(500).json({ status: 500, error: error?.message, message: "something went wrong"});
     
@@ -144,7 +144,7 @@ const updateFavorite = async (req, res) => {
 };
 
 const getFavorites = async (req, res) => {
-  //const id = "604806c1fd383244749bdc91"; //temporary, will recuperate that from the token
+
   const id = req.userId; 
   if (!id) {
       return res.status(401).json({ status: 401, message: "The user is not authenticated" });
