@@ -8,7 +8,7 @@ const BusinessModel = require('../models/business');
 const getUsers = async (req, res) => { 
   const { search } = req.query; 
   const userid = req.userId;
-
+console.log('search', search);
   if (!userid) {
       return res.status(401).json({ status: 401, message: "The user is not authenticated" });
   }
@@ -16,7 +16,7 @@ const getUsers = async (req, res) => {
   try {
     let result = null;  
     if (search){
-        result = await UserModel.find({ userName: { $regex: search, $options: 'i' } },  { userName: 1, image: 1 }).sort({ userName: 1 }).limit(10);
+        result = await UserModel.find({ userName: { $regex: search, $options: 'i' } },  { userName: 1, image: 1 }).sort({ userName: 1 }).limit(9);
     }else {
         result = await UserModel.find({}, { userName: 1, image: 1 } ).sort({ userName: 1 }); 
       }

@@ -62,6 +62,9 @@ const Title = styled.p`
     font-size: 12px;
     font-weight: 600;
     margin: 0;   
+    ${onSmallTabletMediaQuery()} {
+        font-size: 11px;
+    }
 `;
 
 const Content = styled.p`

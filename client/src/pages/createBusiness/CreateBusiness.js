@@ -291,8 +291,9 @@ const CreateBusiness = ({type})=>{
                         <SearchBox 
                             panTo={panTo}
                             top='0'
-                            left='0%'
-                            width='95%'
+                            left='0'
+                            right='0'
+                            width='100%'
                             /> 
                     </ SearchBoxWrapper> 
                     <TextBoxWrapper>
@@ -361,7 +362,7 @@ const CreateBusiness = ({type})=>{
                     {daysArray.map((day)=>{
                         return (
                         <HourFormWrapper key={day}>
-                            <Label ><strong>{day}</strong></Label> 
+                            <Label >{day.toUpperCase()}</Label> 
                             <HoursWrapper >                   
                                 <DropDown 
                                     id={`${day}From`}
@@ -470,7 +471,7 @@ const Label = styled.label`
 const SearchBoxWrapper = styled.div`
     position: relative;   
     height: 30px;
-    width: 100%;
+    max-width: 100%;
 `;
 
 const TextBoxWrapper = styled.div`    

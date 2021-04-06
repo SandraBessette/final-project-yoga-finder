@@ -58,7 +58,7 @@ const Wrapper = styled.div`
     }    
 
     ${onSmallTabletMediaQuery()} {
-        height: ${(p)=>p.height? p.height : '100px'}; 
+        height: ${(p)=>p.height? p.height : '105px'}; 
     }
 `;
 

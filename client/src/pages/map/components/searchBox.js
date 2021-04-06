@@ -10,7 +10,7 @@ import { AiFillCloseCircle } from  "react-icons/ai";
 import TextBox from '../../../components/textBox/TextBox';
 import IconButton from '../../../components/button/IconButton';
 
-const SearchBox = ({panTo, top='30px', left='20px', width='360px'})=>{  
+const SearchBox = ({panTo, top='30px', left='20px', width='360px', right=null})=>{  
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0); 
     const {
         ready,
@@ -112,7 +112,7 @@ const SearchBox = ({panTo, top='30px', left='20px', width='360px'})=>{
         });
 
     return (
-        <SearchWrapper ref={ref} top={top} left={left}> 
+        <SearchWrapper ref={ref} top={top} left={left} right={right}> 
             <TextBoxWrapper>          
                 <TextBox 
                     handleOnChanged={handleOnChanged}
@@ -136,7 +136,7 @@ const SearchWrapper = styled.div`
     box-sizing: border-box;
     top: ${(p)=>p.top};
     left: ${(p)=>p.left};
-    right: 0;
+    right: ${(p)=>p.right};
     display: flex;
     flex-direction: column;    
 `;
@@ -144,12 +144,14 @@ const SearchWrapper = styled.div`
 const List = styled.ul`    
     box-sizing: border-box; 
     background-color: white;
-    border-radius: 5px;
-    width: ${(p)=>p.width};    
+    border-radius: 5px;  
+    max-width: ${(p)=>p.width}; 
+   
     box-shadow: 1px 3px 7px 3px #D3D3D3;
     margin-bottom: 20px;   
     line-height: normal;
-    padding: 0;   
+    padding: 0;     
+     margin-right: 33px;    
     z-index: 6;
   
    li {

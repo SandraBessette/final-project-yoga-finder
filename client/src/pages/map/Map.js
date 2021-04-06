@@ -212,7 +212,7 @@ const Wrapper = styled.div`
     width: 100%;
     height: calc(100vh - ${HEADER_HEIGHT});
 
-    & *:focus {
+   & *:focus {
         outline: none;
     }
 

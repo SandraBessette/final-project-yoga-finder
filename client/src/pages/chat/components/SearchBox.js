@@ -34,6 +34,7 @@ const SearchBox = ()=>{
     const handleOnChanged = (ev) => {
         setValue(ev.target.value); 
         if (ev.target.value !== "") {
+            console.log('ev.target.value', ev.target.value);
             setStatus("loading");   
         
             fetch(`/user/?search=${ev.target.value}`, {

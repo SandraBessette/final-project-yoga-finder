@@ -54,8 +54,8 @@ const Confirmation = ({type})=>{
             {status === 'idle' && 
             <MainWrapper> 
             {type === 'New' ?
-                <p>Your business has been created succesfully!</p> :
-                <p>Your business has been modified succesfully!</p>
+                <p>Your business has been created successfully!</p> :
+                <p>Your business has been modified successfully!</p>
             }
                 <BusinessItem data={business} height='150px'/>
             </MainWrapper>
