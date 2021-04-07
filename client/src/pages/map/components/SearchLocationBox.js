@@ -10,7 +10,7 @@ import { AiFillCloseCircle } from  "react-icons/ai";
 import TextBox from '../../../components/textBox/TextBox';
 import IconButton from '../../../components/button/IconButton';
 
-const SearchBox = ({panTo, top='30px', left='20px', width='360px', right=null})=>{  
+const SearchLocationBox = ({panTo, top='30px', left='20px', width='360px', right=null})=>{  
     const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(0); 
     const {
         ready,
@@ -168,4 +168,4 @@ const TextBoxWrapper = styled.div`
     align-items: center;   
 `;
 
-export default SearchBox;
+export default SearchLocationBox;

@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { HEADER_HEIGHT,  HEADER_HEIGHT_SMALL } from '../../GlobalStyles'
 import MapStyled  from '../../MapStyled';
 import Button from '../../components/button/Button';
-import SearchBox from './components/SearchBox';
+import SearchLocationBox from './components/SearchLocationBox';
 import SideBar from './components/SideBar';
 import LocationButton from './components/LocationButton';
 import SmallWindow from './components/SmallWindow';
@@ -177,7 +177,7 @@ const Map = ()=>{
                 </InfoWindow>
                 ) : null}
             </GoogleMap>
-            <SearchBox panTo={panTo}/>               
+            <SearchLocationBox panTo={panTo}/>               
             <LocationButton panTo={panTo}/>          
             {areaButtonVisible && <AreaWrapper >
                 <Button width={'175px'} radius={'15px'} onclick={handleAreaButtonClick }>

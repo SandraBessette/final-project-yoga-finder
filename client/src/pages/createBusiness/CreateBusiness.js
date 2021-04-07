@@ -6,7 +6,7 @@ import FileBase from 'react-file-base64';
 import { COLORS, HEADER_HEIGHT, HEADER_HEIGHT_SMALL } from '../../GlobalStyles';
 import UserHeader from '../../components/userHeader/UserHeader';
 import TextBox from '../../components/textBox/TextBox.js';
-import SearchBox from '../map/components/SearchBox';
+import SearchLocationBox from '../map/components/SearchLocationBox';
 import DropDown from './components/DropDown';
 import Checkbox from './components/Checkbox';
 import TextArea from '../../components/textArea/TextArea';
@@ -288,7 +288,7 @@ const CreateBusiness = ({type})=>{
                     <ErrorMessage>{validPhoneError}</ErrorMessage >
                     <Divider/>
                     < SearchBoxWrapper>                                   
-                        <SearchBox 
+                        <SearchLocationBox 
                             panTo={panTo}
                             top='0'
                             left='0'
