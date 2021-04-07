@@ -1,6 +1,6 @@
 # Yoga finder with google map API and a private chat using MERN stack and socket-io
 
-<p align="center"><img src="./images/screen/mainMap.PNG"></p>
+<p align="center"><img src="./Images/screen/mainMap.PNG"></p>
 
 ## Introduction
 This is my final project for the Concordia web development bootcamp.
@@ -26,7 +26,7 @@ If you are a owner of this type of business you can add it to the application.
 - the application is responsive and ok with desktop, tablet and phone format. 
 
 Single page exemple: 
-<p align="center"><img src="./images/screen/singlePage.PNG"></p>
+<p align="center"><img src="./Images/screen/singlePage.PNG"></p>
 
 Example of the chat with a fictitious conversation for the purpose of demonstration
-<p align="center"><img src="./images/screen/chat.PNG"></p>
+<p align="center"><img src="./Images/screen/chat.PNG"></p>
