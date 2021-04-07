@@ -183,6 +183,7 @@ const Wrapper = styled.div`
     width: 100%;
     border: 1px solid ${COLORS.lightGray};
     height: 100%; 
+    
     padding: 0;
     box-sizing: border-box;
     overflow-y: auto;       
@@ -231,9 +232,8 @@ const WrapperMessages = styled.div`
     display: flex;
    // flex-direction: column;
     flex-direction: column-reverse;
-    flex: 1;
-    min-height: 100%;
-   
+   // flex: 1;  
+    min-height: calc(100% - 65px); 
     width: 100%;
     border-radius: 10px;
     padding: 10px 0;

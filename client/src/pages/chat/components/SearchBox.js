@@ -25,7 +25,7 @@ const SearchBox = ()=>{
       });
 
       const isListShown = ()=>{
-          return status === "idle" && data && data.length !== 0;   
+          return status !== "error" && data && data.length !== 0;   
       }
 
       if (isListShown() && selectedSuggestionIndex > data.length -1)
@@ -33,8 +33,7 @@ const SearchBox = ()=>{
 
     const handleOnChanged = (ev) => {
         setValue(ev.target.value); 
-        if (ev.target.value !== "") {
-            console.log('ev.target.value', ev.target.value);
+        if (ev.target.value !== "") {      
             setStatus("loading");   
         
             fetch(`/user/?search=${ev.target.value}`, {

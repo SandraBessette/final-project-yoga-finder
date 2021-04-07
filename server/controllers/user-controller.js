@@ -8,7 +8,7 @@ const BusinessModel = require('../models/business');
 const getUsers = async (req, res) => { 
   const { search } = req.query; 
   const userid = req.userId;
-console.log('search', search);
+
   if (!userid) {
       return res.status(401).json({ status: 401, message: "The user is not authenticated" });
   }
