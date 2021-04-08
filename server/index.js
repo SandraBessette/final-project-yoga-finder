@@ -14,18 +14,24 @@ const { MONGO_URI } = process.env;
 
 
 const app = express();
-//const server = http.createServer(app);
+const server = http.createServer(app);
 /*io = socketio(server,  {
   cors: {
     origin: '*',
   }
 });*/
 const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000']
-/*io = socketio(server,  {
+io = socketio(server,  {
   cors: {
-    origin: 'https://yoga-finder.netlify.app:*',
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true)
+      } else {
+        callback(new Error('Not allowed by CORS'))
+      }
+    },
   }
-});*/
+});
 //'https://yoga-finder-server.herokuapp.com',
 
 const corsOptions = {
@@ -39,8 +45,7 @@ const corsOptions = {
 }
 
 app.use((cors(corsOptions)));
-const server = http.createServer(app);
-io = socketio(server);
+
 /*app.use((req, res, next) => {  
   if (whitelist.indexOf(req.headers.origin) !== -1) {
 
