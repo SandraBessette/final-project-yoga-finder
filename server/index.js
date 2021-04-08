@@ -17,7 +17,18 @@ const app = express();
 const server = http.createServer(app);
 io = socketio(server);
 
-app.use((cors({ origin: 'https://yoga-finder.netlify.app' })));
+const whitelist = ['https://yoga-finder.netlify.app', 'https://yoga-finder-server.herokuapp.com', 'http://localhost:3000']
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+}
+
+app.use((cors(corsOptions)));
 
 
 app.use(express.json({limit: '50mb'}));
