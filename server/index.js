@@ -17,7 +17,7 @@ const app = express();
 const server = http.createServer(app);
 io = socketio(server);
 
-app.use((cors()));
+app.use((cors({ origin: 'https://yoga-finder.netlify.app' })));
 
 
 app.use(express.json({limit: '50mb'}));
