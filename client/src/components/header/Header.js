@@ -16,7 +16,7 @@ import { receiveCountInfo, resetChat, updateMessage, increaseCountInfo } from '.
 
 //const ENDPOINT = 'http://localhost:3000';
 //let socket = io(ENDPOINT);
-let socket = io();
+let socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
 
 const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
