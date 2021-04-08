@@ -21,7 +21,7 @@ const server = http.createServer(app);
   }
 });*/
 const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000']
-io = socketio(server,  {
+/*io = socketio(server,  {
   cors: {
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -31,8 +31,14 @@ io = socketio(server,  {
       }
     },
   }
-});
+});*/
 //'https://yoga-finder-server.herokuapp.com',
+
+io = socketio(server,  {
+  cors: {
+    origin: 'https://yoga-finder.netlify.app',
+  }
+});
 
 const corsOptions = {
   origin: function (origin, callback) {
