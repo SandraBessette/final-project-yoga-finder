@@ -15,7 +15,7 @@ const { MONGO_URI } = process.env;
 
 const app = express();
 const server = http.createServer(app);
-io = socketio(server);
+io = socketio(server, { origins: '*:*'});
 
 const whitelist = ['https://yoga-finder.netlify.app', 'https://yoga-finder-server.herokuapp.com', 'http://localhost:3000']
 const corsOptions = {
@@ -32,6 +32,7 @@ app.use((cors(corsOptions)));
 
 app.use((req, res, next) => {  
   if (whitelist.indexOf(req.headers.origin) !== -1) {
+
       res.header('Access-Control-Allow-Origin', req.headers.origin);
       res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   }
