@@ -20,8 +20,8 @@ io = socketio(server,  {
     origin: '*',
   }
 });
-
-const whitelist = ['https://yoga-finder.netlify.app', 'https://yoga-finder-server.herokuapp.com', 'http://localhost:3000']
+//'https://yoga-finder-server.herokuapp.com',
+const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000']
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
