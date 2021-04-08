@@ -36,7 +36,7 @@ const Business = ()=>{
 
     const handleDeleteClick = useCallback((e, id)=>{
         e.preventDefault();   
-        fetch(`/business/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/business/${id}`, {
             method: "DELETE",
             headers: {
                 Accept: "application/json",
@@ -70,7 +70,7 @@ const Business = ()=>{
     useEffect(() => {       
     
             setStatus("loading");   
-            fetch('/user/business', {
+            fetch(`${process.env.REACT_APP_API_URL}/user/business`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",

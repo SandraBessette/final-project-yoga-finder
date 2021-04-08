@@ -48,7 +48,7 @@ const Comments = ({onRatingChange})=>{
             return;
        
         setDisabled(true);       
-        fetch(`/comment/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/comment/${id}`, {
             method: 'POST',
             headers: {
                 Accept: "application/json",
@@ -80,7 +80,7 @@ const Comments = ({onRatingChange})=>{
 
     useEffect(() => {       
         setStatus("loading");   
-        fetch(`/comment/business/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/comment/business/${id}`)
         .then((res) => res.json())
         .then((json) => {
             const { status, data, message } = json;            

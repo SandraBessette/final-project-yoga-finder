@@ -58,7 +58,7 @@ const SingleBusiness = ()=>{
 
     const handleClickFavorites = useCallback((e, id)=>{       
         e.preventDefault();
-        fetch(`/user/favorite/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/user/favorite/${id}`, {
             method: "PATCH",
             headers: {
                 Accept: "application/json",
@@ -97,7 +97,7 @@ const SingleBusiness = ()=>{
 
     useEffect(() => {  
         setStatus("loading");
-        fetch(`/business/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/business/${id}`)
           .then((res) => res.json())
           .then((json) => {
             const { status, data} = json;     

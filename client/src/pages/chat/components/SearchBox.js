@@ -36,7 +36,7 @@ const SearchBox = ()=>{
         if (ev.target.value !== "") {      
             setStatus("loading");   
         
-            fetch(`/user/?search=${ev.target.value}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/user/?search=${ev.target.value}`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",

@@ -113,7 +113,7 @@ const CreateBusiness = ({type})=>{
         ev.preventDefault();
         setServerError("");
         setDisabled(true);
-        const endpoint = type === 'New' ? '/business/': `/business/${id}`;
+        const endpoint = type === 'New' ? `${process.env.REACT_APP_API_URL}/business/`: `${process.env.REACT_APP_API_URL}/business/${id}`;
         const method = type === 'New' ? 'POST': 'PUT';
         const confirmationLink = type === 'New' ? '/user/new/confirmation': '/user/confirmation';
         fetch(endpoint, {
@@ -207,7 +207,7 @@ const CreateBusiness = ({type})=>{
     useEffect(() => {
         if (type === 'Modify' && id) {
         setStatus("loading");
-        fetch(`/business/${id}`)
+        fetch(`${process.env.REACT_APP_API_URL}/business/${id}`)
           .then((res) => res.json())
           .then((json) => {
             const { status, data} = json;     

@@ -28,7 +28,7 @@ const Favorites = ()=>{
 
     const handleDeleteClick = useCallback((e, id)=>{   
         e.preventDefault();
-        fetch(`/user/favorite/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/user/favorite/${id}`, {
             method: "PATCH",
             headers: {
                 Accept: "application/json",
@@ -60,7 +60,7 @@ const Favorites = ()=>{
     useEffect(() => {       
     
             setStatus("loading");   
-            fetch('/user/favorites', {
+            fetch(`${process.env.REACT_APP_API_URL}/user/favorites`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",

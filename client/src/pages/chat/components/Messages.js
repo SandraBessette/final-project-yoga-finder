@@ -18,6 +18,7 @@ const Messages = ({singleUser})=>{
     const { authData } = useSelector((state)=>state.auth); 
     const { selected, messages } = useSelector((state)=>state.chat);      
     const [status, setStatus] = useState("loading"); 
+    const [ready, setReady] = useState(true); 
     const [error, setError] = useState("");
     const [messageText, setMessageText] = useState("");
     const [unreadStyle, setUnreadStyle] = useState(true);
@@ -50,8 +51,9 @@ const Messages = ({singleUser})=>{
         e.preventDefault(); 
         if (messageText === ""){
             return;
-        }           
-        fetch('/chat/message/', {
+        }   
+        setReady(false);       
+        fetch(`${process.env.REACT_APP_API_URL}/chat/message/`, {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -71,17 +73,20 @@ const Messages = ({singleUser})=>{
                 }         
                 dispatch(updateMessage(data.message, data.chat)); 
                 setUnreadStyle(false);
+                setReady(true);  
             }
             else {
                 setError(status.toString());
                 setStatus("error");
-                console.log(json.message) ;                                                      
+                console.log(json.message) ;
+                setReady(true);                                                       
             }
         })
         .catch((error)=>{  
             setError("500");             
             setStatus("error");
-            console.log('error', error) ;                      
+            console.log('error', error) ;    
+            setReady(true);                   
         });         
     }; 
 
@@ -98,7 +103,7 @@ const Messages = ({singleUser})=>{
           if(selected.chatId){
             
             setStatus("loading");   
-            fetch(`/chat/messages/${selected.chatId}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/chat/messages/${selected.chatId}`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",
@@ -167,7 +172,7 @@ const Messages = ({singleUser})=>{
             </WrapperMessages>           
             <Footer>
                 <textarea type="text" autocomplete="off" name="fname" value={messageText} onChange={handleChange} />
-                <IconButton margin='0 2px 0 0' padding='5px' onclick={handleSendClick}>
+                <IconButton margin='0 2px 0 0' padding='5px' disabled={!ready} onclick={handleSendClick}>
                     <MdSend size={22} />
                 </IconButton >
             </Footer>
@@ -229,10 +234,8 @@ const Wrapper = styled.div`
 `;
 
 const WrapperMessages = styled.div`
-    display: flex;
-   // flex-direction: column;
-    flex-direction: column-reverse;
-   // flex: 1;  
+    display: flex;   
+    flex-direction: column-reverse; 
     min-height: calc(100% - 65px); 
     width: 100%;
     border-radius: 10px;
@@ -261,6 +264,7 @@ const WrapperNoMessages = styled.div`
 
 const Footer = styled.div`
     height: 65px;  
+    -webkit-backdrop-filter: blur(40px);
     backdrop-filter: blur(40px);
     background-color: rgba(255, 255, 255, 0.4);
     display: flex;
@@ -310,6 +314,7 @@ const IconWrapper = styled.div`
 const Header = styled.div`
     display: flex;
     height: 65px;  
+    -webkit-backdrop-filter: blur(40px);
     backdrop-filter: blur(40px);
     background-color: rgba(255, 255, 255, 0.9);
     z-index: 4;

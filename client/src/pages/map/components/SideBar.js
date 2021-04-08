@@ -206,9 +206,9 @@ const TopWrapper = styled.div`
     flex-wrap: wrap;
     align-items: center;  
     padding: 10px 0 5px 0;
-    //background-color: white;
+    -webkit-backdrop-filter: blur(40px);
     backdrop-filter: blur(40px);
- background-color: rgba(255, 255, 255, 0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     z-index: 4;  
     ${onSmallTabletMediaQuery()} {
         justify-content:center;    

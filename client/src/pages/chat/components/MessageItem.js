@@ -13,7 +13,7 @@ const MessageItem = ({reference = null, sender, message, unreadStyle})=>{
      
         if ((!message.read && !sender) || (!message.read && message.sender._id === message.receiver)){
           
-            fetch(`/chat/message/read/${message._id}`, {
+            fetch(`${process.env.REACT_APP_API_URL}/chat/message/read/${message._id}`, {
                 method: "PUT",
                 headers: {
                     Accept: "application/json",

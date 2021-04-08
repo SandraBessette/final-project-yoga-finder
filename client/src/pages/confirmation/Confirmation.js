@@ -17,7 +17,7 @@ const Confirmation = ({type})=>{
         const businessID = window.localStorage.getItem('business');
         if (businessID) { 
             setStatus("loading");   
-            fetch(`/business/${businessID}`)
+            fetch(`${process.env.REACT_APP_API_URL}/business/${businessID}`)
             .then((res) => res.json())
             .then((json) => {
                 const { status, data } = json;            

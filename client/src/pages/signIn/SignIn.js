@@ -58,7 +58,7 @@ const SignIn = ()=>{
         
         setDisabled(true);
         dispatch(requestAuthInfo());
-        const endpoint = isSignup ? '/user/signup' : '/user/signin';
+        const endpoint = isSignup ? `${process.env.REACT_APP_API_URL}/user/signup` : `${process.env.REACT_APP_API_URL}/user/signin`;
         fetch(endpoint, {
             method: "POST",
             headers: {

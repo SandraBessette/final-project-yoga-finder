@@ -18,7 +18,7 @@ const Chat = ()=>{
 
     useEffect(() => { 
         dispatch(requestChatListInfo());  
-        fetch('/chat', {
+        fetch(`${process.env.REACT_APP_API_URL}/chat`, {
             method: "GET",
             headers: {
                 Accept: "application/json",

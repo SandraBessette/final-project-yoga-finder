@@ -14,8 +14,9 @@ import IconButton from '../../components/button/IconButton';
 import { onSmallTabletMediaQuery, onSmallPhoneMediaQuery, onPhoneMediaQuery } from '../../utils/responsives';
 import { receiveCountInfo, resetChat, updateMessage, increaseCountInfo } from '../../store/reducers/chat/actions';
 
-const ENDPOINT = 'http://localhost:3000';
-let socket = io(ENDPOINT);
+//const ENDPOINT = 'http://localhost:3000';
+//let socket = io(ENDPOINT);
+let socket = io();
 
 const Header = ()=>{
     const {authData} = useSelector((state)=>state.auth);  
@@ -74,7 +75,7 @@ const Header = ()=>{
 
     useEffect(() => {
         if (authData){          
-            fetch('/chat/messages/unread', {
+            fetch(`${process.env.REACT_APP_API_URL}/chat/messages/unread`, {
                 method: "GET",
                 headers: {
                     Accept: "application/json",

@@ -44,7 +44,7 @@ const App= () => {
     useEffect(() => {  
       
       dispatch(requestFilterInfo());
-      fetch(`/business/filters/metadata`)
+      fetch(`${process.env.REACT_APP_API_URL}/business/filters/metadata`)
         .then((res) => res.json())
         .then((json) => {
           const { status, data} = json;     

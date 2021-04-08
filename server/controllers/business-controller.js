@@ -91,7 +91,7 @@ const getFilteredBusiness = async (req, res) => {
 
     };  
 
-    pipeline.push( { $limit: 100 }); 
+    pipeline.push( { $limit: 50 }); 
        
     try{  
         const query = BusinessModel.aggregate([pipeline]); 

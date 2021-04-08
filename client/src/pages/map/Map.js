@@ -95,7 +95,7 @@ const Map = ()=>{
         if(!coordinates)
             return;       
         setStatus("loading");
-        fetch('/business/filters', {
+        fetch(`${process.env.REACT_APP_API_URL}/business/filters`, {
             method: "POST",
             headers: {
                 Accept: "application/json",

@@ -11,7 +11,7 @@ const Websockets = require('./utils/Websockets');
 require("dotenv").config();
 
 const { MONGO_URI } = process.env;
-const PORT = 8000;
+
 
 const app = express();
 const server = http.createServer(app);
@@ -44,7 +44,7 @@ app.set('io', io);
 
 
 
-server.listen(PORT, () => console.info(`Listening on port ${PORT}`));
+server.listen(process.env.PORT || 8000);
 
 mongoose.connect(MONGO_URI, { useNewUrlParser: true , useUnifiedTopology: true});
 const db = mongoose.connection;

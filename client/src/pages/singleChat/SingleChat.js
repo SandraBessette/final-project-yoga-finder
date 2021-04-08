@@ -28,7 +28,7 @@ const SingleChat = ()=>{
     useEffect(() => { 
         
         setStatus("loading");   
-        fetch(`/chat/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/chat/${id}`, {
             method: "GET",
             headers: {
                 Accept: "application/json",

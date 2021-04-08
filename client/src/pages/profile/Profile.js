@@ -27,7 +27,7 @@ const Profile = ()=>{
 
       useEffect(() => {       
         setStatus("loading");
-        fetch(`/user/profile/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/user/profile/${id}`, {
             method: "GET",
             headers: {
                 Accept: "application/json",

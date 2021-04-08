@@ -19,7 +19,7 @@ const Comments = ()=>{
 
     useEffect(() => {       
         setStatus("loading");   
-        fetch(`/comment/user/${id}`, {
+        fetch(`${process.env.REACT_APP_API_URL}/comment/user/${id}`, {
             method: "GET",
             headers: {
                 Accept: "application/json",
