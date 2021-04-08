@@ -15,11 +15,6 @@ const { MONGO_URI } = process.env;
 
 const app = express();
 const server = http.createServer(app);
-/*io = socketio(server,  {
-  cors: {
-    origin: '*',
-  }
-});*/
 
 io = socketio(server,  {
   cors: {
