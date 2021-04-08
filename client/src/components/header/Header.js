@@ -15,7 +15,7 @@ import { onSmallTabletMediaQuery, onSmallPhoneMediaQuery, onPhoneMediaQuery } fr
 import { receiveCountInfo, resetChat, updateMessage, increaseCountInfo } from '../../store/reducers/chat/actions';
 
 //const ENDPOINT = 'http://localhost:3000';
-let socket = io(ENDPOINT);
+//let socket = io(ENDPOINT);
 let socket = io(process.env.REACT_APP_SOCKET_ENDPOINT);
 //let socket = io('/');
 
