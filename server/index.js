@@ -20,19 +20,6 @@ const server = http.createServer(app);
     origin: '*',
   }
 });*/
-const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000']
-/*io = socketio(server,  {
-  cors: {
-    origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1) {
-        callback(null, true)
-      } else {
-        callback(new Error('Not allowed by CORS'))
-      }
-    },
-  }
-});*/
-//'https://yoga-finder-server.herokuapp.com',
 
 io = socketio(server,  {
   cors: {
@@ -40,6 +27,7 @@ io = socketio(server,  {
   }
 });
 
+const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000'];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -48,19 +36,9 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'))
     }
   },
-}
-
+};
 app.use((cors(corsOptions)));
 
-/*app.use((req, res, next) => {  
-  if (whitelist.indexOf(req.headers.origin) !== -1) {
-
-      res.header('Access-Control-Allow-Origin', req.headers.origin);
-      res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  }
-
-  next();
-});*/
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ limit: '50mb', extended: false }))
 app.use("/", express.static(__dirname + "/"))
