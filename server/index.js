@@ -23,7 +23,7 @@ const server = http.createServer(app);
 
 io = socketio(server,  {
   cors: {
-    origin: 'https://yoga-finder-server.herokuapp.com:*',
+    origin: 'https://yoga-finder-server.herokuapp.com/:*',
   }
 });
 //'https://yoga-finder-server.herokuapp.com',
