@@ -10,6 +10,10 @@ The yoga centers can be rated and received comments and can be added to your fav
 If you are a owner of this type of business you can add it to the application.
 \*\*\* All the businesses in the app have been added by me and not the real owner of the business as a demonstration purpuse only.
 
+## Youtube demo
+
+https://youtu.be/Z3p3gUNFB1s
+
 ## Netlify link
 
 https://yoga-finder.netlify.app/
