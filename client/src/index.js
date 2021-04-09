@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./store";
+import { SocketProvider } from './components/socketContext/SocketContext';
 import App from "./App";
 
 const loadState = () => {  
@@ -25,7 +26,9 @@ const store = createStore(
 ReactDOM.render(
   <React.StrictMode>  
       <Provider store={store}>
-        <App />  
+        <SocketProvider>
+          <App /> 
+        </SocketProvider> 
       </Provider> 
   </React.StrictMode>,
   document.getElementById("root")

@@ -22,7 +22,7 @@ io = socketio(server,  {
   }
 });
 
-const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000'];
+/*const whitelist = ['https://yoga-finder.netlify.app', 'http://localhost:3000'];
 const corsOptions = {
   origin: function (origin, callback) {
     if (whitelist.indexOf(origin) !== -1) {
@@ -31,8 +31,9 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'))
     }
   },
-};
-app.use((cors(corsOptions)));
+};*/
+//app.use((cors(corsOptions)));
+app.use((cors({origin: ['https://yoga-finder.netlify.app', 'http://localhost:3000']})));
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({ limit: '50mb', extended: false }))
