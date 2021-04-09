@@ -309,6 +309,7 @@ const Footer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     bottom: 0;
@@ -355,6 +356,7 @@ const Header = styled.div`
     z-index: 4;
     padding-top: 7px;
     padding-left: 10px;
+    position: -webkit-sticky;
     position: sticky;
     left: 0;
     top: 0;
