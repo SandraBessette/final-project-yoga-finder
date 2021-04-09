@@ -46,7 +46,6 @@ const App = () => {
 
     useEffect(() => {
         const handleReceiveMessage = (data) => {
-            console.log("receivemessagefrom socket");
             dispatch(updateMessage(data.data.message, data.data.chat));
             dispatch(increaseCountInfo(data.data.chat._id));
         };
@@ -90,7 +89,6 @@ const App = () => {
                 .then((json) => {
                     const { status, data, message } = json;
                     if (status === 200) {
-                        console.log("receiveCountInfo");
                         dispatch(receiveCountInfo(data));
                     } else {
                         console.log(message);
