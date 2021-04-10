@@ -12,7 +12,7 @@ If you are a owner of this type of business you can add it to the application.
 
 ## Youtube demo
 
-https://youtu.be/Z3p3gUNFB1s
+https://youtu.be/x5w83U-iFjg
 
 ## Netlify link
 
