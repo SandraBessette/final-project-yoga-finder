@@ -14,10 +14,6 @@ If you are a owner of this type of business you can add it to the application.
 
 https://youtu.be/x5w83U-iFjg
 
-## Netlify link
-
-https://yoga-finder.netlify.app/
-
 ## Technologies
 
 React, Redux, styled-components, Nodejs, Express, MongoDb and Mongoose, socket-io, jsonwebtoken, bcryptjs, jwt-decode.
